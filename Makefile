@@ -6,64 +6,45 @@
 #    By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/05 19:40:56 by jbaeza-c          #+#    #+#              #
-#    Updated: 2023/12/05 20:09:56 by jbaeza-c         ###   ########.fr        #
+#    Updated: 2023/12/05 20:49:07 by jbaeza-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-#Nombre
 NAME = minishell
+CC = gcc -g3
+CFLAGS = -Wall -Werror -Wextra -I libft/inc -I inc
+LIBFT_DIR = libft
+LIBFT_LIB = $(LIBFT_DIR)/libft.a
+SRC_DIR = src/
+OBJ_DIR = obj/
+OBJ = $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
+SRC = $(addprefix $(SRC:DIR), $(SRCS))
 
-#Compilación
-CC = cc 
-CFLAGS = -Wall -Wextra -Werror
+SRCS = main.c comman_split.c get_path.c minishell.c
 
-#Directorios
-SRC_DIR		= ./src/
-OBJ_DIR		= ./obj/
-INC_DIR		= ./inc/
-LIBFT_DIR	= ./libft/
+all: $(NAME)
 
-#Files
-SRC_FILES	= main.c
-OBJ_FILES	= $(SRC_FILES:.c=.o)
+$(NAME): $(OBJ)
+	@$(MAKE) -C $(LIBFT_DIR)
+	@echo "libft compiled successfully!"
+	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LIBFT_LIB) -lreadline
+	@echo "minishell compiled successfully!"
 
-#Direcciones
-SRC			= $(addprefix $(SRC_DIR), $(SRC_FILES))
-OBJ			= $(addprefix $(OBJ_DIR), $(OBJ_FILES))
-LIBFT		= $(addprefix $(LIBFT_DIR), libft.a)
-
-#Ejecutable
-all: obj $(NAME)
-
-#Gestión de los objetos
-obj:
+$(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	@mkdir -p $(OBJ_DIR)
-$(OBJ_DIR)%.o:$(SRC_DIR)%.c
-	$(CC) $(CFLAGS) -I $(INC_DIR) -o $@ -c $<
+	@$(CC) $(CFLAGS) -c $< -o $@
 
-#Compilación de los objetos con las librerías
-$(NAME): $(OBJ) $(LIBFT)
-	@echo "Compilando..."
-	$(CC) $(OBJ) -o $(NAME) $(LIBFT)
-	@echo "Completado!"
-
-#Compilación de la librería
-$(LIBFT):
-	make -C $(LIBFT_DIR) all
-
-#Eliminación de los objetos
 clean:
-	make -C $(LIBFT_DIR) clean
-	$(RM) $(OBJ_DIR)
-	@echo "Object removed."
+	@$(MAKE) -C $(LIBFT_DIR) clean
+	@rm -rf $(OBJ_DIR)
+	@echo "object files removed!"
 
-#Eliminación de los objetos y los ejecutables
 fclean: clean
-	make -C $(LIBFT:DIR) fclean
-	$(RM) $(NAME)
-	@echo "Everything has been removed."
+	@$(MAKE) -C $(LIBFT_DIR) fclean
+	@rm -f $(NAME)
+	@echo "Executable and object files removed!"
 
-#re-make
 re: fclean all
+	@echo "Recompiled everything!"
 
 .PHONY: all clean fclean re
