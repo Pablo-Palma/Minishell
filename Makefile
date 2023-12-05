@@ -6,7 +6,7 @@
 #    By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/05 19:40:56 by jbaeza-c          #+#    #+#              #
-#    Updated: 2023/12/05 20:49:07 by jbaeza-c         ###   ########.fr        #
+#    Updated: 2023/12/05 20:58:34 by jbaeza-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ OBJ_DIR = obj/
 OBJ = $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
 SRC = $(addprefix $(SRC:DIR), $(SRCS))
 
-SRCS = main.c comman_split.c get_path.c minishell.c
+SRCS = main.c command_split.c get_path.c minishell.c
 
 all: $(NAME)
 

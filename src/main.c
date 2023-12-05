@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 19:34:21 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2023/12/05 20:45:01 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2023/12/05 20:58:20 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 int	main(int argc, char **argv, char **envp)
 {
+	(void)argv;
+	(void)envp;
 	if (argc == 1)
 		minishell();
 	else
