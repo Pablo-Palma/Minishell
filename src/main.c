@@ -6,11 +6,11 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 19:34:21 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2023/12/05 19:36:34 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2023/12/05 19:40:08 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../incl/minishell.h"
+#include "../inc/minishell.h"
 
 int	main(int argc, char **argv, char **envp)
 {
