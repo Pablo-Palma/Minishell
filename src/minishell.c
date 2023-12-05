@@ -1,22 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/05 19:34:21 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2023/12/05 20:45:01 by jbaeza-c         ###   ########.fr       */
+/*   Created: 2023/12/05 20:44:10 by jbaeza-c          #+#    #+#             */
+/*   Updated: 2023/12/05 20:44:55 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int	main(int argc, char **argv, char **envp)
+int	minishell(void)
 {
-	if (argc == 1)
-		minishell();
-	else
-		ft_printf("Incorrect input. Please, execute as follows: ./minishell\n");
+	char	*input;
+	char	**args;
+	char	*cmd_path;
+	while (1)
+	{
+		input = readline("minishell> ");
+	
+		if (!input)
+			break;
+		if (*input)
+		{
+			add_history(input);
+			args = split_cmd(input);
+			cmd_path = get_path(args[0], getenv("PATH"));
+			printf("%s\n", cmd_path);
+			free(cmd_path);
+			ft_free_arrays(args);
+		}
+		free(input);
+	}
+	printf("Saliendo de minishell...\n");
 	return (0);
 }

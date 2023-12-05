@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 19:37:32 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2023/12/05 20:41:13 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2023/12/05 20:46:39 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,13 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-///###   SPLIT_CMD
+///###	SPLIT_CMD
 char	**split_cmd(const char *cmd);
 
-////###   GET_PATH
+///###	GET_PATH
 char	*get_path(char *cmd, const char *env_path);
+
+///###	MINISHELL
+int		minishell(void);
 
 #endif
