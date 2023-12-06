@@ -6,7 +6,7 @@
 /*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/06 11:57:19 by pabpalma         ###   ########.fr       */
+/*   Updated: 2023/12/06 12:21:41 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,14 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-typedef struct	s_minishell
+typedef struct s_minishell
 {
-   char		**envp;
-   int		fd_in;
-   int		fd_out;
-   char		*input_line;
-   char 	**commands;
-}			t_minishell;
+	char	**envp;
+	int		fd_in;
+	int		fd_out;
+	char	*input_line;
+	char	**commands;
+}	t_minishell;
 
 ///###   SPLIT_CMD
 char	**split_cmd(const char *cmd);

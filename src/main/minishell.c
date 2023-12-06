@@ -6,7 +6,7 @@
 /*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:21:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/06 10:54:43 by pabpalma         ###   ########.fr       */
+/*   Updated: 2023/12/06 12:23:35 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,8 @@ int	minishell(char **envp)
 	while (1)
 	{
 		input = readline("minishell> ");
-	
 		if (!input)
-			break;
+			break ;
 		if (*input)
 		{
 			add_history(input);
