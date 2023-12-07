@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
+/*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/06 12:21:41 by pabpalma         ###   ########.fr       */
+/*   Updated: 2023/12/07 02:55:37 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "libft.h"
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <sys/wait.h>
 
 typedef struct s_minishell
 {
@@ -24,6 +25,7 @@ typedef struct s_minishell
 	int		fd_out;
 	char	*input_line;
 	char	**commands;
+	int		number_commands;
 }	t_minishell;
 
 ///###   SPLIT_CMD
@@ -37,5 +39,8 @@ void	execute_command(char *input, t_minishell *shell);
 
 ///###	MINISHELL
 int		minishell(char **envp);
+
+///###	INPUT HANDLING
+int	handle_input(char *input, t_minishell *shell);
 
 #endif
