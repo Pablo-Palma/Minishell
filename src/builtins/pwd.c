@@ -1,40 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signal.c                                           :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/06 19:12:18 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/06 20:52:45 by pabpalma         ###   ########.fr       */
+/*   Created: 2023/12/07 09:42:10 by pabpalma          #+#    #+#             */
+/*   Updated: 2023/12/07 11:18:06 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-volatile sig_atomic_t sigint_recived = 0;
+//cwd(current working directory)
 
-void	handle_sigint(int sig)
+void	pwd_command(void)
 {
-	(void)sig;
-	
-	sigint_recived = 1;
-}
+	char	cwd[MAX_PATH];
 
-void	handle_sigquit(int sig)
-{
-	(void)sig;
-}
-
-void	setup_signal_handlers()
-{
-	struct sigaction sa;
-
-	sa.sa_handler = handle_sigint;
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = SA_RESTART;
-	sigaction(SIGINT, &sa, NULL);
-	
-	sa.sa_handler = handle_sigquit;
-	sigaction(SIGQUIT, &sa, NULL);
+	if (getcwd(cwd, sizeof(cwd)) != NULL)
+		printf("%s\n", cwd);
+	else
+		perror("pwd");
 }
