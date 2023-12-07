@@ -11,7 +11,8 @@ SRCS = $(SRC_DIR)main/main.c \
        $(SRC_DIR)execute/execute.c \
        $(SRC_DIR)shared/get_path.c \
        $(SRC_DIR)shared/command_split.c \
-	   $(SRC_DIR)input/token.c
+	   $(SRC_DIR)input/input.c	\
+	   $(SRC_DIR)pipe/pipe.c
 
 OBJS = $(SRCS:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
 

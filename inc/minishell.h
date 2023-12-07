@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/07 02:55:37 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2023/12/07 03:02:25 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ void	execute_command(char *input, t_minishell *shell);
 int		minishell(char **envp);
 
 ///###	INPUT HANDLING
-int	handle_input(char *input, t_minishell *shell);
+int		handle_input(char *input, t_minishell *shell);
+
+int		execute_pipe_command(t_minishell *shell);
 
 #endif

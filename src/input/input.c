@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 22:53:13 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2023/12/07 02:59:48 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2023/12/07 03:00:21 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,3 @@ int	handle_input(char *input, t_minishell *shell) //SIN REDIRECCIONES
 		execute_pipe_command(shell);
 	return (1);
 }
-
-Se modifica esto en dev?
