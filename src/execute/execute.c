@@ -6,7 +6,7 @@
 /*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:11:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/07 07:23:43 by pabpalma         ###   ########.fr       */
+/*   Updated: 2023/12/07 07:36:58 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static void	execute_command_child(char **cmd_args, t_minishell *shell)
 	char	*cmd_path;
 
 	cmd_path = get_path(cmd_args[0], getenv("PATH"));
-	if(!cmd_path)
+	if (!cmd_path)
 		exit(EXIT_FAILURE);
 	execve(cmd_path, cmd_args, shell->envp);
 	ft_free_arrays(cmd_args);
@@ -43,7 +43,7 @@ void	execute_single_cmd(char **cmd_args, t_minishell *shell)
 
 void	execute_command(char *input, t_minishell *shell)
 {
-	char **cmd_args;
+	char	**cmd_args;
 
 	cmd_args = split_cmd(input);
 	if (!cmd_args)
