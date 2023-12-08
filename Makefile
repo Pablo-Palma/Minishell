@@ -18,6 +18,8 @@ SRCS = $(SRC_DIR)main/main.c \
        $(SRC_DIR)builtins/pwd.c \
        $(SRC_DIR)builtins/export.c
 
+	   $(SRC_DIR)input/input.c	\
+	   $(SRC_DIR)pipe/pipe.c
 
 OBJS = $(SRCS:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
+/*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/07 14:03:17 by pabpalma         ###   ########.fr       */
+/*   Updated: 2023/12/08 21:07:41 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,19 @@
 # include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <sys/wait.h>
 
 extern volatile sig_atomic_t sigint_recived;
 
 typedef struct	s_minishell
 {
-   char		**envp;
-   int		fd_in;
-   int		fd_out;
-   char		*input_line;
-   char 	**commands;
-}			t_minishell;
+	char	**envp;
+	int		fd_in;
+	int		fd_out;
+	char	*input_line;
+	char	**commands;
+	int		number_commands;
+}	t_minishell;
 
 ///###   SPLIT_CMD
 char    **split_cmd(const char *cmd, const char *delimiters);
