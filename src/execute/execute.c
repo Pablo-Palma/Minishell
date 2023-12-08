@@ -6,16 +6,20 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:11:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/07 02:36:37 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2023/12/08 20:52:27 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	execute_command_child(char **cmd_args, t_minishell *shell)
+void	execute_command(char *input, t_minishell *shell)
 {
+	char	**cmd_args;
 	char	*cmd_path;
 
+	cmd_args = split_cmd(input);
+	if (!cmd_args)
+		perror("Command not found");
 	cmd_path = get_path(cmd_args[0], getenv("PATH"));
 	if (!cmd_path)
 		exit(EXIT_FAILURE);
@@ -23,31 +27,5 @@ static void	execute_command_child(char **cmd_args, t_minishell *shell)
 	ft_free_arrays(cmd_args);
 	free(cmd_path);
 	exit (EXIT_FAILURE);
-}
-
-void	execute_single_cmd(char **cmd_args, t_minishell *shell)
-{
-	pid_t	pid;
-	int		status;
-
-	pid = fork();
-	if (pid == -1)
-		perror("Fork error");
-	else if (pid == 0)
-		execute_command_child(cmd_args, shell);
-	else
-	{
-		waitpid(pid, &status, 0);
-	}
-}
-
-void	execute_command(char *input, t_minishell *shell)
-{
-	char	**cmd_args;
-
-	cmd_args = split_cmd(input);
-	if (!cmd_args)
-		perror("Command not found");
-	execute_single_cmd(cmd_args, shell);
 	ft_free_arrays(cmd_args);
 }

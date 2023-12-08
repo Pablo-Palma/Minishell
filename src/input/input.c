@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 22:53:13 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2023/12/07 21:42:38 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2023/12/08 20:48:34 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,12 @@ int	ft_tablen(char **tab)
 
 int	handle_input(char *input, t_minishell *shell) //SIN REDIRECCIONES
 {
-	int	i;
-
-	i = 0;
 	shell->commands = ft_split(input, '|');
 	shell->number_commands = ft_tablen(shell->commands);
 	if (shell->number_commands == 1)
 	{
-		//ft_printf("Ejecutando comandos sin pipe\n");
-		execute_command(shell->commands[i], shell);
+		if (execute_non_pipe_command(shell) == -1)
+			ft_printf("ERROR EN EXEC_NON_PIPE_COMMAND");
 	}
 	else
 		if (execute_pipe_command(shell) == -1)
