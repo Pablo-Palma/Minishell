@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/08 21:10:15 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2023/12/09 12:17:35 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,9 @@ void	echo_command(char **cmd_args);
 void	cd_command(char **cmd_args);
 void	pwd_command(void);
 int		export_command(char **cmd_args, t_minishell *shell);
+int		unset_command(char **args, t_minishell *shell);
+void	env_command(t_minishell *shell);
+int		exit_command(char **cmd_args, t_minishell *shell);
 
 ///###	PIPE
 int	execute_non_pipe_command(t_minishell *shell);

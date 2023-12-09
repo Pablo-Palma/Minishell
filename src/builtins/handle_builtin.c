@@ -6,7 +6,7 @@
 /*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 08:14:43 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/07 14:03:40 by pabpalma         ###   ########.fr       */
+/*   Updated: 2023/12/09 13:20:12 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,17 @@ int	handle_builtin(char **cmd_args, t_minishell *shell)
 		export_command(&cmd_args[1], shell);
 		return (1);
 	}
+	else if (strncmp(cmd_args[0], "unset", 5) == 0)
+	{
+		unset_command(&cmd_args[1], shell);
+		return (1);
+	}
+	else if (strncmp(cmd_args[0], "env", 3) == 0)
+	{
+		env_command(shell);
+		return (1);
+	}
+	else if (strncmp(cmd_args[0], "exit", 4) == 0)
+		exit_command(cmd_args, shell);
 	return (0);
 }

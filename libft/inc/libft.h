@@ -6,7 +6,7 @@
 /*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 17:24:17 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/11/17 17:15:12 by pabpalma         ###   ########.fr       */
+/*   Updated: 2023/12/09 11:12:30 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ int		ft_isdigit(int c);
 int		ft_isprint(int c);
 int		ft_isspace(int c);
 int		ft_skip_space_sign(char *str, int *is_neg);
+int		ft_isnumeric(const char *str);
 
 // Memory manipulation
 void	ft_bzero(void *s, size_t n);
