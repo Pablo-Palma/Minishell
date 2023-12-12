@@ -6,51 +6,21 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2023/12/09 12:58:24 by pabpalma         ###   ########.fr       */
+/*   Updated: 2023/12/13 15:31:42 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	cmd1(t_minishell *shell, int *fd)
+static void	cmd(t_minishell *shell, int pos)
 {
-	dup2(fd[1], STDOUT_FILENO);
-	close(fd[0]);
-	close(fd[1]);
-	execute_command(shell->commands[0], shell);
-}
-
-static void	cmd2(t_minishell *shell, int *fd)
-{
-	dup2(fd[0], STDIN_FILENO);
-	close(fd[0]);
-	close(fd[1]);
-	execute_command(shell->commands[1], shell);
-}
-
-int	execute_pipe_command(t_minishell *shell)
-{
-	int		fd[2];
-	pid_t	pid1;
-	pid_t	pid2;
-
-	if (pipe(fd) == -1)
-		return (-1);
-	pid1 = fork();
-	if (pid1 == -1)
-		return (-1);
-	if (!pid1)
-		cmd1(shell, fd);
-	pid2 = fork();
-	if (pid2 == -1)
-		return (-1);
-	if (!pid2)
-		cmd2(shell, fd);
-	close(fd[0]);
-	close(fd[1]);
-	waitpid(pid1, NULL, 0);
-	waitpid(pid2, NULL, 0);
-	return (1);
+	if (pos != shell->number_commands - 1)
+		dup2(shell->fd_write, STDOUT_FILENO);
+	if (pos)
+		dup2(shell->fd_read, STDIN_FILENO);
+	close(shell->fd_read);
+	close(shell->fd_write);
+	execute_command(shell->commands[pos], shell);
 }
 
 int	execute_non_pipe_command(t_minishell *shell)
@@ -62,6 +32,30 @@ int	execute_non_pipe_command(t_minishell *shell)
 		perror("Fork error");
 	if (!pid)
 		execute_command(shell->commands[0], shell);
-	waitpid(pid, NULL, 0);
+	wait(NULL);
+	return (1);
+}
+
+int	execute_pipe_command(t_minishell *shell)
+{
+	int		fd[2];
+	pid_t	pid;
+	int		i;
+
+	i = -1;
+	while( ++i < shell->number_commands)
+	{
+		if (pipe(fd))
+			perror("PIPE ERROR");
+		shell->fd_write = fd[1];
+		pid = fork();
+		if (pid == -1)
+			perror("FORK ERROR");
+		if (!pid)
+			cmd(shell, i);
+		waitpid(pid, NULL, 0);
+		shell->fd_read = fd[0];
+		close(fd[1]);
+	}
 	return (1);
 }

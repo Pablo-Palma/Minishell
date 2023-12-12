@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/09 12:17:35 by pabpalma         ###   ########.fr       */
+/*   Updated: 2023/12/13 15:28:19 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,10 @@ extern volatile sig_atomic_t sigint_recived;
 typedef struct	s_minishell
 {
 	char	**envp;
-	int		fd_in;
-	int		fd_out;
+	int		fd_read;
+	int		fd_write;
+	int		input_redirect;
+	int		output_redirect;
 	char	*input_line;
 	char	**commands;
 	int		number_commands;
