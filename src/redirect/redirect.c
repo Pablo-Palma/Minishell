@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/13 13:24:33 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2023/12/15 16:06:55 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2023/12/15 18:24:47 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,10 @@ static int	output_redirect(t_minishell *shell, int pos);
 		shell->output_redirect = NULL;
 	else
 	{
-		shell->output_redirect = open(shell->commands[pos], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+		if (strchr(shell->commands[pos], '>') == strrchr(shell->commands[pos], '>'))
+			shell->output_redirect = open(shell->commands[pos], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+		else
+			shell->output_redirect = open(shell->commands[pos], O_WRONLY | O_CREAT | O_APPEND, 0777);
 		if (shell->output_redirect == -1)
 		{
 			perror("Error en redirección de salida");
