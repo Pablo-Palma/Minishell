@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:11:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/10 18:51:03 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2023/12/15 13:43:14 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	execute_command(char *input, t_minishell *shell)
 	char	**cmd_args;
 	char	*cmd_path;
 
-	cmd_args = split_cmd(input, " ");
+	cmd_args = ft_split(input, ' ');
 	if(!handle_builtin(cmd_args, shell))
 	{	
 		if (!cmd_args)

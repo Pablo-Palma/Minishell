@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/13 15:28:19 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2023/12/15 12:04:50 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,12 @@
 
 extern volatile sig_atomic_t sigint_recived;
 
+typedef struct	s_token
+{
+	char			*data;
+	struct s_token	*next;
+}	t_token;
+
 typedef struct	s_minishell
 {
 	char	**envp;
@@ -33,6 +39,7 @@ typedef struct	s_minishell
 	char	*input_line;
 	char	**commands;
 	int		number_commands;
+	t_token	*tokens;
 }	t_minishell;
 
 ///###   SPLIT_CMD
