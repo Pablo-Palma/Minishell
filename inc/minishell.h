@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/15 12:04:50 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2023/12/16 13:28:54 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void	setup_signal_handlers();
 
 ///###   BUILTIN
 int		handle_builtin(char **cmd_args, t_minishell *shell);
+int		prefork_builtin(t_minishell *shell);
 void	echo_command(char **cmd_args);
 void	cd_command(char **cmd_args);
 void	pwd_command(void);
@@ -68,11 +69,14 @@ void	env_command(t_minishell *shell);
 int		exit_command(char **cmd_args, t_minishell *shell);
 
 ///###	PIPE
-int	execute_non_pipe_command(t_minishell *shell);
-int	execute_pipe_command(t_minishell *shell);
+int		execute_non_pipe_command(t_minishell *shell);
+int		execute_pipe_command(t_minishell *shell);
 
 ///###	INPUT
-int	handle_input(char *input, t_minishell *shell);
-int	ft_tablen(char **tab);
+int		handle_input(char *input, t_minishell *shell);
+int		ft_tablen(char **tab);
+
+///###	ERROR
+int		error(char *error_msg);
 
 #endif

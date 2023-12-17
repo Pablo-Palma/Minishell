@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:21:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/09 15:39:32 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2023/12/16 20:50:12 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,23 +24,18 @@ int	minishell(char **envp)
 		input = readline("minishell> ");
 	
 		if (sigint_recived)
-		{
 			sigint_recived = 0;
-			printf("\nminishell> ");
-		}
-		if (!input)
+		else if (!input)
 		{
 			ft_printf("%s\n", "EOF recibido. Saliendo...\n");
 			break;
 		}
-		if (*input)
+		else
 		{
 			add_history(input);
 			handle_input(input, &shell);
-			free(input);
 		}
-		else
-			free(input);
+		free(input);
 	}
 	printf("Saliendo de minishell...\n");
 	return (0);

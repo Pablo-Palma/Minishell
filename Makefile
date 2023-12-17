@@ -13,6 +13,7 @@ SRCS = $(SRC_DIR)main/main.c \
        $(SRC_DIR)shared/command_split.c \
        $(SRC_DIR)signal/signal.c \
        $(SRC_DIR)builtins/handle_builtin.c \
+	   $(SRC_DIR)builtins/prefork_builtin.c \
        $(SRC_DIR)builtins/echo.c \
        $(SRC_DIR)builtins/cd.c \
        $(SRC_DIR)builtins/pwd.c \
@@ -21,7 +22,8 @@ SRCS = $(SRC_DIR)main/main.c \
 	   $(SRC_DIR)builtins/env.c \
 	   $(SRC_DIR)builtins/exit.c \
 	   $(SRC_DIR)input/input.c	\
-	   $(SRC_DIR)pipe/pipe.c
+	   $(SRC_DIR)pipe/pipe.c	\
+	   $(SRC_DIR)error/error.c
 
 OBJS = $(SRCS:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
 

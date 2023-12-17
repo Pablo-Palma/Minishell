@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2023/12/15 23:48:11 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2023/12/16 13:41:19 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,11 @@ int	execute_non_pipe_command(t_minishell *shell)
 {
 	int	pid;
 
+	if (prefork_builtin(shell))
+		return (1);
 	pid = fork();
 	if (pid == -1)
-		perror("Fork error");
+		error("Error forking processes");
 	if (!pid)
 		execute_command(shell->commands[0], shell);
 	wait(NULL);
@@ -46,11 +48,11 @@ int	execute_pipe_command(t_minishell *shell)
 	while( ++i < shell->number_commands)
 	{
 		if (pipe(fd) == -1)
-			perror("PIPE ERROR");
+			error("Error creating pipes");
 		shell->fd_write = fd[1];
 		pid = fork();
 		if (pid == -1)
-			perror("FORK ERROR");
+			error("Error forking processes");
 		if (!pid)
 			cmd(shell, i);
 		waitpid(pid, NULL, 0);
