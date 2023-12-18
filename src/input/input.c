@@ -6,33 +6,29 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 22:53:13 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2023/12/09 13:24:42 by pabpalma         ###   ########.fr       */
+/*   Updated: 2023/12/17 18:15:25 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_tablen(char **tab)
+int	handle_input(char *input, t_minishell *shell) 
 {
-	int	i;
-
-	i = 0;
-	while (tab[i])
-		i++;
-	return (i);
-}
-
-int	handle_input(char *input, t_minishell *shell) //SIN REDIRECCIONES
-{
-	shell->commands = ft_split(input, '|');
-	shell->number_commands = ft_tablen(shell->commands);
-	if (shell->number_commands == 1)
+	t_token	*tokens = lexer(input);
+	if (!tokens)
 	{
-		if (execute_non_pipe_command(shell) == -1)
-			ft_printf("ERROR EN EXEC_NON_PIPE_COMMAND");
+		ft_printf("ERROR generating tokens");
+		return (-1);
 	}
-	else
-		if (execute_pipe_command(shell) == -1)
-			ft_printf("ERROR EN EXEC_PIPE_COMMAND");
-	return (1);
+	t_ast_node *ast = build_ast(tokens);
+	if (!ast)
+	{
+		ft_printf("ERROR building AST");
+		free_tokens(tokens);
+		return (-1);
+	}
+	execute_ast_command(ast, shell);
+	free_ast(ast);
+	free_tokens(tokens);
+	return(1);
 }

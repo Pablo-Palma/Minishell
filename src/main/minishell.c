@@ -6,26 +6,39 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:21:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/09 15:39:32 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2023/12/18 11:42:56 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	init_minishell(t_minishell *shell, char **envp)
+{
+	if (!shell)
+		return ;
+	shell->envp = envp;
+	shell->fd_in = -1;
+	shell->fd_in = -1;
+	shell ->input_redirect = 0;
+	shell->output_redirect = 0;
+	shell->input_line = NULL;
+	shell->ast = NULL;
+}
 
 int	minishell(char **envp)
 {
 	t_minishell	shell;
 	char		*input;
 
-	shell.envp = envp;
+	init_minishell(&shell, envp);
 	setup_signal_handlers();
 	while (1)
 	{
 		input = readline("minishell> ");
 	
-		if (sigint_recived)
+		if (g_sigint_recived)
 		{
-			sigint_recived = 0;
+			g_sigint_recived = 0;
 			printf("\nminishell> ");
 		}
 		if (!input)

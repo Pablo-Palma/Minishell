@@ -1,40 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signal.c                                           :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/06 19:12:18 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/18 11:43:35 by pabpalma         ###   ########.fr       */
+/*   Created: 2023/12/15 20:46:20 by pabpalma          #+#    #+#             */
+/*   Updated: 2023/12/15 20:46:36 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-volatile sig_atomic_t g_sigint_recived = 0;
-
-void	handle_sigint(int sig)
+void	handle_error(const char *msg, int use_perror, int error_code)
 {
-	(void)sig;
-	
-	g_sigint_recived = 1;
-}
-
-void	handle_sigquit(int sig)
-{
-	(void)sig;
-}
-
-void	setup_signal_handlers()
-{
-	struct sigaction sa;
-
-	sa.sa_handler = handle_sigint;
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = SA_RESTART;
-	sigaction(SIGINT, &sa, NULL);
-	
-	sa.sa_handler = handle_sigquit;
-	sigaction(SIGQUIT, &sa, NULL);
+	if (use_perror)
+		perror(msg);
+	else
+		ft_printf("%s\n", msg);
+	exit(error_code);
 }
