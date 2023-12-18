@@ -38,7 +38,6 @@ $(NAME): $(OBJS)
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	@mkdir -p $(@D)
->>>>>>> dev
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
