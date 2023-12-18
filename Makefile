@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/12/05 19:40:56 by jbaeza-c          #+#    #+#              #
-#    Updated: 2023/12/05 20:58:34 by jbaeza-c         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 NAME = minishell
 CC = gcc -g3
 CFLAGS = -Wall -Werror -Wextra -I libft/inc -I inc
@@ -17,21 +5,40 @@ LIBFT_DIR = libft
 LIBFT_LIB = $(LIBFT_DIR)/libft.a
 SRC_DIR = src/
 OBJ_DIR = obj/
-OBJ = $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
-SRC = $(addprefix $(SRC:DIR), $(SRCS))
+SRCS = $(SRC_DIR)main/main.c \
+       $(SRC_DIR)main/minishell.c \
+       $(SRC_DIR)execute/execute.c \
+       $(SRC_DIR)shared/get_path.c \
+       $(SRC_DIR)shared/command_split.c \
+       $(SRC_DIR)shared/utils.c \
+       $(SRC_DIR)signal/signal.c \
+       $(SRC_DIR)builtins/handle_builtin.c \
+       $(SRC_DIR)builtins/echo.c \
+       $(SRC_DIR)builtins/cd.c \
+       $(SRC_DIR)builtins/pwd.c \
+       $(SRC_DIR)builtins/export.c	\
+	   $(SRC_DIR)builtins/unset.c \
+	   $(SRC_DIR)builtins/env.c \
+	   $(SRC_DIR)builtins/exit.c \
+	   $(SRC_DIR)input/input.c	\
+	   $(SRC_DIR)input/lexer.c \
+	   $(SRC_DIR)ast/ast.c	\
+	   $(SRC_DIR)ast/ast_utils.c \
+	   $(SRC_DIR)pipe/pipe.c
 
-SRCS = main.c command_split.c get_path.c minishell.c
+OBJS = $(SRCS:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
-	@$(MAKE) -C $(LIBFT_DIR)
+$(NAME): $(OBJS)
+	@$(MAKE) bonus -C $(LIBFT_DIR)
 	@echo "libft compiled successfully!"
-	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LIBFT_LIB) -lreadline
+	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT_LIB) -lreadline
 	@echo "minishell compiled successfully!"
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
-	@mkdir -p $(OBJ_DIR)
+	@mkdir -p $(@D)
+>>>>>>> dev
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:

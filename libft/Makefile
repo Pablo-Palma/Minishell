@@ -14,7 +14,7 @@ LIBFT_SRC = $(addprefix $(LIBFT_SRC_DIR)/mand/, ft_atof.c ft_itoa.c \
 	ft_memmove.c ft_split.c ft_strtrim.c ft_isascii.c ft_memset.c ft_strchr.c \
 	ft_strrchr.c ft_isdigit.c ft_putchar_fd.c ft_strdup.c ft_substr.c \
 	ft_isprint.c ft_putendl_fd.c ft_striteri.c ft_tolower.c ft_isspace.c \
-	ft_puthexlo_fd.c ft_strjoin.c ft_toupper.c)
+	ft_puthexlo_fd.c ft_strjoin.c ft_toupper.c ft_isnumeric.c)
 
 BONUS_SRC =	$(addprefix $(LIBFT_SRC_DIR)/bonus/, ft_lstadd_back_bonus.c \
 	ft_lstdelone_bonus.c ft_lstmap_bonus.c ft_lstadd_front_bonus.c \
