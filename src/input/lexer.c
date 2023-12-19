@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
+/*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:37:07 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/18 11:34:00 by pabpalma         ###   ########.fr       */
+/*   Updated: 2023/12/18 21:07:02 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ t_type	token_type(char *value)
 	if (ft_strncmp(value, "|", 1) == 0)
 		return (AST_PIPE);
 	else if (ft_strncmp(value, "<", 1) == 0)
-		return (AST_REDIRECT_IN);
+		return (AST_REDIRECT);
 	else if (ft_strncmp(value, ">", 1) == 0)
-		return (AST_REDIRECT_OUT);
+		return (AST_REDIRECT);
 	return (AST_COMMAND);
 }
 

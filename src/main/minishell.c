@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:21:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/18 11:42:56 by pabpalma         ###   ########.fr       */
+/*   Updated: 2023/12/18 21:08:42 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,13 @@ void	init_minishell(t_minishell *shell, char **envp)
 	if (!shell)
 		return ;
 	shell->envp = envp;
-	shell->fd_in = -1;
-	shell->fd_in = -1;
-	shell ->input_redirect = 0;
+	shell->fd_read = 0;
+	shell->fd_write = 1;
+	shell->input_redirect = 0;
 	shell->output_redirect = 0;
 	shell->input_line = NULL;
 	shell->ast = NULL;
+	shell->last_cmd = 1;
 }
 
 int	minishell(char **envp)
@@ -39,7 +40,6 @@ int	minishell(char **envp)
 		if (g_sigint_recived)
 		{
 			g_sigint_recived = 0;
-			printf("\nminishell> ");
 		}
 		if (!input)
 		{
@@ -49,7 +49,7 @@ int	minishell(char **envp)
 		if (*input)
 		{
 			add_history(input);
-			handle_input(input, &shell);
+			handle_input(&shell, input);
 			free(input);
 		}
 		else

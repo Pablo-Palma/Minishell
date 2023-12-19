@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
+/*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 10:49:42 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/09 11:29:17 by pabpalma         ###   ########.fr       */
+/*   Updated: 2023/12/18 21:05:35 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 //el código de salida del ultimo comando entonces para 1 argumento (exit)
 //exit_code = (last_exit_code)
 
-int	exit_command(char **cmd_args, t_minishell *shell)
+int	exit_command(t_minishell *shell, char **cmd_args)
 {
 	int	exit_code;
 

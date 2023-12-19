@@ -25,7 +25,8 @@ SRCS = $(SRC_DIR)main/main.c \
 	   $(SRC_DIR)input/lexer.c \
 	   $(SRC_DIR)ast/ast.c	\
 	   $(SRC_DIR)ast/ast_utils.c \
-	   $(SRC_DIR)pipe/pipe.c
+	   $(SRC_DIR)pipe/pipe.c	\
+	    $(SRC_DIR)redirect/redirect.c
 
 OBJS = $(SRCS:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
 

@@ -6,13 +6,13 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 22:53:13 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2023/12/17 18:15:25 by pabpalma         ###   ########.fr       */
+/*   Updated: 2023/12/18 21:06:03 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	handle_input(char *input, t_minishell *shell) 
+int	handle_input(t_minishell *shell, char *input) 
 {
 	t_token	*tokens = lexer(input);
 	if (!tokens)
@@ -27,7 +27,7 @@ int	handle_input(char *input, t_minishell *shell)
 		free_tokens(tokens);
 		return (-1);
 	}
-	execute_ast_command(ast, shell);
+	execute_ast_command(shell, ast);
 	free_ast(ast);
 	free_tokens(tokens);
 	return(1);

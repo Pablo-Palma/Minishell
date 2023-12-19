@@ -6,13 +6,13 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:11:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/16 15:45:42 by pabpalma         ###   ########.fr       */
+/*   Updated: 2023/12/18 21:00:31 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	execute_ast_command(t_ast_node *node, t_minishell *shell)
+void	execute_ast_command(t_minishell *shell, t_ast_node *node)
 {
 	if (node == NULL || shell == NULL)
 	{
@@ -20,12 +20,12 @@ void	execute_ast_command(t_ast_node *node, t_minishell *shell)
 		return ;
 	}
 	if (node->type == AST_COMMAND)
-		execute_single_command(node->value, shell);
+		execute_single_command(shell, node->value);
 	if (node->type == AST_PIPE)
-		execute_ast_pipe(node, shell);
+		execute_ast_pipe(shell, node);
 }
 
-void	execute_single_command(char *value, t_minishell *shell)
+void	execute_single_command(t_minishell *shell, char *value)
 {
 	pid_t	pid;
 	int		status;
@@ -35,7 +35,7 @@ void	execute_single_command(char *value, t_minishell *shell)
 	if (!value || !shell)
 		return ;
 	args = split_cmd(value, " ");
-	if (handle_builtin(&args[0], shell))
+	if (handle_builtin(shell, &args[0]))
 	{
 		return ;
 	}
