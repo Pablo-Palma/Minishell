@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/18 21:08:48 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2023/12/22 14:29:37 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ typedef enum t_type
 	AST_PIPE,
 	AST_SUBSHELL,
 	AST_REDIRECT,
+	AST_FILE,
+	AST_HEREDOC,
 }	t_type;
 
 typedef struct s_token

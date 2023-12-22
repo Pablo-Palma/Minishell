@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/13 13:24:33 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2023/12/19 12:21:11 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2023/12/21 16:56:59 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,13 +57,13 @@ int	output_append_redirection(t_minishell *shell, t_ast_node *cmd_node)
 
 int	handle_redirect(t_minishell *shell, t_ast_node *cmd_node)
 {
-	if (ft_strncmp(cmd_node->value, "<", 1) == 0)
-		input_redirection(shell, cmd_node->left);
-	if (ft_strncmp(cmd_node->value, ">", 1) == 0)
-		output_redirection(shell, cmd_node->left);
 	if (ft_strncmp(cmd_node->value, "<<", 2) == 0)
 		here_doc(shell, cmd_node->left);
 	if (ft_strncmp(cmd_node->value, ">>", 2) == 0)
 		output_append_redirection(shell, cmd_node->left);
+	if (ft_strncmp(cmd_node->value, "<", 1) == 0)
+		input_redirection(shell, cmd_node->left);
+	if (ft_strncmp(cmd_node->value, ">", 1) == 0)
+		output_redirection(shell, cmd_node->left);
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:37:07 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/18 21:07:02 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2023/12/22 14:31:40 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ t_type	token_type(char *value)
 {
 	if (ft_strncmp(value, "|", 1) == 0)
 		return (AST_PIPE);
+	else if (ft_strncmp(value, "<<", 2) == 0)
+		return (AST_HEREDOC);
 	else if (ft_strncmp(value, "<", 1) == 0)
 		return (AST_REDIRECT);
 	else if (ft_strncmp(value, ">", 1) == 0)
@@ -51,11 +53,16 @@ t_token	*lexer(char *input)
 	temp = NULL;
 	while (split_input[i] != NULL)
 	{
-		if (token_type(split_input[i]) != AST_COMMAND)
+		if (token_type(split_input[i]) == AST_PIPE)
 		{
 			add_token_back(&tokens, create_token(AST_PIPE, split_input[i]));
 			i++;
 		}
+		else if (token_type(split_input[i]) == AST_REDIRECT)
+		{
+			add_token_back(&tokens, create_token(AST_REDIRECT, split_input[i]))
+			i++;
+		}	
 		else
 		{
 			command = ft_strdup(split_input[i]);
