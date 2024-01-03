@@ -6,12 +6,32 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:37:07 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/22 14:31:40 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/03 11:24:11 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+t_token	*create_token(t_type type, char *value)
+{
+	t_token	*new_token;
+	int		envvar;
+
+	new_token = malloc(sizeof(t_token));
+	if (!new_token)
+		return (NULL);
+	new_token->type = type;
+	new_token->next = NULL;
+	new_token->prev = NULL;
+	new_token->value = malloc(ft_strlen(value) + 1);
+	envvar = strip_quotes(value, new_token->value);
+	if (envvar == -1)
+		return (NULL);
+	else
+		new_token->envvar = envvar;
+	return (new_token);
+}
+/*
 t_token	*create_token(t_type type, char *value)
 {
 	t_token	*new_token;
@@ -24,7 +44,7 @@ t_token	*create_token(t_type type, char *value)
 	new_token->next = NULL;
 	new_token->prev = NULL;
 	return (new_token);
-}
+}*/
 
 t_type	token_type(char *value)
 {
@@ -33,9 +53,9 @@ t_type	token_type(char *value)
 	else if (ft_strncmp(value, "<<", 2) == 0)
 		return (AST_HEREDOC);
 	else if (ft_strncmp(value, "<", 1) == 0)
-		return (AST_REDIRECT);
+		return (AST_REDIRECT_IN);
 	else if (ft_strncmp(value, ">", 1) == 0)
-		return (AST_REDIRECT);
+		return (AST_REDIRECT_OUT);
 	return (AST_COMMAND);
 }
 
@@ -58,9 +78,14 @@ t_token	*lexer(char *input)
 			add_token_back(&tokens, create_token(AST_PIPE, split_input[i]));
 			i++;
 		}
-		else if (token_type(split_input[i]) == AST_REDIRECT)
+		else if (token_type(split_input[i]) == AST_REDIRECT_IN)
 		{
-			add_token_back(&tokens, create_token(AST_REDIRECT, split_input[i]))
+			add_token_back(&tokens, create_token(AST_REDIRECT_IN, split_input[i]));
+			i++;
+		}
+		else if (token_type(split_input[i]) == AST_REDIRECT_OUT)
+		{
+			add_token_back(&tokens, create_token(AST_REDIRECT_OUT, split_input[i]));
 			i++;
 		}	
 		else
@@ -82,6 +107,7 @@ t_token	*lexer(char *input)
 			free(command);
 		}
 	}
+	free(input);
 	ft_free_arrays(split_input);
 	return (tokens);
 }

@@ -6,23 +6,78 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 22:53:13 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2023/12/21 11:37:55 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/03 11:47:08 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int	count_operators(char *input)
+{
+	int	flag;
+	int	counter;
+	int	i;
+
+	flag = 0;
+	counter = 0;
+	i = -1;
+	while (input[++i])
+	{
+		if ((input[i] == '>' || input[i] == '<' || input[i] == '|') && !flag)
+		{
+			counter++;
+			flag++;
+		}
+		else if (input[i] != '>' && input[i] != '<')
+			flag = 0;
+	}
+	return (counter);
+}
+
+char	*handle_operators(char *input)
+{
+	char	*parsed_input;
+	int		i;
+	int		j;
+	int		flag;
+
+	parsed_input = malloc(ft_strlen(input) + count_operators(input) * 2 + 1);
+	i = 0;
+	j = 0;
+	flag = 0;
+	while (input[i])
+	{
+		if ((input[i] == '>' || input[i] == '<' || input[i] == '|') && !flag)
+		{
+			parsed_input[j++] = ' ';
+			flag++;
+		}
+		else if (!(input[i] == '>' || input[i] == '<' || input[i] == '|') && flag)
+		{
+			parsed_input[j++] = ' ';
+			flag = 0;
+		}
+		parsed_input[j++] = input[i++];
+	}
+	parsed_input[j] = 0;
+	return (parsed_input);
+}
+
 int	strip_quotes(char *quoted_str, char *unquoted_str)
 {
 	int		i;
 	int		j;
+	int		envvar;
 	char	last_quote;
 
 	i = 0;
 	j = 0;
 	last_quote = 0;
+	envvar = 1;
 	while (quoted_str[i])
 	{
+		if (last_quote == 39 && quoted_str[i] == '$')
+			envvar = 0;
 		if ((quoted_str[i] == 39 || quoted_str[i] == 34) && last_quote == 0)
 			last_quote = quoted_str[i];
 		else if (quoted_str[i] == last_quote)
@@ -33,36 +88,27 @@ int	strip_quotes(char *quoted_str, char *unquoted_str)
 	}
 	unquoted_str[j] = 0;
 	if (last_quote)
-		return (0);
-	return (1);
+		return (-1);
+	return (envvar);
 }
 
 int	handle_input(t_minishell *shell, char *input) 
 {
-	char	*unquoted_input;
-
-	unquoted_input = malloc(ft_strlen(input) + 1);
-	if (strip_quotes(input, unquoted_input))
+	t_token	*tokens = lexer(handle_operators(input));
+	if (!tokens)
 	{
-		t_token	*tokens = lexer(unquoted_input);
-		if (!tokens)
-		{
-			ft_printf("ERROR generating tokens");
-			return (-1);
-		}
-		t_ast_node *ast = build_ast(tokens);
-		if (!ast)
-		{
-			ft_printf("ERROR building AST");
-			free_tokens(tokens);
-			return (-1);
-		}
-		execute_ast_command(shell, ast);
-		free_ast(ast);
-		free_tokens(tokens);
+		ft_printf("ERROR generating tokens");
+		return (-1);
 	}
-	else
-		printf("Incorrect input\n");
-	free(unquoted_input);
+	t_ast_node *ast = build_ast(tokens);
+	if (!ast)
+	{
+		ft_printf("ERROR building AST");
+		free_tokens(tokens);
+		return (-1);
+	}
+	execute_ast_command(shell, ast);
+	free_ast(ast);
+	free_tokens(tokens);
 	return(1);
 }

@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/22 14:29:37 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/03 11:18:56 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ typedef enum t_type
 	AST_COMMAND,
 	AST_PIPE,
 	AST_SUBSHELL,
-	AST_REDIRECT,
+	AST_REDIRECT_IN,
+	AST_REDIRECT_OUT,
 	AST_FILE,
 	AST_HEREDOC,
 }	t_type;
@@ -37,6 +38,7 @@ typedef struct s_token
 {
 	t_type			type;
 	char			*value;
+	int				envvar;
 	struct s_token	*next;
 	struct s_token	*prev;
 }					t_token;
@@ -109,6 +111,7 @@ void		create_pipe(int pipes[2]);
 int			handle_input(t_minishell *shell, char *input);
 int			handle_redirect(t_minishell *shell, t_ast_node *cmd_node);
 int			ft_tablen(char **tab);
+int			strip_quotes(char *quoted_str, char *unquoted_str);
 void		handle_error(const char *msg, int use_perror, int error_code);
 
 #endif
