@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:11:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/07 10:35:21 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/07 12:28:27 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	execute_ast_command(t_ast_node *node, t_minishell *shell)
 	if (node->type == AST_COMMAND)
 		execute_single_command(node->value, shell);
 	if (node->type == AST_PIPE)
-		execute_ast_pipe(node, shell);
+		execute_ast_pipe(shell, node);
 }
 
 void	execute_single_command(char *value, t_minishell *shell)
@@ -41,7 +41,7 @@ void	execute_single_command(char *value, t_minishell *shell)
 		ft_free_arrays(args);
 		return ;
 	}
-	if (handle_builtin(&args[0], shell))
+	if (handle_builtin(shell, &args[0]))
 	{
 		return ;
 	}

@@ -6,15 +6,95 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 22:53:13 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2023/12/17 18:15:25 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/03 11:47:08 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	handle_input(char *input, t_minishell *shell) 
+int	count_operators(char *input)
 {
-	t_token	*tokens = lexer(input);
+	int	flag;
+	int	counter;
+	int	i;
+
+	flag = 0;
+	counter = 0;
+	i = -1;
+	while (input[++i])
+	{
+		if ((input[i] == '>' || input[i] == '<' || input[i] == '|') && !flag)
+		{
+			counter++;
+			flag++;
+		}
+		else if (input[i] != '>' && input[i] != '<')
+			flag = 0;
+	}
+	return (counter);
+}
+
+char	*handle_operators(char *input)
+{
+	char	*parsed_input;
+	int		i;
+	int		j;
+	int		flag;
+
+	parsed_input = malloc(ft_strlen(input) + count_operators(input) * 2 + 1);
+	i = 0;
+	j = 0;
+	flag = 0;
+	while (input[i])
+	{
+		if ((input[i] == '>' || input[i] == '<' || input[i] == '|') && !flag)
+		{
+			parsed_input[j++] = ' ';
+			flag++;
+		}
+		else if (!(input[i] == '>' || input[i] == '<' || input[i] == '|') && flag)
+		{
+			parsed_input[j++] = ' ';
+			flag = 0;
+		}
+		parsed_input[j++] = input[i++];
+	}
+	parsed_input[j] = 0;
+	return (parsed_input);
+}
+
+int	strip_quotes(char *quoted_str, char *unquoted_str)
+{
+	int		i;
+	int		j;
+	int		envvar;
+	char	last_quote;
+
+	i = 0;
+	j = 0;
+	last_quote = 0;
+	envvar = 1;
+	while (quoted_str[i])
+	{
+		if (last_quote == 39 && quoted_str[i] == '$')
+			envvar = 0;
+		if ((quoted_str[i] == 39 || quoted_str[i] == 34) && last_quote == 0)
+			last_quote = quoted_str[i];
+		else if (quoted_str[i] == last_quote)
+			last_quote = 0;
+		else
+			unquoted_str[j++] = quoted_str[i];
+		i++;
+	}
+	unquoted_str[j] = 0;
+	if (last_quote)
+		return (-1);
+	return (envvar);
+}
+
+int	handle_input(t_minishell *shell, char *input) 
+{
+	t_token	*tokens = lexer(handle_operators(input));
 	if (!tokens)
 	{
 		ft_printf("ERROR generating tokens");
@@ -27,7 +107,7 @@ int	handle_input(char *input, t_minishell *shell)
 		free_tokens(tokens);
 		return (-1);
 	}
-	execute_ast_command(ast, shell);
+	execute_ast_command(shell, ast);
 	free_ast(ast);
 	free_tokens(tokens);
 	return(1);

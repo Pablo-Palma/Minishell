@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
+/*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 11:24:43 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/09 10:29:12 by pabpalma         ###   ########.fr       */
+/*   Updated: 2023/12/18 21:03:22 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	process_export(t_minishell *shell, const char *arg)
 	}
 	if (tokens[0])
 	{
-		unset_command(tokens, shell);
+		unset_command(shell, tokens);
 		if (tokens[1])
 			add_var_envp(shell, arg);
 		else
@@ -68,13 +68,12 @@ int	process_export(t_minishell *shell, const char *arg)
 	return (status);
 }
 
-int	export_command(char **args, t_minishell *shell)
+int	export_command(t_minishell *shell, char **args)
 {
 	int			i;
 	int			ret;
 	int			status;
 
-	(void)shell;
 	ret = 0;
 	i = 0;
 	status = 0;

@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/07 11:19:25 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/07 12:18:21 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ typedef enum t_type
 	AST_SUBSHELL,
 	AST_REDIRECT_IN,
 	AST_REDIRECT_OUT,
-	AST_APPEND,
+	AST_FILE,
 	AST_HEREDOC,
 }	t_type;
 
@@ -38,6 +38,7 @@ typedef struct s_token
 {
 	t_type			type;
 	char			*value;
+	int				envvar;
 	struct s_token	*next;
 	struct s_token	*prev;
 }					t_token;
@@ -61,6 +62,7 @@ typedef struct s_minishell
 	char		*input_line;
 	char		*executable_path;
 	t_ast_node	*ast;
+	int			last_cmd;
 }	t_minishell;
 
 ///###   AST
@@ -93,24 +95,25 @@ int			minishell(char **envp, char *executable_path);
 void		setup_signal_handlers(void);
 
 ///###   BUILTIN
-int			handle_builtin(char **cmd_args, t_minishell *shell);
+int			handle_builtin(t_minishell *shell, char **cmd_args);
 void		echo_command(char **cmd_args);
 void		cd_command(char **cmd_args);
 void		pwd_command(void);
-int			export_command(char **cmd_args, t_minishell *shell);
-int			unset_command(char **args, t_minishell *shell);
+int			export_command(t_minishell *shell, char **cmd_args);
+int			unset_command(t_minishell *shell, char **args);
 void		env_command(t_minishell *shell);
-int			exit_command(char **cmd_args, t_minishell *shell);
+int			exit_command(t_minishell *shell, char **cmd_args);
 
 ///###	PIPE
-void		execute_single_cmd(t_minishell *shell, t_ast_node *cmd_node,
-				int input, int output);
-void		execute_ast_pipe(t_ast_node *cmd_node, t_minishell *shell);
+void		execute_single_cmd(t_minishell *shell, t_ast_node *cmd_node);
+void		execute_ast_pipe(t_minishell *shell, t_ast_node *cmd_node);
 void		create_pipe(int pipes[2]);
 
 ///###	INPUT
-int			handle_input(char *input, t_minishell *shell);
+int			handle_input(t_minishell *shell, char *input);
+int			handle_redirect(t_minishell *shell, t_ast_node *cmd_node);
 int			ft_tablen(char **tab);
+int			strip_quotes(char *quoted_str, char *unquoted_str);
 void		handle_error(const char *msg, int use_perror, int error_code);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
+/*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 19:12:18 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/18 11:43:35 by pabpalma         ###   ########.fr       */
+/*   Updated: 2023/12/18 18:03:46 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,10 @@ volatile sig_atomic_t g_sigint_recived = 0;
 void	handle_sigint(int sig)
 {
 	(void)sig;
-	
+	printf("\n");
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
 	g_sigint_recived = 1;
 }
 
