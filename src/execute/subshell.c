@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   subshell.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
+/*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/07 10:23:34 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/07 11:58:59 by pabpalma         ###   ########.fr       */
+/*   Created: 2024/01/07 12:45:38 by jbaeza-c          #+#    #+#             */
+/*   Updated: 2024/01/07 13:00:22 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include "minishell.h"
 
-void	execute_subshell(t_minishell	*shell)
+void	execute_subshell(t_minishell *shell)
 {
 	pid_t pid;
 	int	status;
