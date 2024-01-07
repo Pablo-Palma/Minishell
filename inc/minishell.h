@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/18 11:42:30 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/07 11:19:25 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,13 @@ typedef struct s_ast_node
 typedef struct s_minishell
 {
 	char		**envp;
+	char		**og_envp;
 	int			fd_in;
 	int			fd_out;
 	int			input_redirect;
 	int			output_redirect;
 	char		*input_line;
+	char		*executable_path;
 	t_ast_node	*ast;
 }	t_minishell;
 
@@ -82,9 +84,10 @@ char		*get_path(char *cmd, const char *env_path);
 ///###   EXECUTE
 void		execute_ast_command(t_ast_node *node, t_minishell *shell);
 void		execute_single_command(char *value, t_minishell *shell);
+void		execute_subshell(t_minishell	*shell);
 
 ///###	MINISHELL
-int			minishell(char **envp);
+int			minishell(char **envp, char *executable_path);
 
 ///###   SIGNAL
 void		setup_signal_handlers(void);

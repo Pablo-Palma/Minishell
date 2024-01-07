@@ -9,6 +9,7 @@ OBJ_DIR = obj/
 SRCS = $(SRC_DIR)main/main.c \
        $(SRC_DIR)main/minishell.c \
        $(SRC_DIR)execute/execute.c \
+       $(SRC_DIR)execute/subshell.c \
        $(SRC_DIR)shared/get_path.c \
        $(SRC_DIR)shared/command_split.c \
        $(SRC_DIR)shared/utils.c \

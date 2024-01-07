@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:11:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/16 15:45:42 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/07 10:35:21 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,12 @@ void	execute_single_command(char *value, t_minishell *shell)
 	if (!value || !shell)
 		return ;
 	args = split_cmd(value, " ");
+	if (ft_strncmp(args[0], "./minishell", 11) == 0)
+	{
+		execute_subshell(shell);
+		ft_free_arrays(args);
+		return ;
+	}
 	if (handle_builtin(&args[0], shell))
 	{
 		return ;
