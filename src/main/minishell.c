@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:21:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/07 13:00:39 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/07 19:00:16 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ int	minishell(char **envp, char *executable_path)
 	while (1)
 	{
 		input = readline("minishell> ");
-	
 		if (g_sigint_recived)
 		{
 			g_sigint_recived = 0;

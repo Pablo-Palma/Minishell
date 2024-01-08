@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 22:53:13 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/03 11:47:08 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/07 18:15:55 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,12 +95,30 @@ int	strip_quotes(char *quoted_str, char *unquoted_str)
 int	handle_input(t_minishell *shell, char *input) 
 {
 	t_token	*tokens = lexer(handle_operators(input));
+	t_ast_node	*ast;
+	t_token		*current_token = 0;
+	t_token		*delimiter_token = 0;
 	if (!tokens)
 	{
 		ft_printf("ERROR generating tokens");
 		return (-1);
 	}
-	t_ast_node *ast = build_ast(tokens);
+	current_token = tokens;
+	while (current_token != NULL)
+	{
+		if (current_token->type == AST_HEREDOC)
+		{
+			delimiter_token = current_token->next;
+			if (delimiter_token && delimiter_token->type == AST_HEREDOC_DELIM)
+			{
+				proccess_heredoc(shell, delimiter_token->value);
+				current_token = current_token->next;
+			}
+		}
+		else
+			current_token = current_token->next;
+	}
+	ast = build_ast(tokens);
 	if (!ast)
 	{
 		ft_printf("ERROR building AST");
@@ -110,5 +128,5 @@ int	handle_input(t_minishell *shell, char *input)
 	execute_ast_command(shell, ast);
 	free_ast(ast);
 	free_tokens(tokens);
-	return(1);
+	return (1);
 }

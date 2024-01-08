@@ -6,7 +6,7 @@
 /*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 17:24:17 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/17 17:41:16 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/08 08:29:02 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # include <unistd.h>
 # include <limits.h>
 # include "ft_printf.h"
-# include "get_next_line.h"
+//# include "get_next_line.h"
 # include "get_next_line_bonus.h"
 
 //Estructura para la lista enlazada

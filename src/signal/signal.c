@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 19:12:18 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/18 18:03:46 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/07 13:24:46 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	handle_sigint(int sig)
 	(void)sig;
 	printf("\n");
 	rl_on_new_line();
-	rl_replace_line("", 0);
+	//rl_replace_line("", 0);
 	rl_redisplay();
 	g_sigint_recived = 1;
 }

@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/07 13:01:28 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/08 08:49:10 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef enum t_type
 	AST_REDIRECT_OUT,
 	AST_FILE,
 	AST_HEREDOC,
+	AST_HEREDOC_DELIM,
 }	t_type;
 
 typedef struct s_token
@@ -47,6 +48,7 @@ typedef struct s_ast_node
 {
 	t_type				type;
 	char				*value;
+	char				*delimiter;
 	struct s_ast_node	*left;
 	struct s_ast_node	*right;
 }	t_ast_node;
@@ -88,6 +90,8 @@ char		*get_path(char *cmd, const char *env_path);
 void		execute_ast_command(t_minishell *shell,t_ast_node *node);
 void		execute_single_command(t_minishell *shell, char *value);
 void		execute_subshell(t_minishell	*shell);
+void    	read_from_stdin(const char *delimiter, int write_fd);
+void		proccess_heredoc(t_minishell *shell, char *delimiter);
 
 ///###	MINISHELL
 int			minishell(char **envp, char *executable_path);
@@ -110,6 +114,7 @@ int			exit_command(t_minishell *shell, char **cmd_args);
 void		execute_single_cmd(t_minishell *shell, t_ast_node *cmd_node);
 void		execute_ast_pipe(t_minishell *shell, t_ast_node *cmd_node);
 void		create_pipe(int pipes[2]);
+void	handle_fd(t_minishell *shell);
 
 ///###	INPUT
 int			handle_input(t_minishell *shell, char *input);

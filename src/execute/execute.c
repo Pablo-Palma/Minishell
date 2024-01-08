@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:11:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/07 13:04:54 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/08 11:04:47 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,11 @@ void	execute_single_command(t_minishell *shell, char *value)
 		perror("Fork Error");
 	else if (pid == 0)
 	{
+		if (shell->fd_read != STDIN_FILENO)
+		{
+			dup2(shell->fd_read, STDIN_FILENO);
+			close(shell->fd_read);
+		}
 		if (execve(path, args, shell->envp) == -1)
 		{
 			perror("Execve Error");
@@ -60,7 +65,11 @@ void	execute_single_command(t_minishell *shell, char *value)
 		}
 	}
 	else
+	{
+		if (shell->fd_read != STDIN_FILENO)
+			close(shell->fd_read);
 		waitpid(pid, &status, 0);
+	}
 	free(path);
 	ft_free_arrays(args);
 }

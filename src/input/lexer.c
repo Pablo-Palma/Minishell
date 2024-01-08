@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:37:07 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/03 11:24:11 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/08 11:14:05 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,19 @@ t_token	*lexer(char *input)
 		{
 			add_token_back(&tokens, create_token(AST_REDIRECT_OUT, split_input[i]));
 			i++;
+		}	
+		else if (token_type(split_input[i]) == AST_HEREDOC)
+		{
+			add_token_back(&tokens, create_token(AST_HEREDOC, split_input[i]));
+			i++;
+			while (split_input[i] != NULL && ft_strlen(split_input[i]) == 0)
+				i++;
+			if (split_input[i] != NULL)
+			{
+				add_token_back(&tokens, create_token(AST_HEREDOC_DELIM,
+					split_input[i]));
+				i++;
+			}
 		}	
 		else
 		{
