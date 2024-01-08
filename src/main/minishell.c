@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:21:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/07 19:00:16 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/08 18:53:35 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	minishell(char **envp, char *executable_path)
 		if (!input)
 		{
 			ft_printf("%s\n", "EOF recibido. Saliendo...\n");
-			break;
+			break ;
 		}
 		if (*input)
 		{

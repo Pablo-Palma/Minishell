@@ -6,25 +6,25 @@
 /*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 16:45:29 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/08 11:25:31 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/08 18:45:07 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+//
 void	proccess_heredoc(t_minishell *shell, char *delimiter)
 {
 	create_pipe(shell->pipes);
 	shell->fd_write = shell->pipes[1];
 	shell->fd_read = shell->pipes[0];
-
 	read_from_stdin(delimiter, shell->fd_write);
 	close(shell->pipes[1]);
 }
 
 void	read_from_stdin(const char *delimiter, int write_fd)
 {
-	char *line;
+	char	*line;
 
 	while (1)
 	{

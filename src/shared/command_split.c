@@ -6,7 +6,7 @@
 /*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 18:27:38 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/07 12:58:23 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/08 18:54:52 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ static int	count_args(const char *cmd, const char *delimiters)
 			in_single_quote = !in_single_quote;
 		else if (*cmd == '\"' && !in_single_quote)
 			in_double_quote = !in_double_quote;
-		else if (!in_single_quote && !in_double_quote &&ft_strchr(delimiters, *cmd) != NULL)
+		else if (!in_single_quote && !in_double_quote
+			&& ft_strchr(delimiters, *cmd) != NULL)
 			count++;
 		cmd++;
 	}
@@ -53,7 +54,8 @@ static char	*copy_arg(const char **src, const char *delimiters)
 			in_single_quote = !in_single_quote;
 		if (*end == '\"' && !in_single_quote)
 			in_double_quote = !in_double_quote;
-		else if (!in_single_quote && !in_double_quote && ft_strchr(delimiters, *end)  != NULL)
+		else if (!in_single_quote && !in_double_quote
+			&& ft_strchr(delimiters, *end) != NULL)
 			break ;
 		end++;
 	}
