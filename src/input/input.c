@@ -6,29 +6,186 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 22:53:13 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2023/12/17 18:15:25 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/09 12:24:56 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	handle_input(char *input, t_minishell *shell) 
+int	count_operators(char *input)
 {
-	t_token	*tokens = lexer(input);
+	int	flag;
+	int	counter;
+	int	i;
+
+	flag = 0;
+	counter = 0;
+	i = -1;
+	while (input[++i])
+	{
+		if ((input[i] == '>' || input[i] == '<' || input[i] == '|') && !flag)
+		{
+			counter++;
+			flag++;
+		}
+		else if (input[i] != '>' && input[i] != '<')
+			flag = 0;
+	}
+	return (counter);
+}
+
+char	*handle_operators(char *input)
+{
+	char	*parsed_input;
+	int		i;
+	int		j;
+	int		flag;
+
+	parsed_input = malloc(ft_strlen(input) + count_operators(input) * 2 + 1);
+	i = 0;
+	j = 0;
+	flag = 0;
+	while (input[i])
+	{
+		if ((input[i] == '>' || input[i] == '<' || input[i] == '|') && !flag)
+		{
+			parsed_input[j++] = ' ';
+			flag++;
+		}
+		else if (!(input[i] == '>' || input[i] == '<' || input[i] == '|') && flag)
+		{
+			parsed_input[j++] = ' ';
+			flag = 0;
+		}
+		parsed_input[j++] = input[i++];
+	}
+	parsed_input[j] = 0;
+	return (parsed_input);
+}
+
+int	strip_quotes(char *quoted_str, char *unquoted_str)
+{
+	int		i;
+	int		j;
+	int		envvar;
+	char	last_quote;
+
+	i = 0;
+	j = 0;
+	last_quote = 0;
+	envvar = 1;
+	while (quoted_str[i])
+	{
+		if (last_quote == 39 && quoted_str[i] == '$')
+			envvar = 0;
+		if ((quoted_str[i] == 39 || quoted_str[i] == 34) && last_quote == 0)
+			last_quote = quoted_str[i];
+		else if (quoted_str[i] == last_quote)
+			last_quote = 0;
+		else
+			unquoted_str[j++] = quoted_str[i];
+		i++;
+	}
+	unquoted_str[j] = 0;
+	if (last_quote)
+		return (-1);
+	return (envvar);
+}
+
+void	switch_envp(t_minishell *shell, char **tab, int i)
+{
+	int	j;
+	int	k;
+
+	j = 0;
+	if (!tab[i][1])
+		return ;
+	while (shell->envp[j])
+	{
+		if (!ft_strncmp(&tab[i][1], shell->envp[j], ft_strlen(tab[i]) - 1))
+		{
+			free(tab[i]);
+			k = 0;
+			while (shell->envp[j][k] != '=')
+				k++;
+			k++;
+			tab[i] = ft_strdup(&(shell->envp[j][k]));
+			return ;
+		}
+		j++;
+	}
+	free(tab[i]);
+	tab[i] = ft_strdup("");
+}
+
+void	handle_envp(t_minishell *shell, t_token *node)
+{
+	t_token	*token;
+	char	**tab;
+	int		i;
+
+	token = node;
+	while (token)
+	{
+		if (token->envvar)
+		{
+			tab = ft_split(token->value, ' ');
+			free(token->value);
+			i = -1;
+			while (tab[++i])
+				if (tab[i][0] == '$')
+					switch_envp(shell, tab, i);
+			token->value = ft_strdup(tab[0]);
+			i = 0;
+			while (tab[++i])
+			{
+				token->value = ft_strjoin(token->value, " ");
+				token->value = ft_strjoin(token->value, tab[i]);
+			}
+			ft_free_arrays(tab);
+		}
+		token = token->next;
+	}
+}
+
+int	handle_input(t_minishell *shell, char *input) 
+{
+	t_token		*tokens;
+	t_ast_node	*ast;
+	t_token		*current_token;
+	t_token		*delimiter_token;
+
+	tokens = lexer(handle_operators(input));
+	handle_envp(shell, tokens);
 	if (!tokens)
 	{
 		ft_printf("ERROR generating tokens");
 		return (-1);
 	}
-	t_ast_node *ast = build_ast(tokens);
+	current_token = tokens;
+	while (current_token != NULL)
+	{
+		if (current_token->type == AST_HEREDOC)
+		{
+			delimiter_token = current_token->next;
+			if (delimiter_token && delimiter_token->type == AST_HEREDOC_DELIM)
+			{
+				proccess_heredoc(shell, delimiter_token->value);
+				current_token = current_token->next;
+			}
+		}
+		else
+			current_token = current_token->next;
+	}
+	ast = build_ast(tokens);
 	if (!ast)
 	{
 		ft_printf("ERROR building AST");
 		free_tokens(tokens);
 		return (-1);
 	}
-	execute_ast_command(ast, shell);
+	execute_ast_command(shell, ast);
 	free_ast(ast);
 	free_tokens(tokens);
-	return(1);
+	return (1);
 }

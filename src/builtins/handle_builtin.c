@@ -6,15 +6,14 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 08:14:43 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/09 14:17:33 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2023/12/18 21:01:51 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	handle_builtin(char **cmd_args, t_minishell *shell)
+int	handle_builtin(t_minishell *shell, char **cmd_args)
 {
-	(void)shell;
 	if (strncmp(cmd_args[0], "echo", 4) == 0)
 	{
 		echo_command(cmd_args);
@@ -32,12 +31,12 @@ int	handle_builtin(char **cmd_args, t_minishell *shell)
 	}
 	else if (strncmp(cmd_args[0], "export", 6) == 0)
 	{
-		export_command(&cmd_args[1], shell);
+		export_command(shell, &cmd_args[1]);
 		return (1);
 	}
 	else if (strncmp(cmd_args[0], "unset", 5) == 0)
 	{
-		unset_command(&cmd_args[1], shell);
+		unset_command(shell, &cmd_args[1]);
 		return (1);
 	}
 	else if (strncmp(cmd_args[0], "env", 3) == 0)
@@ -46,6 +45,6 @@ int	handle_builtin(char **cmd_args, t_minishell *shell)
 		return (1);
 	}
 	else if (strncmp(cmd_args[0], "exit", 4) == 0)
-		exit_command(cmd_args, shell);
+		exit_command(shell, cmd_args);
 	return (0);
 }

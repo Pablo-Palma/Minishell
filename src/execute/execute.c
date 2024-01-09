@@ -6,13 +6,13 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:11:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/16 15:45:42 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/09 12:51:05 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	execute_ast_command(t_ast_node *node, t_minishell *shell)
+void	execute_ast_command(t_minishell *shell, t_ast_node *node)
 {
 	if (node == NULL || shell == NULL)
 	{
@@ -20,12 +20,12 @@ void	execute_ast_command(t_ast_node *node, t_minishell *shell)
 		return ;
 	}
 	if (node->type == AST_COMMAND)
-		execute_single_command(node->value, shell);
-	if (node->type == AST_PIPE)
-		execute_ast_pipe(node, shell);
+		execute_single_command(shell, node->value);
+	else
+		execute_ast_pipe(shell, node);
 }
 
-void	execute_single_command(char *value, t_minishell *shell)
+void	execute_single_command(t_minishell *shell, char *value)
 {
 	pid_t	pid;
 	int		status;
@@ -35,7 +35,13 @@ void	execute_single_command(char *value, t_minishell *shell)
 	if (!value || !shell)
 		return ;
 	args = split_cmd(value, " ");
-	if (handle_builtin(&args[0], shell))
+	if (ft_strncmp(args[0], "./minishell", 11) == 0)
+	{
+		execute_subshell(shell);
+		ft_free_arrays(args);
+		return ;
+	}
+	if (handle_builtin(shell, &args[0]))
 	{
 		return ;
 	}
@@ -47,6 +53,11 @@ void	execute_single_command(char *value, t_minishell *shell)
 		perror("Fork Error");
 	else if (pid == 0)
 	{
+		if (shell->fd_read != STDIN_FILENO)
+		{
+			dup2(shell->fd_read, STDIN_FILENO);
+			close(shell->fd_read);
+		}
 		if (execve(path, args, shell->envp) == -1)
 		{
 			perror("Execve Error");
@@ -54,7 +65,11 @@ void	execute_single_command(char *value, t_minishell *shell)
 		}
 	}
 	else
+	{
+		if (shell->fd_read != STDIN_FILENO)
+			close(shell->fd_read);
 		waitpid(pid, &status, 0);
+	}
 	free(path);
 	ft_free_arrays(args);
 }

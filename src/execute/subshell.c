@@ -1,27 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   subshell.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/06 10:28:52 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/08 18:47:58 by pabpalma         ###   ########.fr       */
+/*   Created: 2024/01/07 12:45:38 by jbaeza-c          #+#    #+#             */
+/*   Updated: 2024/01/08 18:51:41 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include "minishell.h"
 
-/*void leaks()
+void	execute_subshell(t_minishell *shell)
 {
-	system("leaks -q minishell");
-}*/
+	pid_t	pid;
+	int		status;
+	char	*args[2];
 
-int	main(int argc, char **argv, char **envp)
-{
-	if (argc == 1)
-		minishell(envp, argv[0]);
+	pid = fork();
+	status = 0;
+	args[0] = shell->executable_path;
+	args[1] = NULL;
+	if (pid == -1)
+	{
+		perror("fork");
+		return ;
+	}
+	if (pid == 0)
+	{
+		if (execve(shell->executable_path, args, shell->og_envp) == -1)
+		{
+			perror ("execve");
+			exit(EXIT_FAILURE);
+		}
+	}
 	else
-		ft_printf("Incorrect input. Please, execute as follows: ./minishell\n");
-	return (0);
+	{
+		waitpid(pid, &status, 0);
+	}
 }
