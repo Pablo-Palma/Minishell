@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 22:53:13 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/09 12:24:56 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/10 00:23:34 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,7 +159,7 @@ int	handle_input(t_minishell *shell, char *input)
 	handle_envp(shell, tokens);
 	if (!tokens)
 	{
-		ft_printf("ERROR generating tokens");
+		ft_printf("ERROR generating tokens\n");
 		return (-1);
 	}
 	current_token = tokens;
@@ -180,7 +180,7 @@ int	handle_input(t_minishell *shell, char *input)
 	ast = build_ast(tokens);
 	if (!ast)
 	{
-		ft_printf("ERROR building AST");
+		ft_printf("ERROR building AST\n");
 		free_tokens(tokens);
 		return (-1);
 	}
