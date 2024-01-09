@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/03 11:19:29 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/09 13:17:35 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	handle_fd(t_minishell *shell)
 {
 	if (dup2(shell->fd_read, STDIN_FILENO) == -1)
 			handle_error("Error in dup2", 1, EXIT_FAILURE);
-	if (!shell->last_cmd)
+	if (!shell->last_cmd || shell->output_redirect)
 		if (dup2(shell->fd_write, STDOUT_FILENO) == -1)
 			handle_error("Error in dup2", 1, EXIT_FAILURE);
 	close(shell->fd_read);

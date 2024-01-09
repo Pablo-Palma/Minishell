@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/08 08:49:10 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/08 12:16:17 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ int			exit_command(t_minishell *shell, char **cmd_args);
 void		execute_single_cmd(t_minishell *shell, t_ast_node *cmd_node);
 void		execute_ast_pipe(t_minishell *shell, t_ast_node *cmd_node);
 void		create_pipe(int pipes[2]);
-void	handle_fd(t_minishell *shell);
+void		handle_fd(t_minishell *shell);
 
 ///###	INPUT
 int			handle_input(t_minishell *shell, char *input);
@@ -122,5 +122,6 @@ int			handle_redirect(t_minishell *shell, t_ast_node *cmd_node);
 int			ft_tablen(char **tab);
 int			strip_quotes(char *quoted_str, char *unquoted_str);
 void		handle_error(const char *msg, int use_perror, int error_code);
+char		*ft_join(char *s1, char *s2);
 
 #endif
