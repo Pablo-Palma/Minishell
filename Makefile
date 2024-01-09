@@ -1,6 +1,6 @@
 NAME = minishell
 CC = gcc -g3
-CFLAGS = -Wall -Werror -Wextra -I libft/inc -I inc -fsanitize=address
+CFLAGS = -Wall -Werror -Wextra -I libft/inc -I inc
 LIBFT_DIR = libft
 LIBFT_LIB = $(LIBFT_DIR)/libft.a
 SRC_DIR = src/

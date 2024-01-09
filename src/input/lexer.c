@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:37:07 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/08 11:14:05 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/09 12:24:46 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,14 +66,22 @@ t_token	*lexer(char *input)
 	char	*temp;
 	char	*command;
 	int		i;
+	int		is_file;
 
 	i = 0;
-	split_input = split_cmd(input, " ");
+	is_file = 0;
+	split_input = ft_split(input, ' ');
 	tokens = NULL;
 	temp = NULL;
 	while (split_input[i] != NULL)
 	{
-		if (token_type(split_input[i]) == AST_PIPE)
+		if (is_file)
+		{
+			add_token_back(&tokens, create_token(AST_FILE, split_input[i]));
+			i++;
+			is_file = 0;
+		}
+		else if (token_type(split_input[i]) == AST_PIPE)
 		{
 			add_token_back(&tokens, create_token(AST_PIPE, split_input[i]));
 			i++;
@@ -82,11 +90,13 @@ t_token	*lexer(char *input)
 		{
 			add_token_back(&tokens, create_token(AST_REDIRECT_IN, split_input[i]));
 			i++;
+			is_file++;
 		}
 		else if (token_type(split_input[i]) == AST_REDIRECT_OUT)
 		{
 			add_token_back(&tokens, create_token(AST_REDIRECT_OUT, split_input[i]));
 			i++;
+			is_file++;
 		}	
 		else if (token_type(split_input[i]) == AST_HEREDOC)
 		{

@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 22:53:13 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/07 18:15:55 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/09 12:24:56 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,12 +92,71 @@ int	strip_quotes(char *quoted_str, char *unquoted_str)
 	return (envvar);
 }
 
+void	switch_envp(t_minishell *shell, char **tab, int i)
+{
+	int	j;
+	int	k;
+
+	j = 0;
+	if (!tab[i][1])
+		return ;
+	while (shell->envp[j])
+	{
+		if (!ft_strncmp(&tab[i][1], shell->envp[j], ft_strlen(tab[i]) - 1))
+		{
+			free(tab[i]);
+			k = 0;
+			while (shell->envp[j][k] != '=')
+				k++;
+			k++;
+			tab[i] = ft_strdup(&(shell->envp[j][k]));
+			return ;
+		}
+		j++;
+	}
+	free(tab[i]);
+	tab[i] = ft_strdup("");
+}
+
+void	handle_envp(t_minishell *shell, t_token *node)
+{
+	t_token	*token;
+	char	**tab;
+	int		i;
+
+	token = node;
+	while (token)
+	{
+		if (token->envvar)
+		{
+			tab = ft_split(token->value, ' ');
+			free(token->value);
+			i = -1;
+			while (tab[++i])
+				if (tab[i][0] == '$')
+					switch_envp(shell, tab, i);
+			token->value = ft_strdup(tab[0]);
+			i = 0;
+			while (tab[++i])
+			{
+				token->value = ft_strjoin(token->value, " ");
+				token->value = ft_strjoin(token->value, tab[i]);
+			}
+			ft_free_arrays(tab);
+		}
+		token = token->next;
+	}
+}
+
 int	handle_input(t_minishell *shell, char *input) 
 {
-	t_token	*tokens = lexer(handle_operators(input));
+	t_token		*tokens;
 	t_ast_node	*ast;
-	t_token		*current_token = 0;
-	t_token		*delimiter_token = 0;
+	t_token		*current_token;
+	t_token		*delimiter_token;
+
+	tokens = lexer(handle_operators(input));
+	handle_envp(shell, tokens);
 	if (!tokens)
 	{
 		ft_printf("ERROR generating tokens");
