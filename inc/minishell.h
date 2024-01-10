@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/08 12:16:17 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/10 10:49:34 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ void		setup_signal_handlers(void);
 
 ///###   BUILTIN
 int			handle_builtin(t_minishell *shell, char **cmd_args);
+int			handle_special_builtin(t_minishell *shell, char **cmd_args);
 void		echo_command(char **cmd_args);
 void		cd_command(char **cmd_args);
 void		pwd_command(void);

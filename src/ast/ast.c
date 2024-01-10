@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 13:32:58 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/09 13:12:25 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/10 10:43:21 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,19 @@ t_ast_node	*build_ast(t_token *tokens)
 	}
 	if (redirect_out)
 	{
-		current = root;
-		while (current->right->right)
-			current = current->right;
-		redirect_out->right = current->right;
-		current->right = redirect_out;
+		if (root->type == AST_COMMAND)
+		{
+			redirect_out->right = root;
+			root = redirect_out;
+		}
+		else
+		{
+			current = root;
+			while (current->right->right)
+				current = current->right;
+			redirect_out->right = current->right;
+			current->right = redirect_out;
+		}
 	}
 	return (root);
 }
