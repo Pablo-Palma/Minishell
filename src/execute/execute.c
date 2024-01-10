@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:11:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/10 10:56:16 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/10 14:07:14 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,32 @@ void	execute_ast_command(t_minishell *shell, t_ast_node *node)
 		perror("Nodo AST or Shell as NULL");
 		return ;
 	}
-	execute_ast_pipe(shell, node);
+	if (node->type == AST_COMMAND)
+		execute_single_command(shell, node->value);
+	else if (node->type == AST_REDIRECT_OUT)
+		execute_output_redirect(shell, node);
+	else
+		execute_ast_pipe(shell, node);
+}
+
+void	execute_output_redirect(t_minishell *shell, t_ast_node *node)
+{
+	pid_t	pid;
+	int		fd_out;
+
+	pid = fork();
+	if (!pid)
+	{
+		if (ft_strncmp(node->value, ">>", 2) == 0)
+			fd_out = open(node->left->value, O_WRONLY | O_CREAT | O_APPEND, 0777);
+		else
+			fd_out = open(node->left->value, O_WRONLY | O_CREAT | O_TRUNC, 0777);
+		dup2(fd_out, STDOUT_FILENO);
+		execute_single_command(shell, node->right->value);
+		exit(0);
+	}
+	waitpid(pid, 0, 0);
+	return;
 }
 
 void	execute_single_command(t_minishell *shell, char *value)

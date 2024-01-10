@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/10 10:49:34 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/10 14:08:11 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ char		*get_path(char *cmd, const char *env_path);
 
 ///###   EXECUTE
 void		execute_ast_command(t_minishell *shell,t_ast_node *node);
+void		execute_output_redirect(t_minishell *shell, t_ast_node *node);
 void		execute_single_command(t_minishell *shell, char *value);
 void		execute_subshell(t_minishell	*shell);
 void    	read_from_stdin(const char *delimiter, int write_fd);
