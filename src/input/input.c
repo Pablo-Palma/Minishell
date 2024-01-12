@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 22:53:13 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/10 00:23:34 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/12 22:16:34 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,5 +187,9 @@ int	handle_input(t_minishell *shell, char *input)
 	execute_ast_command(shell, ast);
 	free_ast(ast);
 	free_tokens(tokens);
+	shell->fd_read = 0;
+	shell->fd_write = 1;
+	shell->input_redirect = 0;
+	shell->output_redirect = 0;
 	return (1);
 }

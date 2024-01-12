@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/10 13:47:13 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/12 22:15:50 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,10 @@
 
 void	handle_fd(t_minishell *shell)
 {
+	if (shell->fd_read)
 	if (dup2(shell->fd_read, STDIN_FILENO) == -1)
 			handle_error("Error in dup2", 1, EXIT_FAILURE);
-	if (!shell->last_cmd || shell->output_redirect)
+	if ((!shell->last_cmd || shell->output_redirect) && shell->fd_write != 1)
 		if (dup2(shell->fd_write, STDOUT_FILENO) == -1)
 			handle_error("Error in dup2", 1, EXIT_FAILURE);
 	close(shell->fd_read);
@@ -72,8 +73,8 @@ void	execute_ast_pipe( t_minishell *shell, t_ast_node *cmd_node)
 		execute_single_cmd(shell, cmd_node);
 	else if (cmd_node->type == AST_PIPE)
 	{
-//		if (pipe(shell->pipes) == -1)
-//			handle_error("Error creating pipe", 1, EXIT_FAILURE);
+		if (pipe(shell->pipes) == -1)
+			handle_error("Error creating pipe", 1, EXIT_FAILURE);
 		shell->fd_write = shell->pipes[1];
 		shell->last_cmd = 0;
 		execute_ast_pipe(shell, cmd_node->left);
