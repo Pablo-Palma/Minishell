@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/12 22:15:50 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/12 22:26:37 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,8 @@ void	execute_ast_pipe( t_minishell *shell, t_ast_node *cmd_node)
 	if (cmd_node->type == AST_REDIRECT_IN || cmd_node->type == AST_REDIRECT_OUT)
 	{
 		handle_redirect(shell, cmd_node);
-		execute_single_cmd(shell, cmd_node->right);
+		if (cmd_node->right)
+			execute_single_cmd(shell, cmd_node->right);
 	}
 	else if (cmd_node->type == AST_COMMAND)
 		execute_single_cmd(shell, cmd_node);
