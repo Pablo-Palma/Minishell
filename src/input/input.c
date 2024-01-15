@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 22:53:13 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/12 22:16:34 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/15 15:35:16 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ char	*handle_operators(char *input)
 			parsed_input[j++] = ' ';
 			flag++;
 		}
-		else if (!(input[i] == '>' || input[i] == '<' || input[i] == '|') && flag)
+		else if (!(input[i] == '>' || input[i] == '<' || input[i] == '|')
+			&& flag)
 		{
 			parsed_input[j++] = ' ';
 			flag = 0;
@@ -150,7 +151,7 @@ void	handle_envp(t_minishell *shell, t_token *node)
 	}
 }
 
-int	handle_input(t_minishell *shell, char *input) 
+int	handle_input(t_minishell *shell, char *input)
 {
 	t_token		*tokens;
 	t_ast_node	*ast;

@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/12 22:26:37 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/15 15:57:55 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,12 @@
 void	handle_fd(t_minishell *shell)
 {
 	if (shell->fd_read)
-	if (dup2(shell->fd_read, STDIN_FILENO) == -1)
+		if (dup2(shell->fd_read, STDIN_FILENO) == -1)
 			handle_error("Error in dup2", 1, EXIT_FAILURE);
 	if ((!shell->last_cmd || shell->output_redirect) && shell->fd_write != 1)
 		if (dup2(shell->fd_write, STDOUT_FILENO) == -1)
 			handle_error("Error in dup2", 1, EXIT_FAILURE);
 	close(shell->fd_read);
-	//close(shell->fd_write);
 }
 
 void	execute_command_child(t_minishell *shell, t_ast_node *cmd_node)

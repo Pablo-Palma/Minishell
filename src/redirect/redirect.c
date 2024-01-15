@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/13 13:24:33 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/09 13:17:30 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/15 15:47:27 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	output_redirection(t_minishell *shell, t_ast_node *cmd_node)
 {
 	close(shell->fd_write);
 	shell->fd_write = open(cmd_node->value,
-		O_WRONLY | O_CREAT | O_TRUNC, 0777);
+			O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	shell->output_redirect = 1;
 	return (1);
 }
@@ -46,7 +46,7 @@ int	output_append_redirection(t_minishell *shell, t_ast_node *cmd_node)
 {
 	close(shell->fd_write);
 	shell->fd_write = open(cmd_node->value,
-		O_WRONLY | O_CREAT | O_APPEND, 0777);
+			O_WRONLY | O_CREAT | O_APPEND, 0777);
 	shell->output_redirect = 1;
 	return (1);
 }

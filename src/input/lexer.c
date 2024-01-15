@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:37:07 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/09 12:24:46 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/15 15:34:18 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,16 +88,18 @@ t_token	*lexer(char *input)
 		}
 		else if (token_type(split_input[i]) == AST_REDIRECT_IN)
 		{
-			add_token_back(&tokens, create_token(AST_REDIRECT_IN, split_input[i]));
+			add_token_back(&tokens, create_token(AST_REDIRECT_IN,
+					split_input[i]));
 			i++;
 			is_file++;
 		}
 		else if (token_type(split_input[i]) == AST_REDIRECT_OUT)
 		{
-			add_token_back(&tokens, create_token(AST_REDIRECT_OUT, split_input[i]));
+			add_token_back(&tokens, create_token(AST_REDIRECT_OUT,
+					split_input[i]));
 			i++;
 			is_file++;
-		}	
+		}
 		else if (token_type(split_input[i]) == AST_HEREDOC)
 		{
 			add_token_back(&tokens, create_token(AST_HEREDOC, split_input[i]));
@@ -107,10 +109,10 @@ t_token	*lexer(char *input)
 			if (split_input[i] != NULL)
 			{
 				add_token_back(&tokens, create_token(AST_HEREDOC_DELIM,
-					split_input[i]));
+						split_input[i]));
 				i++;
 			}
-		}	
+		}
 		else
 		{
 			command = ft_strdup(split_input[i]);

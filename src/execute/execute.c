@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:11:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/12 22:33:04 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/15 15:54:21 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,18 @@ void	execute_output_redirect(t_minishell *shell, t_ast_node *node)
 	if (!pid)
 	{
 		if (ft_strncmp(node->value, ">>", 2) == 0)
-			fd_out = open(node->left->value, O_WRONLY | O_CREAT | O_APPEND, 0777);
+			fd_out = open(node->left->value, O_WRONLY | O_CREAT
+					| O_APPEND, 0777);
 		else
-			fd_out = open(node->left->value, O_WRONLY | O_CREAT | O_TRUNC, 0777);
+			fd_out = open(node->left->value, O_WRONLY | O_CREAT
+					| O_TRUNC, 0777);
 		dup2(fd_out, STDOUT_FILENO);
 		if (node->right)
 			execute_single_command(shell, node->right->value);
 		exit(0);
 	}
 	waitpid(pid, 0, 0);
-	return;
+	return ;
 }
 
 void	execute_single_command(t_minishell *shell, char *value)

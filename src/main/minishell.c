@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:21:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/12 22:16:02 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/15 15:56:24 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ void	init_minishell(t_minishell *shell, char **envp, char *executable_path)
 	shell->last_cmd = 0;
 	shell->last_exit_status = 0;
 	shell->executable_path = ft_strdup(executable_path);
-	//pipe(shell->pipes);
 }
 
 int	minishell(char **envp, char *executable_path)
