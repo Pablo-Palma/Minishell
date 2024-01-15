@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/10 00:08:57 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/12 22:26:37 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,10 @@
 
 void	handle_fd(t_minishell *shell)
 {
+	if (shell->fd_read)
 	if (dup2(shell->fd_read, STDIN_FILENO) == -1)
 			handle_error("Error in dup2", 1, EXIT_FAILURE);
-	if (!shell->last_cmd || shell->output_redirect)
+	if ((!shell->last_cmd || shell->output_redirect) && shell->fd_write != 1)
 		if (dup2(shell->fd_write, STDOUT_FILENO) == -1)
 			handle_error("Error in dup2", 1, EXIT_FAILURE);
 	close(shell->fd_read);
@@ -66,7 +67,8 @@ void	execute_ast_pipe( t_minishell *shell, t_ast_node *cmd_node)
 	if (cmd_node->type == AST_REDIRECT_IN || cmd_node->type == AST_REDIRECT_OUT)
 	{
 		handle_redirect(shell, cmd_node);
-		execute_single_cmd(shell, cmd_node->right);
+		if (cmd_node->right)
+			execute_single_cmd(shell, cmd_node->right);
 	}
 	else if (cmd_node->type == AST_COMMAND)
 		execute_single_cmd(shell, cmd_node);

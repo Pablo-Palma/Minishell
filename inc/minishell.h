@@ -88,6 +88,7 @@ char		*get_path(char *cmd, const char *env_path);
 
 ///###   EXECUTE
 void		execute_ast_command(t_minishell *shell,t_ast_node *node);
+void		execute_output_redirect(t_minishell *shell, t_ast_node *node);
 void		execute_single_command(t_minishell *shell, char *value);
 void		execute_subshell(t_minishell	*shell);
 void    	read_from_stdin(const char *delimiter, int write_fd);
@@ -102,6 +103,7 @@ void		setup_signal_handlers(void);
 
 ///###   BUILTIN
 int			handle_builtin(t_minishell *shell, char **cmd_args);
+int			handle_special_builtin(t_minishell *shell, char **cmd_args);
 void		echo_command(char **cmd_args);
 void		cd_command(char **cmd_args);
 void		pwd_command(void);
