@@ -38,7 +38,10 @@ int	handle_builtin(t_minishell *shell, char **cmd_args)
 {
 	if (strncmp(cmd_args[0], "echo", 4) == 0)
 	{
-		echo_command(cmd_args);
+		if (cmd_args[1] && ft_strncmp(cmd_args[1], "$?", 2) == 0)
+			printf("%d\n", shell->last_exit_status);
+		else
+			echo_command(cmd_args);
 		return (1);
 	}
 	else if (strncmp(cmd_args[0], "pwd", 3) == 0)

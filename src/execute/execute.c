@@ -96,6 +96,8 @@ void	execute_single_command(t_minishell *shell, char *value)
 		if (shell->fd_read != STDIN_FILENO)
 			close(shell->fd_read);
 		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			shell->last_exit_status = WEXITSTATUS(status);
 	}
 	free(path);
 	ft_free_arrays(args);

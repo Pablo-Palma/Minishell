@@ -31,6 +31,7 @@ int	exit_command(t_minishell *shell, char **cmd_args)
 	else if (ft_isnumeric(cmd_args[1]) && cmd_args[2] == NULL)
 	{
 		exit_code = ft_atoi(cmd_args[1]);
+		printf("exit\n");
 		exit(exit_code);
 	}
 	else

@@ -66,6 +66,7 @@ typedef struct s_minishell
 	char		*input_line;
 	t_ast_node	*ast;
 	int			last_cmd;
+	int			last_exit_status;
 }	t_minishell;
 
 ///###   AST

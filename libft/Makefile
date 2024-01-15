@@ -51,7 +51,7 @@ $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR) $(OBJ_DIR)/$(LIBFT_SRC_DIR)/mand $(OBJ_DIR)/$(LIBFT_SRC_DIR)/bonus $(OBJ_DIR)/$(PRINTF_SRC_DIR) $(OBJ_DIR)/$(GNL_SRC_DIR)
 
 clean:
-	@rm -rf $(OBJ)
+	@rm -rf $(OBJ_DIR)
 
 fclean: clean
 	@rm -f $(NAME)

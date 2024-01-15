@@ -100,6 +100,8 @@ void	switch_envp(t_minishell *shell, char **tab, int i)
 	j = 0;
 	if (!tab[i][1])
 		return ;
+	if (ft_strncmp(tab[i], "$?", 2) == 0)
+		return ;
 	while (shell->envp[j])
 	{
 		if (!ft_strncmp(&tab[i][1], shell->envp[j], ft_strlen(tab[i]) - 1))

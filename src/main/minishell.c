@@ -25,6 +25,7 @@ void	init_minishell(t_minishell *shell, char **envp, char *executable_path)
 	shell->input_line = NULL;
 	shell->ast = NULL;
 	shell->last_cmd = 0;
+	shell->last_exit_status = 0;
 	shell->executable_path = ft_strdup(executable_path);
 	//pipe(shell->pipes);
 }
