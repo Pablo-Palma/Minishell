@@ -91,13 +91,12 @@ char		*get_path(char *cmd, const char *env_path);
 void		execute_ast_command(t_minishell *shell, t_ast_node *node);
 void		execute_output_redirect(t_minishell *shell, t_ast_node *node);
 void		execute_single_command(t_minishell *shell, char *value);
-void		execute_subshell(t_minishell	*shell);
 void		read_from_stdin(const char *delimiter, int write_fd);
 void		proccess_heredoc(t_minishell *shell, char *delimiter);
 
 ///###	MINISHELL
 int			minishell(char **envp, char *executable_path);
-void		execute_subshell(t_minishell *shell);
+void		select_exec(t_minishell *shell, char *command);
 
 ///###   SIGNAL
 void		setup_signal_handlers(void);

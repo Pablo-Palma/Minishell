@@ -59,77 +59,86 @@ t_type	token_type(char *value)
 	return (AST_COMMAND);
 }
 
+t_token	*build_command_token(char **split_input, int *i)
+{
+	char		*command;
+	char		*temp;
+	t_token		*new_token;
+
+	command = ft_strdup(split_input[*i]);
+	if (!command)
+		return (NULL);
+	(*i)++;
+	while (split_input[*i] != NULL && token_type(split_input[*i])
+		== AST_COMMAND)
+	{
+		temp = command;
+		command = ft_strjoin(command, " ");
+		if (!command)
+			return (NULL);
+		free(temp);
+		temp = command;
+		command = ft_strjoin(command, split_input[*i]);
+		if (!command)
+			return (NULL);
+		free(temp);
+		(*i)++;
+	}
+	new_token = create_token(AST_COMMAND, command);
+	free (command);
+	return (new_token);
+}
+
+void	handle_heredoc(char **split_input, int *i, t_token	**tokens)
+{
+	add_token_back(tokens, create_token(AST_HEREDOC, split_input[*i]));
+	(*i)++;
+	while (split_input[*i] != NULL && ft_strlen(split_input[*i]) == 0)
+		(*i)++;
+	if (split_input[*i] != NULL)
+	{
+		add_token_back(tokens, create_token(AST_HEREDOC_DELIM,
+				split_input[*i]));
+		(*i)++;
+	}
+}
+
 t_token	*lexer(char *input)
 {
 	t_token	*tokens;
 	char	**split_input;
-	char	*temp;
-	char	*command;
+	t_token	*command_token;
 	int		i;
 	int		is_file;
+	t_type	current_type;
 
 	i = 0;
 	is_file = 0;
 	split_input = ft_split(input, ' ');
 	tokens = NULL;
-	temp = NULL;
 	while (split_input[i] != NULL)
 	{
+		current_type = token_type(split_input[i]);
 		if (is_file)
 		{
 			add_token_back(&tokens, create_token(AST_FILE, split_input[i]));
 			i++;
 			is_file = 0;
 		}
-		else if (token_type(split_input[i]) == AST_PIPE)
+		else if (current_type == AST_PIPE || current_type == AST_REDIRECT_IN
+			|| current_type == AST_REDIRECT_OUT)
 		{
-			add_token_back(&tokens, create_token(AST_PIPE, split_input[i]));
+			add_token_back(&tokens, create_token(current_type, split_input[i]));
+			is_file = (current_type != AST_PIPE);
 			i++;
 		}
-		else if (token_type(split_input[i]) == AST_REDIRECT_IN)
-		{
-			add_token_back(&tokens, create_token(AST_REDIRECT_IN,
-					split_input[i]));
-			i++;
-			is_file++;
-		}
-		else if (token_type(split_input[i]) == AST_REDIRECT_OUT)
-		{
-			add_token_back(&tokens, create_token(AST_REDIRECT_OUT,
-					split_input[i]));
-			i++;
-			is_file++;
-		}
-		else if (token_type(split_input[i]) == AST_HEREDOC)
-		{
-			add_token_back(&tokens, create_token(AST_HEREDOC, split_input[i]));
-			i++;
-			while (split_input[i] != NULL && ft_strlen(split_input[i]) == 0)
-				i++;
-			if (split_input[i] != NULL)
-			{
-				add_token_back(&tokens, create_token(AST_HEREDOC_DELIM,
-						split_input[i]));
-				i++;
-			}
-		}
+		else if (current_type == AST_HEREDOC)
+			handle_heredoc(split_input, &i, &tokens);
 		else
 		{
-			command = ft_strdup(split_input[i]);
-			i++;
-			while (split_input[i] != NULL
-				&& token_type(split_input[i]) == AST_COMMAND)
-			{
-				temp = command;
-				command = ft_strjoin(command, " ");
-				free(temp);
-				temp = command;
-				command = ft_strjoin(command, split_input[i]);
-				free (temp);
-				i++;
-			}
-			add_token_back(&tokens, create_token(AST_COMMAND, command));
-			free(command);
+			command_token = build_command_token(split_input, &i);
+			if (command_token)
+				add_token_back(&tokens, command_token);
 		}
 	}
 	free(input);

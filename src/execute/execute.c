@@ -50,43 +50,26 @@ void	execute_output_redirect(t_minishell *shell, t_ast_node *node)
 	return ;
 }
 
-void	execute_single_command(t_minishell *shell, char *value)
+void	redirect_stdin(t_minishell *shell)
+{
+	if (shell->fd_read != STDIN_FILENO)
+	{
+		dup2(shell->fd_read, STDIN_FILENO);
+		close(shell->fd_read);
+	}
+}
+
+void	execute_single_cmd_process(t_minishell *shell, char **args, char *path)
 {
 	pid_t	pid;
 	int		status;
-	char	*path;
-	char	**args;
 
-	if (!value || !shell)
-		return ;
-	args = split_cmd(value, " ");
-	if (ft_strncmp(args[0], "./minishell", 11) == 0)
-	{
-		execute_subshell(shell);
-		ft_free_arrays(args);
-		return ;
-	}
-	if (handle_special_builtin(shell, &args[0]))
-	{
-		return ;
-	}
-	if (handle_builtin(shell, &args[0]))
-	{
-		return ;
-	}
-	path = get_path(args[0], getenv("PATH"));
-	if (!path)
-		perror("Path Error");
 	pid = fork();
 	if (pid == -1)
 		perror("Fork Error");
 	else if (pid == 0)
 	{
-		if (shell->fd_read != STDIN_FILENO)
-		{
-			dup2(shell->fd_read, STDIN_FILENO);
-			close(shell->fd_read);
-		}
+		redirect_stdin(shell);
 		if (execve(path, args, shell->envp) == -1)
 		{
 			perror("Execve Error");
@@ -95,12 +78,34 @@ void	execute_single_command(t_minishell *shell, char *value)
 	}
 	else
 	{
-		if (shell->fd_read != STDIN_FILENO)
-			close(shell->fd_read);
+		redirect_stdin(shell);
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 			shell->last_exit_status = WEXITSTATUS(status);
 	}
-	free(path);
+}
+
+void	execute_single_command(t_minishell *shell, char *value)
+{
+	char	**args;
+	char	*path;
+
+	if (!value || !shell)
+		return ;
+	args = split_cmd(value, " ");
+	if (ft_strncmp(args[0], "./", 2) == 0)
+		select_exec(shell, args[0]);
+	else if (!handle_special_builtin(shell, args)
+		&& !handle_builtin(shell, args))
+	{
+		path = get_path(args[0], getenv("PATH"));
+		if (!path)
+			perror("Path Error: ");
+		else
+		{
+			execute_single_cmd_process(shell, args, path);
+			free(path);
+		}
+	}
 	ft_free_arrays(args);
 }

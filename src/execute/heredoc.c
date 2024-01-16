@@ -12,7 +12,6 @@
 
 #include "minishell.h"
 
-//
 void	proccess_heredoc(t_minishell *shell, char *delimiter)
 {
 	create_pipe(shell->pipes);

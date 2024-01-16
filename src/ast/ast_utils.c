@@ -30,7 +30,7 @@ void	add_token_back(t_token **head, t_token *new_token)
 {
 	t_token	*last;
 
-	if (!head || !new_token) 
+	if (!head || !new_token)
 		return ;
 	if (*head)
 	{
