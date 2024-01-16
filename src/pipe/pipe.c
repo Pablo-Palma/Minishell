@@ -21,6 +21,7 @@ void	handle_fd(t_minishell *shell)
 		if (dup2(shell->fd_write, STDOUT_FILENO) == -1)
 			handle_error("Error in dup2", 1, EXIT_FAILURE);
 	close(shell->fd_read);
+
 }
 
 void	execute_command_child(t_minishell *shell, t_ast_node *cmd_node)

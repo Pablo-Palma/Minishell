@@ -96,7 +96,7 @@ void		proccess_heredoc(t_minishell *shell, char *delimiter);
 
 ///###	MINISHELL
 int			minishell(char **envp, char *executable_path);
-void		select_exec(t_minishell *shell, char *command);
+void		select_exec(t_minishell *shell, char **command);
 
 ///###   SIGNAL
 void		setup_signal_handlers(void);

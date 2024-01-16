@@ -19,6 +19,7 @@
 
 int	main(int argc, char **argv, char **envp)
 {
+	//atexit(leaks);
 	if (argc == 1)
 		minishell(envp, argv[0]);
 	else

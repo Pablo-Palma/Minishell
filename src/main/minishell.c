@@ -45,7 +45,8 @@ int	minishell(char **envp, char *executable_path)
 		}
 		if (!input)
 		{
-			ft_printf("%s\n", "EOF recibido. Saliendo...\n");
+			ft_printf("%s\n", "EOF recibido.\n");
+			free(shell.executable_path);
 			break ;
 		}
 		if (*input)

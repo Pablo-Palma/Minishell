@@ -65,19 +65,16 @@ void	execute_program(t_minishell *shell, char **args)
 	}
 }
 
-void	select_exec(t_minishell *shell, char *command)
+void	select_exec(t_minishell *shell, char **command)
 {
-	char	*args[2];
-
 	if (command == NULL)
 		return ;
-	args[0] = command;
-	args[1] = NULL;
-	if (ft_strncmp(command, "./Minishell", 11) == 0)
+	if (ft_strncmp(command[0], "./Minishell", 11) == 0)
 	{
-		args[0] = shell->executable_path;
-		execute_subshell(shell, args);
+		command[0] = shell->executable_path;
+		command[1] = NULL;
+		execute_subshell(shell, command);
 	}
 	else
-		execute_program(shell, args);
+		execute_program(shell, command);
 }
