@@ -31,7 +31,8 @@ void	read_from_stdin(const char *delimiter, int write_fd)
 		line = get_next_line(STDIN_FILENO);
 		if (!line)
 			break ;
-		if (strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
+		if (strncmp(line, delimiter, ft_strlen(delimiter)) == 0
+			&& line[ft_strlen(delimiter)] == '\n')
 		{
 			free(line);
 			break ;

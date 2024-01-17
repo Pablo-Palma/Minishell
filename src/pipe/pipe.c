@@ -20,7 +20,7 @@ void	handle_fd(t_minishell *shell)
 	if ((!shell->last_cmd || shell->output_redirect) && shell->fd_write != 1)
 		if (dup2(shell->fd_write, STDOUT_FILENO) == -1)
 			handle_error("Error in dup2", 1, EXIT_FAILURE);
-	close(shell->fd_read);
+//	close(shell->fd_read);
 
 }
 

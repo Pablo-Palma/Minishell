@@ -78,7 +78,8 @@ void	execute_single_cmd_process(t_minishell *shell, char **args, char *path)
 	}
 	else
 	{
-		redirect_stdin(shell);
+		if (shell->fd_read != STDIN_FILENO)
+			close(shell->fd_read);
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 			shell->last_exit_status = WEXITSTATUS(status);
