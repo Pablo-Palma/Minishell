@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 13:27:25 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/21 14:52:56 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/17 20:44:53 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,16 @@ t_ast_node	*create_ast_node(t_type type, char *value)
 	node->left = NULL;
 	node->right = NULL;
 	return (node);
+}
+
+t_token	*get_last_token(t_token *token)
+{
+	t_token	*current;
+
+	current = token;
+	while (current->next)
+		current = current->next;
+	return (current);
 }
 
 void	add_token_back(t_token **head, t_token *new_token)
@@ -55,12 +65,6 @@ void	free_tokens(t_token *tokens)
 		free(tokens);
 		tokens = next;
 	}
-}
-
-void	create_pipe(int pipes[2])
-{
-	if (pipe(pipes) == -1)
-		handle_error("Error creating pipe", 1, EXIT_FAILURE);
 }
 
 void	free_ast(t_ast_node *node)

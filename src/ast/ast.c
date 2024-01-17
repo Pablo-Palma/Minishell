@@ -6,89 +6,55 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 13:32:58 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/12 22:32:39 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/17 21:02:22 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+
+static void	insert_redirection(t_ast_node **root, t_ast_node **redirect_in)
+{
+	if (!(*redirect_in))
+		return ;
+	if (!(*root))
+		*root = *redirect_in;
+	else if ((*root)->type == AST_COMMAND)
+	{
+		(*redirect_in)->left = *root;
+		*root = *redirect_in;
+	}
+	else
+	{
+		(*redirect_in)->left = (*root)->left;
+		(*root)->left = *redirect_in;
+	}
+}
+
 t_ast_node	*build_ast(t_token *tokens)
 {
 	t_ast_node	*root;
-	t_ast_node	*current;
-	t_ast_node	*pipe_node;
 	t_ast_node	*file;
 	t_ast_node	*redirect_in;
-	t_ast_node	*redirect_out;
 	t_token		*token_iter;
 
-	token_iter = tokens;
+	token_iter = get_last_token(tokens);
 	root = NULL;
-	file = NULL;
 	redirect_in = NULL;
-	redirect_out = NULL;
-	while (token_iter->next)
-		token_iter = token_iter->next;
-	if (!tokens)
-		return (NULL);
 	while (token_iter)
 	{
-		if (token_iter->type == AST_COMMAND)
-		{
-			current = create_ast_node(token_iter->type, token_iter->value);
-			if (!root)
-				root = current;
-			else
-				root->left = current;
-		}
-		else if (token_iter->type == AST_PIPE)
-		{
-			pipe_node = create_ast_node(token_iter->type, token_iter->value);
-			pipe_node->right = root;
-			root = pipe_node;
-		}
-		else if (token_iter->type == AST_FILE)
+		if (token_iter->type == AST_FILE)
 			file = create_ast_node(token_iter->type, token_iter->value);
-		else if (token_iter->type == AST_REDIRECT_IN)
-		{
-			redirect_in = create_ast_node(token_iter->type, token_iter->value);
-			redirect_in->left = file;
-		}
-		else if (token_iter->type == AST_REDIRECT_OUT)
-		{
-			redirect_out = create_ast_node(token_iter->type, token_iter->value);
-			redirect_out->left = file;
-		}
+		if (token_iter->type == AST_REDIRECT_IN && !redirect_in)
+			add_red_in(&redirect_in, token_iter, &file);
+		if (token_iter->type == AST_PIPE)
+			add_pipe(&root, token_iter);
+		if (token_iter->type == AST_REDIRECT_OUT)
+			add_red_out(&root, token_iter, &file);
+		if (token_iter->type == AST_COMMAND)
+			add_cmd(&root, token_iter);
 		token_iter = token_iter->prev;
 	}
-	if (redirect_in)
-	{
-		if (root && root->type == AST_PIPE)
-		{
-			redirect_in->right = root->left;
-			root->left = redirect_in;
-		}
-		else
-		{
-			redirect_in->right = root;
-			root = redirect_in;
-		}
-	}
-	if (redirect_out)
-	{
-		if (root && root->type != AST_COMMAND)
-		{
-			current = root;
-			while (current->right->right)
-				current = current->right;
-			redirect_out->right = current->right;
-			current->right = redirect_out;
-		}
-		else
-		{
-			redirect_out->right = root;
-			root = redirect_out;
-		}
-	}
+	insert_redirection(&root, &redirect_in);
 	return (root);
 }

@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/15 16:06:11 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/17 20:57:35 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ typedef struct s_minishell
 	char		**og_envp;
 	char		*executable_path;
 	int			pipes[2];
+	int			nb_pipes;
 	int			fd_read;
 	int			fd_write;
 	int			input_redirect;
@@ -75,8 +76,15 @@ void		free_ast(t_ast_node *node);
 t_ast_node	*build_ast(t_token *tokens);
 
 ///###   AST UTILS
+t_token		*get_last_token(t_token *token);
 void		add_token_back(t_token **head, t_token *new_token);
 void		free_tokens(t_token *token);
+
+///###	AST_NODE
+void	add_cmd(t_ast_node **root, t_token *token);
+void	add_pipe(t_ast_node **root, t_token *token);
+void	add_red_out(t_ast_node **root, t_token *token, t_ast_node **file);
+void	add_red_in(t_ast_node **root, t_token *token, t_ast_node **file);
 
 ///###	PARSER
 t_token		*lexer(char *input);

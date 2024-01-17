@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
+/*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 16:45:29 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/08 18:45:07 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/17 20:47:37 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 void	proccess_heredoc(t_minishell *shell, char *delimiter)
 {
-	create_pipe(shell->pipes);
+	if (pipe(shell->pipes))
+		handle_error("Error creating pipe", 1, EXIT_FAILURE);
 	shell->fd_write = shell->pipes[1];
 	shell->fd_read = shell->pipes[0];
 	read_from_stdin(delimiter, shell->fd_write);
