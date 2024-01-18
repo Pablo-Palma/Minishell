@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 22:53:13 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/15 15:35:16 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/18 00:57:54 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,24 +39,23 @@ char	*handle_operators(char *input)
 	char	*parsed_input;
 	int		i;
 	int		j;
-	int		flag;
+	int		f;
 
 	parsed_input = malloc(ft_strlen(input) + count_operators(input) * 2 + 1);
 	i = 0;
 	j = 0;
-	flag = 0;
+	f = 0;
 	while (input[i])
 	{
-		if ((input[i] == '>' || input[i] == '<' || input[i] == '|') && !flag)
+		if ((input[i] == '>' || input[i] == '<' || input[i] == '|') && !f)
 		{
 			parsed_input[j++] = ' ';
-			flag++;
+			f++;
 		}
-		else if (!(input[i] == '>' || input[i] == '<' || input[i] == '|')
-			&& flag)
+		else if (!(input[i] == '>' || input[i] == '<' || input[i] == '|') && f)
 		{
 			parsed_input[j++] = ' ';
-			flag = 0;
+			f = 0;
 		}
 		parsed_input[j++] = input[i++];
 	}

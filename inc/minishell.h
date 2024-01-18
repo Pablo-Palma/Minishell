@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/17 20:57:35 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/18 01:15:41 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,68 +70,99 @@ typedef struct s_minishell
 	int			last_exit_status;
 }	t_minishell;
 
-///###   AST
-t_ast_node	*create_ast_node(t_type type, char *value);
-void		free_ast(t_ast_node *node);
-t_ast_node	*build_ast(t_token *tokens);
+///////////////////////////////////////////////////////////////////////////////
+//																			 //
+//									INPUT									 //
+//																			 //
+///////////////////////////////////////////////////////////////////////////////
 
-///###   AST UTILS
+//tokens
+t_token		*create_token(t_type type, char *value);
+t_token		*build_command_token(char **split_input, int *i);
 t_token		*get_last_token(t_token *token);
 void		add_token_back(t_token **head, t_token *new_token);
 void		free_tokens(t_token *token);
 
-///###	AST_NODE
-void	add_cmd(t_ast_node **root, t_token *token);
-void	add_pipe(t_ast_node **root, t_token *token);
-void	add_red_out(t_ast_node **root, t_token *token, t_ast_node **file);
-void	add_red_in(t_ast_node **root, t_token *token, t_ast_node **file);
+//ast
+t_ast_node	*create_ast_node(t_type type, char *value);
+t_ast_node	*build_ast(t_token *tokens);
+void		add_cmd(t_ast_node **root, t_token *token);
+void		add_pipe(t_ast_node **root, t_token *token);
+void		add_red_out(t_ast_node **root, t_token *token, t_ast_node **file);
+void		add_red_in(t_ast_node **root, t_token *token, t_ast_node **file);
+void		free_ast(t_ast_node *node);
 
-///###	PARSER
+//parsing
 t_token		*lexer(char *input);
+int			handle_input(t_minishell *shell, char *input);
+int			count_operators(char *input);
+char		*handle_operators(char *input);
+void		handle_envp(t_minishell *shell, t_token *node);
+void		switch_envp(t_minishell *shell, char **tab, int i);
+int			strip_quotes(char *quoted_str, char *unquoted_str);
 
-///###   SPLIT_CMD
-char		**split_cmd(const char *cmd, const char *delimiters);
+///////////////////////////////////////////////////////////////////////////////
+//																			 //
+//									EXECUTE									 //
+//																			 //
+///////////////////////////////////////////////////////////////////////////////
 
-////###   GET_PATH
-char		*get_path(char *cmd, const char *env_path);
-
-///###   EXECUTE
+//execute
+int			handle_redirect(t_minishell *shell, t_ast_node *cmd_node);
 void		execute_ast_command(t_minishell *shell, t_ast_node *node);
 void		execute_output_redirect(t_minishell *shell, t_ast_node *node);
 void		execute_single_command(t_minishell *shell, char *value);
 void		read_from_stdin(const char *delimiter, int write_fd);
 void		proccess_heredoc(t_minishell *shell, char *delimiter);
-
-///###	MINISHELL
-int			minishell(char **envp, char *executable_path);
+void		execute_single_cmd(t_minishell *shell, t_ast_node *cmd_node);
+void		execute_ast_pipe(t_minishell *shell, t_ast_node *cmd_node);
+void		handle_fd(t_minishell *shell);
 void		select_exec(t_minishell *shell, char **command);
 
-///###   SIGNAL
-void		setup_signal_handlers(void);
+///////////////////////////////////////////////////////////////////////////////
+//																			 //
+//									BUILTIN									 //
+//																			 //
+///////////////////////////////////////////////////////////////////////////////
 
-///###   BUILTIN
+//built-in
 int			handle_builtin(t_minishell *shell, char **cmd_args);
 int			handle_special_builtin(t_minishell *shell, char **cmd_args);
 void		echo_command(char **cmd_args);
-void		cd_command(char **cmd_args);
+void		env_command(t_minishell *shell);
 void		pwd_command(void);
+void		cd_command(char **cmd_args);
 int			export_command(t_minishell *shell, char **cmd_args);
 int			unset_command(t_minishell *shell, char **args);
-void		env_command(t_minishell *shell);
 int			exit_command(t_minishell *shell, char **cmd_args);
 
-///###	PIPE
-void		execute_single_cmd(t_minishell *shell, t_ast_node *cmd_node);
-void		execute_ast_pipe(t_minishell *shell, t_ast_node *cmd_node);
-void		create_pipe(int pipes[2]);
-void		handle_fd(t_minishell *shell);
+///////////////////////////////////////////////////////////////////////////////
+//																			 //
+//									SIGNAL									 //
+//																			 //
+///////////////////////////////////////////////////////////////////////////////
 
-///###	INPUT
-int			handle_input(t_minishell *shell, char *input);
-int			handle_redirect(t_minishell *shell, t_ast_node *cmd_node);
-int			ft_tablen(char **tab);
-int			strip_quotes(char *quoted_str, char *unquoted_str);
+//signal
+void		setup_signal_handlers(void);
+
+///////////////////////////////////////////////////////////////////////////////
+//																			 //
+//									AUX_FT									 //
+//																			 //
+///////////////////////////////////////////////////////////////////////////////
+
+//aux_ft
+char		**split_cmd(const char *cmd, const char *delimiters);
+char		*get_path(char *cmd, const char *env_path);
 void		handle_error(const char *msg, int use_perror, int error_code);
-char		*ft_join(char *s1, char *s2);
+
+///////////////////////////////////////////////////////////////////////////////
+//																			 //
+//									MAIN									 //
+//																			 //
+///////////////////////////////////////////////////////////////////////////////
+
+//minishell
+int			minishell(char **envp, char *executable_path);
 
 #endif

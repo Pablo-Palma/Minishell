@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:37:07 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/15 15:34:18 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/18 01:27:32 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,20 +31,6 @@ t_token	*create_token(t_type type, char *value)
 		new_token->envvar = envvar;
 	return (new_token);
 }
-/*
-t_token	*create_token(t_type type, char *value)
-{
-	t_token	*new_token;
-
-	new_token = malloc(sizeof(t_token));
-	if (!new_token)
-		return (NULL);
-	new_token->type = type;
-	new_token->value = ft_strdup(value);
-	new_token->next = NULL;
-	new_token->prev = NULL;
-	return (new_token);
-}*/
 
 t_type	token_type(char *value)
 {
@@ -59,18 +45,17 @@ t_type	token_type(char *value)
 	return (AST_COMMAND);
 }
 
-t_token	*build_command_token(char **split_input, int *i)
+t_token	*build_command_token(char **input, int *i)
 {
 	char		*command;
 	char		*temp;
 	t_token		*new_token;
 
-	command = ft_strdup(split_input[*i]);
+	command = ft_strdup(input[*i]);
 	if (!command)
 		return (NULL);
 	(*i)++;
-	while (split_input[*i] != NULL && token_type(split_input[*i])
-		== AST_COMMAND)
+	while (input[*i] != NULL && token_type(input[*i]) == AST_COMMAND)
 	{
 		temp = command;
 		command = ft_strjoin(command, " ");
@@ -78,7 +63,7 @@ t_token	*build_command_token(char **split_input, int *i)
 			return (NULL);
 		free(temp);
 		temp = command;
-		command = ft_strjoin(command, split_input[*i]);
+		command = ft_strjoin(command, input[*i]);
 		if (!command)
 			return (NULL);
 		free(temp);
