@@ -6,30 +6,30 @@ LIBFT_LIB = $(LIBFT_DIR)/libft.a
 SRC_DIR = src/
 OBJ_DIR = obj/
 
-SRCS =	$(SRC_DIR)main/main.c \
-    	$(SRC_DIR)main/minishell.c \
-    	$(SRC_DIR)execute/execute.c \
-		$(SRC_DIR)execute/programs.c	\
-		$(SRC_DIR)execute/heredoc.c	\
-		$(SRC_DIR)shared/get_path.c \
-    	$(SRC_DIR)shared/command_split.c \
-    	$(SRC_DIR)shared/utils.c \
-    	$(SRC_DIR)signal/signal.c \
-    	$(SRC_DIR)builtins/handle_builtin.c \
-    	$(SRC_DIR)builtins/echo.c \
-    	$(SRC_DIR)builtins/cd.c \
-    	$(SRC_DIR)builtins/pwd.c \
-    	$(SRC_DIR)builtins/export.c	\
-		$(SRC_DIR)builtins/unset.c \
-		$(SRC_DIR)builtins/env.c \
-		$(SRC_DIR)builtins/exit.c \
-		$(SRC_DIR)input/input.c	\
-		$(SRC_DIR)input/lexer.c \
-		$(SRC_DIR)ast/ast.c	\
-		$(SRC_DIR)ast/ast_node.c	\
-		$(SRC_DIR)ast/ast_utils.c \
-		$(SRC_DIR)pipe/pipe.c	\
-		$(SRC_DIR)redirect/redirect.c
+SRCS =	$(SRC_DIR)aux_ft/command_split.c		\
+    	$(SRC_DIR)aux_ft/get_path.c				\
+		$(SRC_DIR)aux_ft/utils.c				\
+    	$(SRC_DIR)builtins/cd.c					\
+    	$(SRC_DIR)builtins/echo.c				\
+		$(SRC_DIR)builtins/env.c				\
+		$(SRC_DIR)builtins/exit.c				\
+    	$(SRC_DIR)builtins/export.c				\
+    	$(SRC_DIR)builtins/handle_builtin.c		\
+    	$(SRC_DIR)builtins/pwd.c				\
+		$(SRC_DIR)builtins/unset.c				\
+    	$(SRC_DIR)execute/execute.c 			\
+		$(SRC_DIR)execute/heredoc.c				\
+		$(SRC_DIR)execute/pipe.c				\
+		$(SRC_DIR)execute/programs.c			\
+		$(SRC_DIR)execute/redirect.c			\
+		$(SRC_DIR)input/ast_node.c				\
+		$(SRC_DIR)input/ast_utils.c				\
+		$(SRC_DIR)input/ast.c					\
+		$(SRC_DIR)input/input.c					\
+		$(SRC_DIR)input/lexer.c 				\
+		$(SRC_DIR)main/main.c 					\
+    	$(SRC_DIR)main/minishell.c				\
+    	$(SRC_DIR)signal/signal.c 
 
 OBJS = $(SRCS:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
 
