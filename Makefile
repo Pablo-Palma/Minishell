@@ -1,6 +1,8 @@
 NAME = minishell
 CC = gcc -g3
 CFLAGS = -Wall -Werror -Wextra -I libft/inc -I inc
+LDFLAGS = -L/opt/homebrew/opt/readline/lib
+CPPFLAGS = -I/opt/homebrew/opt/readline/include
 LIBFT_DIR = libft
 LIBFT_LIB = $(LIBFT_DIR)/libft.a
 SRC_DIR = src/
@@ -40,12 +42,12 @@ all: $(NAME)
 $(NAME): $(OBJS)
 	@$(MAKE) bonus -C $(LIBFT_DIR)
 	@echo "libft compiled successfully!"
-	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT_LIB) -lreadline
+	@$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -o $(NAME) $(OBJS) $(LIBFT_LIB) -lreadline
 	@echo "minishell compiled successfully!"
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	@mkdir -p $(@D)
-	@$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
 
 clean:
 	@$(MAKE) -C $(LIBFT_DIR) clean

@@ -44,7 +44,7 @@ void	execute_single_cmd(t_minishell *shell, t_ast_node *cmd_node)
 {
 	pid_t	pid;
 	int		status;
-	//int		exit_status;
+//	int		exit_status;
 
 	pid = fork();
 	if (pid == -1)
@@ -52,8 +52,10 @@ void	execute_single_cmd(t_minishell *shell, t_ast_node *cmd_node)
 	if (!pid)
 		execute_command_child(shell, cmd_node);
 	waitpid(pid, &status, 0);
-	/*if (WIFEXITED(status))
-	{
+	shell->last_exit_status = WEXITSTATUS(status);
+	if (WIFEXITED(status))
+		shell->last_exit_status = WEXITSTATUS(status);
+	/*{
 		exit_status = WEXITSTATUS(status);
 		if (exit_status == EXIT_FAILURE)
 			exit(EXIT_FAILURE);

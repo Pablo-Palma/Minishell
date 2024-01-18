@@ -49,6 +49,9 @@ void	switch_envp(t_minishell *shell, t_token *token, int i)
 
 	cnt = i + 1;
 	j = 0;
+	if ((token->value[i]  == '$' && token->value[i + 1] == '?')
+		|| token->type == AST_HEREDOC_DELIM)
+		return ;
 	while (token->value[cnt] && token->value[cnt] != ' ' && token->value[cnt] != '\'')
 		cnt++;
 	if (!token->value[1] || token->value[1] == '?')
