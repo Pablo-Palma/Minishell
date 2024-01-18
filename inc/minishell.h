@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/18 01:15:41 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/18 14:07:19 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int			handle_input(t_minishell *shell, char *input);
 int			count_operators(char *input);
 char		*handle_operators(char *input);
 void		handle_envp(t_minishell *shell, t_token *node);
-void		switch_envp(t_minishell *shell, char **tab, int i);
+void		switch_envp(t_minishell *shell, t_token *token, int i);
 int			strip_quotes(char *quoted_str, char *unquoted_str);
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -155,6 +155,7 @@ void		setup_signal_handlers(void);
 char		**split_cmd(const char *cmd, const char *delimiters);
 char		*get_path(char *cmd, const char *env_path);
 void		handle_error(const char *msg, int use_perror, int error_code);
+void		ft_strncpy(char *dst, char *src, int n);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //

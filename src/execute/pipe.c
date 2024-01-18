@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/17 21:30:33 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/18 16:48:30 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	execute_single_cmd(t_minishell *shell, t_ast_node *cmd_node)
 {
 	pid_t	pid;
 	int		status;
-	int		exit_status;
+	//int		exit_status;
 
 	pid = fork();
 	if (pid == -1)
@@ -52,12 +52,12 @@ void	execute_single_cmd(t_minishell *shell, t_ast_node *cmd_node)
 	if (!pid)
 		execute_command_child(shell, cmd_node);
 	waitpid(pid, &status, 0);
-	if (WIFEXITED(status))
+	/*if (WIFEXITED(status))
 	{
 		exit_status = WEXITSTATUS(status);
 		if (exit_status == EXIT_FAILURE)
 			exit(EXIT_FAILURE);
-	}
+	}*/
 }
 
 void	execute_ast_pipe( t_minishell *shell, t_ast_node *cmd_node)

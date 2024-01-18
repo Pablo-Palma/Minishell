@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:21:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/18 01:28:33 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/18 15:58:53 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,9 @@ int	minishell(char **envp, char *executable_path)
 			g_sigint_recived = 0;
 		if (!input)
 		{
-			ft_printf("%s\n", "EOF recibido.\n");
+			ft_printf("%s\n", "EOF recibido.");
 			free(shell.executable_path);
-			break ;
+			break;
 		}
 		if (*input)
 		{

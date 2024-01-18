@@ -7,6 +7,7 @@ SRC_DIR = src/
 OBJ_DIR = obj/
 
 SRCS =	$(SRC_DIR)aux_ft/command_split.c		\
+		$(SRC_DIR)aux_ft/ft_strncpy.c			\
     	$(SRC_DIR)aux_ft/get_path.c				\
 		$(SRC_DIR)aux_ft/utils.c				\
     	$(SRC_DIR)builtins/cd.c					\
@@ -25,6 +26,7 @@ SRCS =	$(SRC_DIR)aux_ft/command_split.c		\
 		$(SRC_DIR)input/ast_node.c				\
 		$(SRC_DIR)input/ast_utils.c				\
 		$(SRC_DIR)input/ast.c					\
+		$(SRC_DIR)input/envp.c					\
 		$(SRC_DIR)input/input.c					\
 		$(SRC_DIR)input/lexer.c 				\
 		$(SRC_DIR)main/main.c 					\
