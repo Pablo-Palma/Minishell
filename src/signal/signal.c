@@ -11,17 +11,27 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <sys/ioctl.h>
 
 volatile sig_atomic_t	g_sigint_recived = 0;
 
 void	handle_sigint(int sig)
 {
 	(void)sig;
-	printf("\n");
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	if (g_sigint_recived != 2)
-		rl_redisplay();
+	if (g_sigint_recived == 3)
+	{
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		ioctl(0, TIOCSTI, "\n");
+	}
+	else
+	{
+		printf("\n");
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		if (g_sigint_recived != 2)
+			rl_redisplay();
+	}
 	g_sigint_recived = 1;
 }
 

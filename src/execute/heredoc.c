@@ -14,6 +14,7 @@
 
 void	proccess_heredoc(t_minishell *shell, char *delimiter)
 {
+	g_sigint_recived = 3;
 	if (pipe(shell->pipes))
 		handle_error("Error creating pipe", 1, EXIT_FAILURE);
 	shell->fd_write = shell->pipes[1];
@@ -30,7 +31,7 @@ void	read_from_stdin(const char *delimiter, int write_fd)
 	{
 		ft_printf("> ");
 		line = get_next_line(STDIN_FILENO);
-		if (!line | g_sigint_recived)
+		if (!line || g_sigint_recived)
 		{
 			g_sigint_recived = 3;
 			close(write_fd);
