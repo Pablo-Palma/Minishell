@@ -91,6 +91,7 @@ void	execute_single_command(t_minishell *shell, char *value)
 	char	**args;
 	char	*path;
 
+	g_sigint_recived = 2;
 	if (!value || !shell)
 		return ;
 	args = split_cmd(value, " ");

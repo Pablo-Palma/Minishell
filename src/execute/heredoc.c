@@ -30,8 +30,12 @@ void	read_from_stdin(const char *delimiter, int write_fd)
 	{
 		ft_printf("> ");
 		line = get_next_line(STDIN_FILENO);
-		if (!line)
+		if (!line | g_sigint_recived)
+		{
+			g_sigint_recived = 3;
+			close(write_fd);
 			break ;
+		}
 		if (strncmp(line, delimiter, ft_strlen(delimiter)) == 0
 			&& line[ft_strlen(delimiter)] == '\n')
 		{

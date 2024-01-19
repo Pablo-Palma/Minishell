@@ -64,6 +64,7 @@ void	execute_single_cmd(t_minishell *shell, t_ast_node *cmd_node)
 
 void	execute_ast_pipe( t_minishell *shell, t_ast_node *cmd_node)
 {
+	g_sigint_recived = 2;
 	if (cmd_node->type == AST_REDIRECT_IN || cmd_node->type == AST_REDIRECT_OUT)
 	{
 		handle_redirect(shell, cmd_node);

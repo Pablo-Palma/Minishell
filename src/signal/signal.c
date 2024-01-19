@@ -20,7 +20,8 @@ void	handle_sigint(int sig)
 	printf("\n");
 	rl_on_new_line();
 	rl_replace_line("", 0);
-	rl_redisplay();
+	if (g_sigint_recived != 2)
+		rl_redisplay();
 	g_sigint_recived = 1;
 }
 
