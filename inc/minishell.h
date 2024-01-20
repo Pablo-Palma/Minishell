@@ -13,11 +13,11 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# define MAX_PATH		260 //As a convention
-# define SIGINT_NORMAL	0
-# define SIGINT_RECIVED	1
-# define SIGINT_COMMAND	2
-# define SIGINT_HD		3
+# define MAX_PATH				260 //As a convention
+# define SIGINT_NORMAL			0
+# define SIGINT_RECIVED			1
+# define SIGINT_COMMAND			2
+# define SIGINT_HD				3
 # define SIGINT_HD_RECIVED		4
 
 # include "libft.h"
