@@ -26,6 +26,7 @@ void	execute_subshell(t_minishell *shell, char **args)
 	}
 	if (pid == 0)
 	{
+		 setup_signal_handlers();
 		if (execve(args[0], args, shell->og_envp) == -1)
 		{
 			perror ("execve");
@@ -35,6 +36,7 @@ void	execute_subshell(t_minishell *shell, char **args)
 	else
 	{
 		waitpid(pid, &status, 0);
+		g_sigint_recived = 0;
 		if (WIFEXITED(status))
 			shell->last_exit_status = WEXITSTATUS(status);
 	}
@@ -69,7 +71,7 @@ void	select_exec(t_minishell *shell, char **command)
 {
 	if (command == NULL)
 		return ;
-	if (ft_strncmp(command[0], "./Minishell", 11) == 0)
+	if (ft_strncmp(command[0], "./minishell", 11) == 0)
 	{
 		command[0] = shell->executable_path;
 		command[1] = NULL;
