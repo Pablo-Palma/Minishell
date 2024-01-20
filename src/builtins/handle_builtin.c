@@ -16,7 +16,7 @@ int	handle_special_builtin(t_minishell *shell, char **cmd_args)
 {
 	if (strncmp(cmd_args[0], "cd", 3) == 0)
 	{
-		cd_command(cmd_args);
+		cd_command(shell, cmd_args);
 		return (1);
 	}
 	else if (strncmp(cmd_args[0], "export", 7) == 0)

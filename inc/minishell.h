@@ -73,6 +73,7 @@ typedef struct s_minishell
 	t_ast_node	*ast;
 	int			last_cmd;
 	int			last_exit_status;
+	int			shlvl;
 }	t_minishell;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -123,6 +124,7 @@ void		execute_single_cmd(t_minishell *shell, t_ast_node *cmd_node);
 void		execute_ast_pipe(t_minishell *shell, t_ast_node *cmd_node);
 void		handle_fd(t_minishell *shell);
 void		select_exec(t_minishell *shell, char **command);
+void		increment_shlvl(t_minishell *shell);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //
@@ -136,10 +138,12 @@ int			handle_special_builtin(t_minishell *shell, char **cmd_args);
 void		echo_command(char **cmd_args);
 void		env_command(t_minishell *shell);
 void		pwd_command(void);
-void		cd_command(char **cmd_args);
+void		cd_command(t_minishell *shell, char **cmd_args);
 int			export_command(t_minishell *shell, char **cmd_args);
 int			unset_command(t_minishell *shell, char **args);
 int			exit_command(t_minishell *shell, char **cmd_args);
+void		add_var_envp(t_minishell *shell, const char *new_var);
+void	update_env_var(t_minishell *shell, const char *key, const char *value);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //
@@ -162,6 +166,8 @@ char		**split_cmd(const char *cmd, const char *delimiters);
 char		*get_path(char *cmd, const char *env_path);
 void		handle_error(const char *msg, int use_perror, int error_code);
 void		ft_strncpy(char *dst, char *src, int n);
+void		init_minishell(t_minishell *shell, char **envp,
+					char *executable_path);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //

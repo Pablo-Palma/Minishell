@@ -12,24 +12,6 @@
 
 #include "minishell.h"
 
-void	init_minishell(t_minishell *shell, char **envp, char *executable_path)
-{
-	if (!shell)
-		return ;
-	shell->envp = envp;
-	shell->og_envp = envp;
-	shell->fd_read = 0;
-	shell->fd_write = 1;
-	shell->input_redirect = 0;
-	shell->output_redirect = 0;
-	shell->input_line = NULL;
-	shell->ast = NULL;
-	shell->last_cmd = 0;
-	shell->nb_pipes = 0;
-	shell->last_exit_status = 0;
-	shell->executable_path = ft_strdup(executable_path);
-}
-
 int	minishell(char **envp, char *executable_path)
 {
 	t_minishell	shell;
@@ -46,7 +28,7 @@ int	minishell(char **envp, char *executable_path)
 		{
 			ft_printf("%s\n", "EOF recibido.");
 			free(shell.executable_path);
-			break;
+			break ;
 		}
 		if (*input)
 		{
