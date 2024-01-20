@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   command_split.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
+/*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 18:27:38 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/08 18:54:52 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/20 14:06:18 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 //falta ver que hacer con comillas sin cerrar
-
+/*
 static int	count_args(const char *cmd, const char *delimiters)
 {
 	int	in_single_quote;
@@ -99,4 +99,4 @@ char	**split_cmd(const char *cmd, const char *delimiters)
 	}
 	args[i] = NULL;
 	return (args);
-}
+}*/

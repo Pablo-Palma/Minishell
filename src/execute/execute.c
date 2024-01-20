@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:11:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/17 20:49:57 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/20 15:51:14 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ void	execute_output_redirect(t_minishell *shell, t_ast_node *node)
 		dup2(fd_out, STDOUT_FILENO);
 		if (node->left)
 			execute_single_command(shell, node->left->value);
+		close(fd_out);
 		exit(0);
 	}
 	waitpid(pid, 0, 0);
@@ -99,7 +100,7 @@ void	execute_single_command(t_minishell *shell, char *value)
 	g_sigint_recived = SIGINT_COMMAND;
 	if (!value || !shell)
 		return ;
-	args = split_cmd(value, " ");
+	args = ft_split(value, ' ');
 	if (ft_strncmp(args[0], "./", 2) == 0)
 		select_exec(shell, args);
 	else if (!handle_special_builtin(shell, args)

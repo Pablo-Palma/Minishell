@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 11:24:43 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/18 21:03:22 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/20 14:07:12 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,9 @@ int	process_export(t_minishell *shell, const char *arg)
 {
 	char		**tokens;
 	int			status;
-	const char	*delimiters;
 
 	status = 0;
-	delimiters = "=";
-	tokens = split_cmd(arg, delimiters);
+	tokens = ft_split(arg, '=');
 	if (tokens == NULL)
 	{
 		perror("Errorn en split_cmd");
