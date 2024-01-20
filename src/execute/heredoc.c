@@ -14,7 +14,7 @@
 
 void	proccess_heredoc(t_minishell *shell, char *delimiter)
 {
-	g_sigint_recived = 3;
+	g_sigint_recived = SIGINT_HD;
 	if (pipe(shell->pipes))
 		handle_error("Error creating pipe", 1, EXIT_FAILURE);
 	shell->fd_write = shell->pipes[1];

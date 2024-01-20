@@ -13,7 +13,7 @@
 #include "minishell.h"
 #include <sys/ioctl.h>
 
-volatile sig_atomic_t	g_sigint_recived = 0;
+volatile sig_atomic_t	g_sigint_recived = SIGINT_NORMAL;
 
 void	handle_sigint(int sig)
 {
@@ -32,7 +32,7 @@ void	handle_sigint(int sig)
 		if (g_sigint_recived != SIGINT_COMMAND)
 			rl_redisplay();
 	}
-	g_sigint_recived = 1;
+	g_sigint_recived = SIGINT_RECIVED;
 }
 
 void	handle_sigquit(int sig)
