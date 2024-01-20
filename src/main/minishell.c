@@ -41,7 +41,7 @@ int	minishell(char **envp, char *executable_path)
 	{
 		input = readline("minishell> ");
 		if (g_sigint_recived)
-			g_sigint_recived = 0;
+			g_sigint_recived = SIGINT_NORMAL;
 		if (!input)
 		{
 			ft_printf("%s\n", "EOF recibido.");

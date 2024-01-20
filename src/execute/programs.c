@@ -9,7 +9,7 @@
 /*   Updated: 2024/01/08 18:51:41 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
+#include <termios.h>
 #include "minishell.h"
 
 void	execute_subshell(t_minishell *shell, char **args)
@@ -19,6 +19,7 @@ void	execute_subshell(t_minishell *shell, char **args)
 
 	pid = fork();
 	status = 0;
+	signal(SIGINT, SIG_IGN);
 	if (pid == -1)
 	{
 		perror("fork");
@@ -26,7 +27,6 @@ void	execute_subshell(t_minishell *shell, char **args)
 	}
 	if (pid == 0)
 	{
-		 setup_signal_handlers();
 		if (execve(args[0], args, shell->og_envp) == -1)
 		{
 			perror ("execve");
@@ -36,7 +36,8 @@ void	execute_subshell(t_minishell *shell, char **args)
 	else
 	{
 		waitpid(pid, &status, 0);
-		g_sigint_recived = 0;
+		signal(SIGINT, handle_sigint);
+		g_sigint_recived = SIGINT_NORMAL;
 		if (WIFEXITED(status))
 			shell->last_exit_status = WEXITSTATUS(status);
 	}

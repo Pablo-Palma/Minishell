@@ -149,6 +149,7 @@ int			exit_command(t_minishell *shell, char **cmd_args);
 
 //signal
 void		setup_signal_handlers(void);
+void	handle_sigint(int sig);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //

@@ -92,7 +92,10 @@ void	execute_single_command(t_minishell *shell, char *value)
 	char	*path;
 
 	if	(g_sigint_recived == SIGINT_HD_RECIVED)
+	{
+		shell->last_exit_status = 130;
 		return ;
+	}
 	g_sigint_recived = SIGINT_COMMAND;
 	if (!value || !shell)
 		return ;
@@ -111,6 +114,8 @@ void	execute_single_command(t_minishell *shell, char *value)
 			free(path);
 		}
 	}
+	if (g_sigint_recived == SIGINT_RECIVED)
+		shell->last_exit_status = 130;
 	g_sigint_recived = SIGINT_NORMAL;
 	ft_free_arrays(args);
 }
