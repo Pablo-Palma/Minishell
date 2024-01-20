@@ -31,9 +31,9 @@ void	read_from_stdin(const char *delimiter, int write_fd)
 	{
 		ft_printf("> ");
 		line = get_next_line(STDIN_FILENO);
-		if (!line || g_sigint_recived == 1)
+		if (!line || g_sigint_recived == SIGINT_RECIVED)
 		{
-			g_sigint_recived = 0;
+			g_sigint_recived = SIGINT_HD_RECIVED;
 			close(write_fd);
 			break ;
 		}

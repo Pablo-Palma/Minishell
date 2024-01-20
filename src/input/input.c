@@ -114,6 +114,8 @@ int	handle_input(t_minishell *shell, char *input)
 			delimiter_token = current_token->next;
 			if (delimiter_token && delimiter_token->type == AST_HEREDOC_DELIM)
 			{
+				if (g_sigint_recived == SIGINT_HD_RECIVED)
+					return (0);
 				proccess_heredoc(shell, delimiter_token->value);
 				current_token = current_token->next;
 			}

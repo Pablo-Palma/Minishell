@@ -91,7 +91,9 @@ void	execute_single_command(t_minishell *shell, char *value)
 	char	**args;
 	char	*path;
 
-	g_sigint_recived = 2;
+	if	(g_sigint_recived == SIGINT_HD_RECIVED)
+		return ;
+	g_sigint_recived = SIGINT_COMMAND;
 	if (!value || !shell)
 		return ;
 	args = split_cmd(value, " ");
@@ -109,5 +111,6 @@ void	execute_single_command(t_minishell *shell, char *value)
 			free(path);
 		}
 	}
+	g_sigint_recived = SIGINT_NORMAL;
 	ft_free_arrays(args);
 }
