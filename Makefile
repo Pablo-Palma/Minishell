@@ -8,8 +8,7 @@ LIBFT_LIB = $(LIBFT_DIR)/libft.a
 SRC_DIR = src/
 OBJ_DIR = obj/
 
-SRCS =	$(SRC_DIR)aux_ft/command_split.c		\
-		$(SRC_DIR)aux_ft/ft_strncpy.c			\
+SRCS =	$(SRC_DIR)aux_ft/ft_strncpy.c			\
     	$(SRC_DIR)aux_ft/get_path.c				\
 		$(SRC_DIR)aux_ft/utils.c				\
     	$(SRC_DIR)builtins/cd.c					\

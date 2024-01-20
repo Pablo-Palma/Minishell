@@ -22,8 +22,8 @@ BONUS_SRC =	$(addprefix $(LIBFT_SRC_DIR)/bonus/, ft_lstadd_back_bonus.c \
 	ft_lstlast_bonus.c	ft_lstsize_bonus.c)
 
 PRINTF_SRC = $(LIBFT_SRC_DIR)/printf/ft_printf.c
-GNL_SRC = $(addprefix $(LIBFT_SRC_DIR)/get_next_line/, get_next_line.c get_next_line_utils.c \
-	get_next_line_bonus.c get_next_line_utils_bonus.c)
+GNL_SRC = $(addprefix $(LIBFT_SRC_DIR)/get_next_line/, get_next_line.c  \
+	get_next_line_bonus.c)
 
 SRC = $(LIBFT_SRC) $(PRINTF_SRC) $(GNL_SRC)
 BONUS_OBJ = $(patsubst %.c,$(OBJ_DIR)/%.o,$(BONUS_SRC))

@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/18 16:48:30 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/20 16:19:36 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,15 @@ void	execute_command_child(t_minishell *shell, t_ast_node *cmd_node)
 	char	**cmd_args;
 	char	*cmd_path;
 
-	cmd_args = split_cmd(cmd_node->value, " ");
+	cmd_args = ft_split(cmd_node->value, ' ');
 	if (!cmd_args)
 		handle_error("Error splitting command", 0, 2);
 	cmd_path = get_path(cmd_args[0], getenv("PATH"));
 	if (!cmd_path)
 		handle_error("command not found", 0, 127);
 	handle_fd(shell);
+	close(shell->pipes[0]);
+	close(shell->pipes[1]);
 	execve(cmd_path, cmd_args, shell->envp);
 	ft_free_arrays(cmd_args);
 	handle_error("Error in execve", 1, EXIT_FAILURE);
@@ -44,7 +46,6 @@ void	execute_single_cmd(t_minishell *shell, t_ast_node *cmd_node)
 {
 	pid_t	pid;
 	int		status;
-//	int		exit_status;
 
 	pid = fork();
 	if (pid == -1)
@@ -52,14 +53,14 @@ void	execute_single_cmd(t_minishell *shell, t_ast_node *cmd_node)
 	if (!pid)
 		execute_command_child(shell, cmd_node);
 	waitpid(pid, &status, 0);
+	close(shell->pipes[1]);
+	if (shell->fd_read)
+		close(shell->fd_read);
+	shell->fd_read = shell->pipes[0];
+	shell->last_cmd = 1;
 	shell->last_exit_status = WEXITSTATUS(status);
 	if (WIFEXITED(status))
 		shell->last_exit_status = WEXITSTATUS(status);
-	/*{
-		exit_status = WEXITSTATUS(status);
-		if (exit_status == EXIT_FAILURE)
-			exit(EXIT_FAILURE);
-	}*/
 }
 
 void	execute_ast_pipe( t_minishell *shell, t_ast_node *cmd_node)
@@ -81,8 +82,6 @@ void	execute_ast_pipe( t_minishell *shell, t_ast_node *cmd_node)
 		shell->last_cmd = 0;
 		if (cmd_node->left)
 			execute_ast_pipe(shell, cmd_node->left);
-		shell->fd_read = shell->pipes[0];
-		close(shell->pipes[1]);
 		if (shell->output_redirect)
 		{
 			shell->fd_read = 0;
@@ -91,5 +90,6 @@ void	execute_ast_pipe( t_minishell *shell, t_ast_node *cmd_node)
 		shell->last_cmd = 1;
 		if (cmd_node->right)
 			execute_ast_pipe(shell, cmd_node->right);
+		close(shell->pipes[0]);
 	}
 }
