@@ -12,7 +12,6 @@
 
 #include "minishell.h"
 
-
 static void	insert_redirection(t_ast_node **root, t_ast_node **redirect_in)
 {
 	if (!(*redirect_in))
