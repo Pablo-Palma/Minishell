@@ -19,26 +19,6 @@
 //2.	falta controlar casos especiales como que se exporte una variable vacía
 //o que la forma de exportar la variable o cumpla con las convenciones...
 
-void	add_var_envp(t_minishell *shell, const char *new_var)
-{
-	int		i;
-	char	**new_envp;
-
-	i = 0;
-	while (shell->envp[i] != NULL)
-		i++;
-	new_envp = (char **)malloc(sizeof(char *) * (i + 2));
-	i = 0;
-	while (shell->envp[i] != NULL)
-	{
-		new_envp[i] = shell->envp[i];
-		i++;
-	}
-	new_envp[i] = ft_strdup(new_var);
-	new_envp[i + 1] = NULL;
-	shell->envp = new_envp;
-}
-
 int	process_export(t_minishell *shell, const char *arg)
 {
 	char		**tokens;
@@ -55,7 +35,7 @@ int	process_export(t_minishell *shell, const char *arg)
 	{
 		unset_command(shell, tokens);
 		if (tokens[1])
-			add_var_envp(shell, arg);
+			add_var_envp(&(shell->envp), arg);
 		else
 		{
 			perror("Invalid export argument");

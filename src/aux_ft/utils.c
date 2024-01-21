@@ -20,6 +20,21 @@ void	handle_error(const char *msg, int use_perror, int error_code)
 		ft_printf("%s\n", msg);
 	exit(error_code);
 }
+
+void	free_shell(t_minishell *shell)
+{
+	if (shell->input_line)
+	{
+		free(shell->input_line);
+		shell->input_line = NULL;
+	}
+	if (shell)
+	{
+		if (shell->envp)
+			free_env(&(shell->envp));
+	}
+}
+
 void	copy_envp(t_minishell *shell, char **envp)
 {
 	int		i;
@@ -40,6 +55,7 @@ void	copy_envp(t_minishell *shell, char **envp)
 	}
 	new_envp[envp_len] = NULL;
 	shell->envp = new_envp;
+	shell->og_envp = new_envp;
 }
 
 void	init_minishell(t_minishell *shell, char **envp, char *executable_path)
@@ -47,7 +63,6 @@ void	init_minishell(t_minishell *shell, char **envp, char *executable_path)
 	if (!shell)
 		return ;
 	copy_envp(shell, envp);
-	shell->og_envp = envp;
 	shell->fd_read = 0;
 	shell->fd_write = 1;
 	shell->input_redirect = 0;

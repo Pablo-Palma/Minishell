@@ -23,6 +23,7 @@ int	exit_command(t_minishell *shell, char **cmd_args)
 
 	(void)shell;
 	exit_code = 0;
+	free_shell(shell);
 	if (cmd_args[1] == NULL)
 	{
 		printf("exit\n");
