@@ -12,12 +12,12 @@
 
 #include "minishell.h"
 
-int	minishell(char **envp, char *executable_path)
+int	minishell(char **envp)
 {
 	t_minishell	shell;
 	char		*input;
 
-	init_minishell(&shell, envp, executable_path);
+	init_minishell(&shell, envp);
 	setup_signal_handlers();
 	while (1)
 	{
@@ -27,7 +27,8 @@ int	minishell(char **envp, char *executable_path)
 		if (!input)
 		{
 			ft_printf("%s\n", "EOF recibido.");
-			free(shell.executable_path);
+			free_shell(&shell);
+			free(input);
 			break ;
 		}
 		if (*input)

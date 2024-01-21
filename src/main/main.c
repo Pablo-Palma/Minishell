@@ -12,16 +12,17 @@
 
 #include <minishell.h>
 
-/*void leaks()
+void leaks()
 {
 	system("leaks -q minishell");
-}*/
+}
 
 int	main(int argc, char **argv, char **envp)
 {
-	//atexit(leaks);
+	atexit(leaks);
+	(void)argv;
 	if (argc == 1)
-		minishell(envp, argv[0]);
+		minishell(envp);
 	else
 		ft_printf("Incorrect input. Please, execute as follows: ./minishell\n");
 	return (0);

@@ -58,7 +58,7 @@ void	copy_envp(t_minishell *shell, char **envp)
 	shell->og_envp = new_envp;
 }
 
-void	init_minishell(t_minishell *shell, char **envp, char *executable_path)
+void	init_minishell(t_minishell *shell, char **envp)
 {
 	if (!shell)
 		return ;
@@ -72,5 +72,4 @@ void	init_minishell(t_minishell *shell, char **envp, char *executable_path)
 	shell->last_cmd = 0;
 	shell->nb_pipes = 0;
 	shell->last_exit_status = 0;
-	shell->executable_path = ft_strdup(executable_path);
 }
