@@ -73,7 +73,6 @@ typedef struct s_minishell
 	t_ast_node	*ast;
 	int			last_cmd;
 	int			last_exit_status;
-	int			shlvl;
 }	t_minishell;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -142,8 +141,6 @@ void		cd_command(t_minishell *shell, char **cmd_args);
 int			export_command(t_minishell *shell, char **cmd_args);
 int			unset_command(t_minishell *shell, char **args);
 int			exit_command(t_minishell *shell, char **cmd_args);
-void		add_var_envp(t_minishell *shell, const char *new_var);
-void	update_env_var(t_minishell *shell, const char *key, const char *value);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //
@@ -162,6 +159,11 @@ void	handle_sigint(int sig);
 ///////////////////////////////////////////////////////////////////////////////
 
 //aux_ft
+void		add_var_envp(char ***envp, const char *new_var);
+void		update_env_var(char ***envp, const char *key, const char *value);
+void		increment_shlvl(t_minishell *shell);
+void		free_env(char ***env);
+void		free_shell(t_minishell *shell);
 char		**split_cmd(const char *cmd, const char *delimiters);
 char		*get_path(char *cmd, const char *env_path);
 void		handle_error(const char *msg, int use_perror, int error_code);

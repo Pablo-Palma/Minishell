@@ -12,26 +12,6 @@
 #include <termios.h>
 #include "minishell.h"
 
-void	increment_shlvl(t_minishell *shell)
-{
-	char	*value_str;
-	int		value;
-	char	*new_str;
-
-	shell->shlvl = 2;
-	value_str = getenv("SHLVL");
-	if (value_str != NULL)
-	{
-		value = ft_atoi(value_str);
-		value++;
-	}
-	else
-		value = 1;
-	new_str = ft_itoa(value);
-	update_env_var(shell, "SHLVL", new_str);
-	free(new_str);
-}
-
 void	execute_subshell(t_minishell *shell, char **args)
 {
 	pid_t	pid;
@@ -47,6 +27,7 @@ void	execute_subshell(t_minishell *shell, char **args)
 	}
 	if (pid == 0)
 	{
+		increment_shlvl(shell);
 		if (execve(args[0], args, shell->og_envp) == -1)
 		{
 			perror ("execve");
@@ -55,7 +36,6 @@ void	execute_subshell(t_minishell *shell, char **args)
 	}
 	else
 	{
-		increment_shlvl(shell);
 		waitpid(pid, &status, 0);
 		signal(SIGINT, handle_sigint);
 		g_sigint_recived = SIGINT_NORMAL;

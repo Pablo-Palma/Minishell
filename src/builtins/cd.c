@@ -12,32 +12,6 @@
 
 #include "minishell.h"
 
-void	update_env_var(t_minishell *shell, const char *key, const char *value)
-{
-	char	*new_var;
-	char	*temp;
-	int		i;
-	size_t	key_len;
-
-	i = 0;
-	key_len = ft_strlen(key);
-	temp = ft_strjoin(key, "=");
-	new_var = ft_strjoin(temp, value);
-	free(temp);
-	while (shell->envp[i] != NULL)
-	{
-		if (ft_strncmp(shell->envp[i], key, key_len) == 0
-			&& shell->envp[i][key_len] == '=')
-		{
-			free(shell->envp[i]);
-			shell->envp[i] = new_var;
-			return ;
-		}
-		i++;
-	}
-	add_var_envp(shell, new_var);
-}
-
 void	cd_command(t_minishell *shell, char **cmd_args)
 {
 	char	new_cwd[PATH_MAX];
@@ -51,8 +25,8 @@ void	cd_command(t_minishell *shell, char **cmd_args)
 	if (chdir(new_path) == 0)
 	{
 		getcwd(new_cwd, sizeof(new_cwd));
-		update_env_var(shell, "OLDPWD", old_path);
-		update_env_var(shell, "PWD", new_cwd);
+		update_env_var(&(shell->envp), "OLDPWD", old_path);
+		update_env_var(&(shell->envp), "PWD", new_cwd);
 	}
 	else
 	{
