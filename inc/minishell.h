@@ -168,8 +168,7 @@ char		**split_cmd(const char *cmd, const char *delimiters);
 char		*get_path(char *cmd, const char *env_path);
 void		handle_error(const char *msg, int use_perror, int error_code);
 void		ft_strncpy(char *dst, char *src, int n);
-void		init_minishell(t_minishell *shell, char **envp,
-					char *executable_path);
+void		init_minishell(t_minishell *shell, char **env);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //
@@ -178,6 +177,6 @@ void		init_minishell(t_minishell *shell, char **envp,
 ///////////////////////////////////////////////////////////////////////////////
 
 //minishell
-int			minishell(char **envp, char *executable_path);
+int			minishell(char **envp);
 
 #endif

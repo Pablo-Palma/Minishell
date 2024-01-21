@@ -34,6 +34,8 @@ void	read_from_stdin(const char *delimiter, int write_fd)
 		if (!line || g_sigint_recived == SIGINT_RECIVED)
 		{
 			g_sigint_recived = SIGINT_HD_RECIVED;
+			if (line)
+				free(line);
 			close(write_fd);
 			break ;
 		}

@@ -21,10 +21,7 @@ void	execute_subshell(t_minishell *shell, char **args)
 	status = 0;
 	signal(SIGINT, SIG_IGN);
 	if (pid == -1)
-	{
-		perror("fork");
 		return ;
-	}
 	if (pid == 0)
 	{
 		increment_shlvl(shell);
@@ -74,11 +71,7 @@ void	select_exec(t_minishell *shell, char **command)
 	if (command == NULL)
 		return ;
 	if (ft_strncmp(command[0], "./minishell", 11) == 0)
-	{
-		command[0] = shell->executable_path;
-		command[1] = NULL;
 		execute_subshell(shell, command);
-	}
 	else
 		execute_program(shell, command);
 }
