@@ -21,6 +21,8 @@ void	proccess_heredoc(t_minishell *shell, char *delimiter)
 	shell->fd_read = shell->pipes[0];
 	read_from_stdin(delimiter, shell->fd_write);
 	close(shell->pipes[1]);
+	if (g_sigint_recived == SIGINT_HD_RECIVED)
+		close(shell->pipes[0]);
 }
 
 void	read_from_stdin(const char *delimiter, int write_fd)
@@ -34,9 +36,9 @@ void	read_from_stdin(const char *delimiter, int write_fd)
 		if (!line || g_sigint_recived == SIGINT_RECIVED)
 		{
 			g_sigint_recived = SIGINT_HD_RECIVED;
+			close (write_fd);
 			if (line)
 				free(line);
-			close(write_fd);
 			break ;
 		}
 		if (strncmp(line, delimiter, ft_strlen(delimiter)) == 0
