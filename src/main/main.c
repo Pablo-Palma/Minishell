@@ -12,14 +12,14 @@
 
 #include <minishell.h>
 
-void leaks()
+/*void leaks()
 {
 	system("leaks -q minishell");
-}
+}*/
 
 int	main(int argc, char **argv, char **envp)
 {
-	atexit(leaks);
+//	atexit(leaks);
 	(void)argv;
 	if (argc == 1)
 		minishell(envp);
