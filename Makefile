@@ -10,8 +10,9 @@ OBJ_DIR = obj/
 
 SRCS =	$(SRC_DIR)aux_ft/ft_strncpy.c			\
     	$(SRC_DIR)aux_ft/get_path.c				\
+		$(SRC_DIR)aux_ft/env_utils.c			\
+		$(SRC_DIR)aux_ft/here_doc_env.c			\
 		$(SRC_DIR)aux_ft/utils.c				\
-		$(SRC_DIR)aux_ft/env_utils.c				\
     	$(SRC_DIR)builtins/cd.c					\
     	$(SRC_DIR)builtins/echo.c				\
 		$(SRC_DIR)builtins/env.c				\

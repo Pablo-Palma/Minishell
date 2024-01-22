@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 16:45:29 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/17 20:47:37 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/22 15:47:23 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@ void	proccess_heredoc(t_minishell *shell, char *delimiter)
 		handle_error("Error creating pipe", 1, EXIT_FAILURE);
 	shell->fd_write = shell->pipes[1];
 	shell->fd_read = shell->pipes[0];
-	read_from_stdin(delimiter, shell->fd_write);
+	read_from_stdin(shell, delimiter, shell->fd_write);
 	close(shell->pipes[1]);
 }
 
-void	read_from_stdin(const char *delimiter, int write_fd)
+void	read_from_stdin(t_minishell *shell, const char *delim, int write_fd)
 {
 	char	*line;
 
@@ -39,12 +39,13 @@ void	read_from_stdin(const char *delimiter, int write_fd)
 			close(write_fd);
 			break ;
 		}
-		if (strncmp(line, delimiter, ft_strlen(delimiter)) == 0
-			&& line[ft_strlen(delimiter)] == '\n')
+		if (strncmp(line, delim, ft_strlen(delim)) == 0
+			&& line[ft_strlen(delim)] == '\n')
 		{
 			free(line);
 			break ;
 		}
+		line = doc_envp(shell, line);
 		write (write_fd, line, ft_strlen(line));
 		free(line);
 	}

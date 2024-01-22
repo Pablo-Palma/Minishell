@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/18 14:07:19 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/22 15:48:16 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ int			handle_redirect(t_minishell *shell, t_ast_node *cmd_node);
 void		execute_ast_command(t_minishell *shell, t_ast_node *node);
 void		execute_output_redirect(t_minishell *shell, t_ast_node *node);
 void		execute_single_command(t_minishell *shell, char *value);
-void		read_from_stdin(const char *delimiter, int write_fd);
+void		read_from_stdin(t_minishell *shell, const char *delim, int wr_fd);
 void		proccess_heredoc(t_minishell *shell, char *delimiter);
 void		execute_single_cmd(t_minishell *shell, t_ast_node *cmd_node);
 void		execute_ast_pipe(t_minishell *shell, t_ast_node *cmd_node);
@@ -150,7 +150,7 @@ int			exit_command(t_minishell *shell, char **cmd_args);
 
 //signal
 void		setup_signal_handlers(void);
-void	handle_sigint(int sig);
+void		handle_sigint(int sig);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //
@@ -161,6 +161,7 @@ void	handle_sigint(int sig);
 //aux_ft
 void		add_var_envp(char ***envp, const char *new_var);
 void		update_env_var(char ***envp, const char *key, const char *value);
+char		*doc_envp(t_minishell *shell, char *src);
 void		increment_shlvl(t_minishell *shell);
 void		free_env(char ***env);
 void		free_shell(t_minishell *shell);
