@@ -32,6 +32,7 @@ SRCS =	$(SRC_DIR)aux_ft/ft_strncpy.c			\
 		$(SRC_DIR)input/envp.c					\
 		$(SRC_DIR)input/input.c					\
 		$(SRC_DIR)input/lexer.c 				\
+		$(SRC_DIR)input/token.c 				\
 		$(SRC_DIR)main/main.c 					\
     	$(SRC_DIR)main/minishell.c				\
     	$(SRC_DIR)signal/signal.c 

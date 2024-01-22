@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:28:52 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/22 15:51:46 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/23 00:41:03 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 int	main(int argc, char **argv, char **envp)
 {
-//	atexit(leaks);
+	//atexit(leaks);
 	(void)argv;
 	if (argc == 1)
 		minishell(envp);
