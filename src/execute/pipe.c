@@ -52,6 +52,8 @@ void	execute_single_cmd(t_minishell *shell, t_ast_node *cmd_node)
 		handle_error("Error in fork", 1, EXIT_FAILURE);
 	if (!pid)
 		execute_command_child(shell, cmd_node);
+	if (shell->output_redirect)
+		close(shell->fd_write);
 	waitpid(pid, &status, 0);
 	close(shell->pipes[1]);
 	if (shell->fd_read)
