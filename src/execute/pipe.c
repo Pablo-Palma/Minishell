@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/20 16:19:36 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/22 21:12:19 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ void	execute_single_cmd(t_minishell *shell, t_ast_node *cmd_node)
 		handle_error("Error in fork", 1, EXIT_FAILURE);
 	if (!pid)
 		execute_command_child(shell, cmd_node);
+	if (shell->output_redirect)
+		close(shell->fd_write);
 	waitpid(pid, &status, 0);
 	close(shell->pipes[1]);
 	if (shell->fd_read)
@@ -63,7 +65,7 @@ void	execute_single_cmd(t_minishell *shell, t_ast_node *cmd_node)
 		shell->last_exit_status = WEXITSTATUS(status);
 }
 
-void	execute_ast_pipe( t_minishell *shell, t_ast_node *cmd_node)
+void	execute_ast_pipe(t_minishell *shell, t_ast_node *cmd_node)
 {
 	g_sigint_recived = 2;
 	if (cmd_node->type == AST_REDIRECT_IN || cmd_node->type == AST_REDIRECT_OUT)
