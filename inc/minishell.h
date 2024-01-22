@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/22 15:48:16 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/23 00:18:16 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ typedef struct s_minishell
 t_token		*create_token(t_type type, char *value);
 t_token		*build_command_token(char **split_input, int *i);
 t_token		*get_last_token(t_token *token);
+t_type		token_type(char *value);
 void		add_token_back(t_token **head, t_token *new_token);
 void		free_tokens(t_token *token);
 
@@ -98,7 +99,7 @@ void		add_red_in(t_ast_node **root, t_token *token, t_ast_node **file);
 void		free_ast(t_ast_node *node);
 
 //parsing
-t_token		*lexer(char *input);
+t_token		*lexer(char **input);
 int			handle_input(t_minishell *shell, char *input);
 int			count_operators(char *input);
 char		*handle_operators(char *input);
@@ -120,10 +121,12 @@ void		execute_single_command(t_minishell *shell, char *value);
 void		read_from_stdin(t_minishell *shell, const char *delim, int wr_fd);
 void		proccess_heredoc(t_minishell *shell, char *delimiter);
 void		execute_single_cmd(t_minishell *shell, t_ast_node *cmd_node);
-void		execute_ast_pipe(t_minishell *shell, t_ast_node *cmd_node);
+void		execute_pipe_cmd(t_minishell *shell, t_ast_node *cmd_node);
+void		execute_multiple_cmd(t_minishell *shell, t_ast_node *cmd_node);
 void		handle_fd(t_minishell *shell);
 void		select_exec(t_minishell *shell, char **command);
 void		increment_shlvl(t_minishell *shell);
+void		redirect_stdin(t_minishell *shell);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //
@@ -170,6 +173,7 @@ char		*get_path(char *cmd, const char *env_path);
 void		handle_error(const char *msg, int use_perror, int error_code);
 void		ft_strncpy(char *dst, char *src, int n);
 void		init_minishell(t_minishell *shell, char **env);
+void		reset_minishell(t_minishell *shell);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //

@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 22:53:13 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/18 13:01:28 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/23 00:13:43 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,20 +92,11 @@ int	strip_quotes(char *quoted_str, char *unquoted_str)
 	return (envvar);
 }
 
-int	handle_input(t_minishell *shell, char *input)
+int	handle_doc(t_minishell *shell, t_token *tokens)
 {
-	t_token		*tokens;
-	t_ast_node	*ast;
-	t_token		*current_token;
-	t_token		*delimiter_token;
+	t_token	*current_token;
+	t_token	*delimiter_token;
 
-	tokens = lexer(handle_operators(input));
-	handle_envp(shell, tokens);
-	if (!tokens)
-	{
-		ft_printf("ERROR generating tokens\n");
-		return (-1);
-	}
 	current_token = tokens;
 	while (current_token != NULL)
 	{
@@ -123,6 +114,25 @@ int	handle_input(t_minishell *shell, char *input)
 		else
 			current_token = current_token->next;
 	}
+	return (0);
+}
+
+int	handle_input(t_minishell *shell, char *input)
+{
+	t_token		*tokens;
+	t_ast_node	*ast;
+	char		*parsed_input;
+
+	parsed_input = handle_operators(input);
+	tokens = lexer(ft_split(parsed_input, ' '));
+	handle_envp(shell, tokens);
+	if (!tokens)
+	{
+		ft_printf("ERROR generating tokens\n");
+		return (-1);
+	}
+	if (handle_doc(shell, tokens))
+		return (1);
 	ast = build_ast(tokens);
 	if (!ast)
 	{
@@ -133,9 +143,7 @@ int	handle_input(t_minishell *shell, char *input)
 	execute_ast_command(shell, ast);
 	free_ast(ast);
 	free_tokens(tokens);
-	shell->fd_read = 0;
-	shell->fd_write = 1;
-	shell->input_redirect = 0;
-	shell->output_redirect = 0;
+	free(parsed_input);
+	reset_minishell(shell);
 	return (1);
 }

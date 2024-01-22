@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:21:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/18 15:58:53 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/22 21:30:08 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ int	minishell(char **envp)
 			g_sigint_recived = SIGINT_NORMAL;
 		if (!input)
 		{
-			ft_printf("%s\n", "EOF recibido.");
 			free_shell(&shell);
 			free(input);
 			break ;

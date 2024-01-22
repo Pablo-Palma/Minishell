@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
+/*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 20:46:20 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/15 20:46:36 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/23 00:22:21 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,4 +72,12 @@ void	init_minishell(t_minishell *shell, char **envp)
 	shell->last_cmd = 0;
 	shell->nb_pipes = 0;
 	shell->last_exit_status = 0;
+}
+
+void	reset_minishell(t_minishell *shell)
+{
+	shell->fd_read = 0;
+	shell->fd_write = 1;
+	shell->input_redirect = 0;
+	shell->output_redirect = 0;
 }

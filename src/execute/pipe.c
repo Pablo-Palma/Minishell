@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/22 21:12:19 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/22 22:35:47 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,26 @@ void	execute_single_cmd(t_minishell *shell, t_ast_node *cmd_node)
 		shell->last_exit_status = WEXITSTATUS(status);
 }
 
-void	execute_ast_pipe(t_minishell *shell, t_ast_node *cmd_node)
+void	execute_pipe_cmd(t_minishell *shell, t_ast_node *cmd_node)
+{
+	if (pipe(shell->pipes) == -1)
+			handle_error("Error creating pipe", 1, EXIT_FAILURE);
+	shell->fd_write = shell->pipes[1];
+	shell->last_cmd = 0;
+	if (cmd_node->left)
+		execute_multiple_cmd(shell, cmd_node->left);
+	if (shell->output_redirect)
+	{
+		shell->fd_read = 0;
+		shell->output_redirect = 0;
+	}
+	shell->last_cmd = 1;
+	if (cmd_node->right)
+		execute_multiple_cmd(shell, cmd_node->right);
+	close(shell->pipes[0]);
+}
+
+void	execute_multiple_cmd(t_minishell *shell, t_ast_node *cmd_node)
 {
 	g_sigint_recived = 2;
 	if (cmd_node->type == AST_REDIRECT_IN || cmd_node->type == AST_REDIRECT_OUT)
@@ -76,22 +95,6 @@ void	execute_ast_pipe(t_minishell *shell, t_ast_node *cmd_node)
 	}
 	else if (cmd_node->type == AST_COMMAND)
 		execute_single_cmd(shell, cmd_node);
-	else if (cmd_node->type == AST_PIPE)
-	{
-		if (pipe(shell->pipes) == -1)
-			handle_error("Error creating pipe", 1, EXIT_FAILURE);
-		shell->fd_write = shell->pipes[1];
-		shell->last_cmd = 0;
-		if (cmd_node->left)
-			execute_ast_pipe(shell, cmd_node->left);
-		if (shell->output_redirect)
-		{
-			shell->fd_read = 0;
-			shell->output_redirect = 0;
-		}
-		shell->last_cmd = 1;
-		if (cmd_node->right)
-			execute_ast_pipe(shell, cmd_node->right);
-		close(shell->pipes[0]);
-	}
+	else
+		execute_pipe_cmd(shell, cmd_node);
 }

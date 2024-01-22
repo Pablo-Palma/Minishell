@@ -6,11 +6,20 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/13 13:24:33 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/17 20:50:20 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/23 00:17:24 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	redirect_stdin(t_minishell *shell)
+{
+	if (shell->fd_read != STDIN_FILENO)
+	{
+		dup2(shell->fd_read, STDIN_FILENO);
+		close(shell->fd_read);
+	}
+}
 
 int	input_redirection(t_minishell *shell, t_ast_node *cmd_node)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
+/*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 08:46:52 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/07 09:10:39 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/23 00:22:34 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,31 +33,3 @@ void	cd_command(t_minishell *shell, char **cmd_args)
 		perror("cd failed");
 	}
 }
-
-/*void	cd_command(char **cmd_args)
-{
-	char	*new_path;
-	char	old_path[PATH_MAX];
-	char	current_path[PATH_MAX];
-	int		chdir_result;
-
-	if (getcwd(old_path, sizeof(old_path)) == NULL)
-	{
-		perror ("getcwd");
-		return ;
-	}
-	new_path = cmd_args[1];
-	if (new_path == NULL)
-		new_path = getenv("HOME");
-	chdir_result = chdir(new_path);
-	if (!chdir_result)
-	{
-		setenv("OLDPWD", old_path, 1);
-		if (getcwd(current_path, sizeof(current_path)) != NULL)
-			setenv("PWD", current_path, 1);
-		else
-			perror("getcwd");
-	}
-	else
-		perror("cd");
-}*/

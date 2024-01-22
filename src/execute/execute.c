@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:11:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/20 15:51:14 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/23 00:20:52 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	execute_ast_command(t_minishell *shell, t_ast_node *node)
 	else if (node->type == AST_REDIRECT_OUT)
 		execute_output_redirect(shell, node);
 	else
-		execute_ast_pipe(shell, node);
+		execute_multiple_cmd(shell, node);
 }
 
 void	execute_output_redirect(t_minishell *shell, t_ast_node *node)
@@ -49,15 +49,6 @@ void	execute_output_redirect(t_minishell *shell, t_ast_node *node)
 	}
 	waitpid(pid, 0, 0);
 	return ;
-}
-
-void	redirect_stdin(t_minishell *shell)
-{
-	if (shell->fd_read != STDIN_FILENO)
-	{
-		dup2(shell->fd_read, STDIN_FILENO);
-		close(shell->fd_read);
-	}
 }
 
 void	execute_single_cmd_process(t_minishell *shell, char **args, char *path)
@@ -87,18 +78,25 @@ void	execute_single_cmd_process(t_minishell *shell, char **args, char *path)
 	}
 }
 
+int	handle_signal(t_minishell *shell, char *value)
+{
+	if	(g_sigint_recived == SIGINT_HD_RECIVED)
+	{
+		shell->last_exit_status = 130;
+		return (-1);
+	}
+	g_sigint_recived = SIGINT_COMMAND;
+	if (!value || !shell)
+		return (-1);
+	return (0);
+}
+
 void	execute_single_command(t_minishell *shell, char *value)
 {
 	char	**args;
 	char	*path;
 
-	if	(g_sigint_recived == SIGINT_HD_RECIVED)
-	{
-		shell->last_exit_status = 130;
-		return ;
-	}
-	g_sigint_recived = SIGINT_COMMAND;
-	if (!value || !shell)
+	if (handle_signal(shell, value))
 		return ;
 	args = ft_split(value, ' ');
 	if (ft_strncmp(args[0], "./", 2) == 0)
