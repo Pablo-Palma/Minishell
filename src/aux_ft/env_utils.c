@@ -42,14 +42,14 @@ void	add_var_envp(char ***envp, const char *new_var)
 	if (!new_envp)
 		return ;
 	i = 0;
-	while ((*envp[i]) != NULL)
+	while ((*envp)[i] != NULL)
 	{
-		new_envp[i] = (*envp)[i];
+		new_envp[i] = ft_strdup((*envp)[i]);
 		i++;
 	}
 	new_envp[i] = ft_strdup(new_var);
 	new_envp[i + 1] = NULL;
-	free(*envp);
+	//free(*envp);
 	*envp = new_envp;
 }
 
