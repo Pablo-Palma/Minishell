@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 22:53:13 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/23 00:13:43 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/23 20:54:46 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,21 +125,21 @@ int	handle_input(t_minishell *shell, char *input)
 
 	parsed_input = handle_operators(input);
 	tokens = lexer(ft_split(parsed_input, ' '));
+	free(parsed_input);
 	handle_envp(shell, tokens);
 	if (!tokens)
-		handle_error("ERROR generating tokens", 0, -1);
+		return (-1);
 	if (handle_doc(shell, tokens))
 		return (1);
 	ast = build_ast(tokens);
 	if (!ast)
 	{
 		free_tokens(tokens);
-		handle_error("ERROR building AST\n", 0, -1);
+		return (-1);
 	}
 	execute_ast_command(shell, ast);
 	free_ast(ast);
 	free_tokens(tokens);
-	free(parsed_input);
 	reset_minishell(shell);
 	return (1);
 }

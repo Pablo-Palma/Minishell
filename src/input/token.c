@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 23:49:08 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/22 23:49:52 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/23 22:34:05 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,18 @@ t_token	*create_token(t_type type, char *value)
 	new_token->type = type;
 	new_token->next = NULL;
 	new_token->prev = NULL;
+	new_token->envvar = 0;
 	new_token->value = malloc(ft_strlen(value) + 1);
 	envvar = strip_quotes(value, new_token->value);
 	if (envvar == -1)
+	{
+		free(new_token->value);
+		free(new_token);
 		return (NULL);
-	else
-		new_token->envvar = envvar;
+	}
+	if (type == AST_FILE)
+		return (new_token);
+	new_token->envvar = envvar;
 	return (new_token);
 }
 
@@ -44,3 +50,5 @@ t_type	token_type(char *value)
 		return (AST_REDIRECT_OUT);
 	return (AST_COMMAND);
 }
+
+

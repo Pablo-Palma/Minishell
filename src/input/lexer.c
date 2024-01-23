@@ -6,12 +6,13 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:37:07 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/22 23:57:48 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/23 22:31:12 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/*
 int	is_valid(char *input, t_minishell *shell)
 {
 	while (*input && (!isascii(*input) || (*input == 39 || *input == 34
@@ -25,6 +26,20 @@ int	is_valid(char *input, t_minishell *shell)
 		return (0);
 	}
 	return (1);
+}*/
+void	build_heredoc(char **input, int *i, t_token **tokens)
+{
+	add_token_back(tokens, create_token(AST_HEREDOC, input[*i]));
+	(*i)++;
+	while (input[*i] != NULL && ft_strlen(input[*i]) == 0)
+		(*i)++;
+	if (input[*i] != NULL)
+	{
+		add_token_back(tokens, create_token(AST_HEREDOC_DELIM,
+				input[*i]));
+		(*i)++;
+	}
+	(*i)--;
 }
 
 t_token	*build_command_token(char **input, int *i)
@@ -55,19 +70,32 @@ t_token	*build_command_token(char **input, int *i)
 	return (new_token);
 }
 
-void	build_heredoc(char **input, int *i, t_token **tokens)
+t_token	*build_file_token(char **input, int *i)
 {
-	add_token_back(tokens, create_token(AST_HEREDOC, input[*i]));
+	char		*file;
+	char		*temp;
+	t_token		*new_token;
+
+	file = ft_strdup(input[*i]);
 	(*i)++;
-	while (input[*i] != NULL && ft_strlen(input[*i]) == 0)
-		(*i)++;
-	if (input[*i] != NULL)
+	while (input[*i] && (strchr(input[*i], '\"') || strchr(input[*i], '\'')))
 	{
-		add_token_back(tokens, create_token(AST_HEREDOC_DELIM,
-				input[*i]));
+		temp = file;
+		file = ft_strjoin(file, " ");
+		if (!file)
+			return (NULL);
+		free(temp);
+		temp = file;
+		file = ft_strjoin(file, input[*i]);
+		if (!file)
+			return (NULL);
+		free(temp);
 		(*i)++;
 	}
+	new_token = create_token(AST_FILE, file);
+	free (file);
 	(*i)--;
+	return (new_token);
 }
 
 void	build_token(t_token **tokens, char **input, int *i, int *is_file)
@@ -77,7 +105,7 @@ void	build_token(t_token **tokens, char **input, int *i, int *is_file)
 	type = token_type(input[*i]);
 	if (*is_file)
 	{
-		add_token_back(tokens, create_token(AST_FILE, input[*i]));
+		add_token_back(tokens, build_file_token(input, i));
 		*is_file = 0;
 	}
 	else if (type == AST_COMMAND)
