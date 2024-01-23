@@ -71,10 +71,10 @@ char	*doc_envp(t_minishell *shell, char *src)
 
 	i = 0;
 	line = NULL;
-	while (src[i] != '$')
+	while (src[i] != '$' && src[i] != '\n')
 		i++;
 	cnt = i + 1;
-	if (!src[i])
+	if (!src[i] || src[i] == '\n')
 		return (NULL);
 	if (src[cnt] == '$')
 		line = ft_strdup(src);

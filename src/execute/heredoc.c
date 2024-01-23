@@ -25,6 +25,18 @@ void	proccess_heredoc(t_minishell *shell, char *delimiter)
 		close(shell->pipes[0]);
 }
 
+void	process_line(t_minishell *shell, char *line, int write_fd)
+{
+	char	*new_line;
+
+	new_line = doc_envp(shell, line);
+	if (new_line)
+		line = new_line;
+	write (write_fd, line, ft_strlen(line));
+	if (line)
+		free(line);
+}
+
 void	read_from_stdin(t_minishell *shell, const char *delim, int write_fd)
 {
 	char	*line;
@@ -47,8 +59,6 @@ void	read_from_stdin(t_minishell *shell, const char *delim, int write_fd)
 			free(line);
 			break ;
 		}
-		line = doc_envp(shell, line);
-		write (write_fd, line, ft_strlen(line));
-		free(line);
+		process_line(shell, line, write_fd);
 	}
 }
