@@ -30,7 +30,7 @@ int	minishell(char **envp)
 			free(input);
 			break ;
 		}
-		if (*input)
+		if (*input && is_valid(input, &shell))
 		{
 			add_history(input);
 			handle_input(&shell, input);

@@ -12,6 +12,21 @@
 
 #include "minishell.h"
 
+int	is_valid(char *input, t_minishell *shell)
+{
+	while (*input && (!isascii(*input) || (*input == 39 || *input == 34
+				|| *input == '<' || *input == '>' || *input == '?'
+				|| *input == '/' || *input == '!')))
+		input++;
+	if (*input == '\0')
+	{
+		printf("minishell: command not found\n");
+		shell->last_exit_status = 127;
+		return (0);
+	}
+	return (1);
+}
+
 t_token	*build_command_token(char **input, int *i)
 {
 	char		*command;

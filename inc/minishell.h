@@ -107,6 +107,7 @@ char		*handle_operators(char *input);
 void		handle_envp(t_minishell *shell, t_token *node);
 void		switch_envp(t_minishell *shell, t_token *token, int i);
 int			strip_quotes(char *quoted_str, char *unquoted_str);
+int			is_valid(char *input, t_minishell *shell);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //
