@@ -32,6 +32,13 @@ void	process_line(t_minishell *shell, char *line, int write_fd)
 	new_line = doc_envp(shell, line);
 	if (new_line)
 		line = new_line;
+	if (ft_strncmp(line, "$$\n", 3) == 0 && shell->shell_pid)
+	{
+		new_line = ft_strdup(ft_itoa(shell->shell_pid));
+		line = ft_strjoin(new_line, "\n");
+		if (new_line)
+			free(new_line);
+	}
 	write (write_fd, line, ft_strlen(line));
 	if (line)
 		free(line);

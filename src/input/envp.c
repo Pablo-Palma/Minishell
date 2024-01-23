@@ -44,13 +44,13 @@ void	switch_envp(t_minishell *shell, t_token *token, int i)
 	int		cnt;
 
 	cnt = i + 1;
-	if ((token->value[i] == '$' && token->value[i + 1] == '?')
+	if ((token->value[i] == '$' && (token->value[i + 1] == '?'))
 		|| token->type == AST_HEREDOC_DELIM)
 		return ;
 	while (token->value[cnt] && token->value[cnt] != ' '
 		&& token->value[cnt] != '\'')
 		cnt++;
-	if (!token->value[1] || token->value[1] == '?')
+	if (!token->value[1] || token->value[1] == '?' || token->value[1] == '$')
 		return ;
 	new_value = ft_switch(shell, token, i, cnt);
 	if (!new_value)
@@ -77,8 +77,14 @@ void	handle_envp(t_minishell *shell, t_token *node)
 		{
 			i = -1;
 			while (token->value[++i])
-				if (token->value[i] == '$')
+			{
+				if (token->value[i] && token->value[i] == '$')
+				{
+					if (token->value[i + 1] == '$')
+						break ;
 					switch_envp(shell, token, i);
+				}
+			}
 		}
 		token = token->next;
 	}

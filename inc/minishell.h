@@ -73,6 +73,7 @@ typedef struct s_minishell
 	t_ast_node	*ast;
 	int			last_cmd;
 	int			last_exit_status;
+	int			shell_pid;
 }	t_minishell;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -127,6 +128,8 @@ void		handle_fd(t_minishell *shell);
 void		select_exec(t_minishell *shell, char **command);
 void		increment_shlvl(t_minishell *shell);
 void		redirect_stdin(t_minishell *shell);
+void		execute_single_cmd_process(t_minishell *shell, char **args,
+				char *path);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //

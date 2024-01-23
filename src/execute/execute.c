@@ -61,19 +61,21 @@ void	execute_single_cmd_process(t_minishell *shell, char **args, char *path)
 		perror("Fork Error");
 	else if (pid == 0)
 	{
+		if (args[1] && ft_strncmp(args[1], "$$", 3) == 0)
+			exit (0);
 		redirect_stdin(shell);
 		if (execve(path, args, shell->envp) == -1)
-		{
-			perror("Execve Error");
-			exit (EXIT_FAILURE);
-		}
+			handle_error("Execve Error", 1, EXIT_FAILURE);
 	}
 	else
 	{
+		if (!shell->shell_pid)
+			shell->shell_pid = ((int)pid - 1);
+		if (args[1] && ft_strncmp(args[1], "$$", 3) == 0)
+			printf("%d\n", shell->shell_pid);
 		if (shell->fd_read != STDIN_FILENO)
 			close(shell->fd_read);
-		waitpid(pid, &status, 0);
-		if (WIFEXITED(status))
+		if (waitpid(pid, &status, 0) != -1 && WIFEXITED(status))
 			shell->last_exit_status = WEXITSTATUS(status);
 	}
 }
