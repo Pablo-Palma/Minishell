@@ -80,7 +80,7 @@ void	execute_single_cmd_process(t_minishell *shell, char **args, char *path)
 
 int	handle_signal(t_minishell *shell, char *value)
 {
-	if	(g_sigint_recived == SIGINT_HD_RECIVED)
+	if (g_sigint_recived == SIGINT_HD_RECIVED)
 	{
 		shell->last_exit_status = 130;
 		return (-1);

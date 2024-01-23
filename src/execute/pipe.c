@@ -68,7 +68,7 @@ void	execute_single_cmd(t_minishell *shell, t_ast_node *cmd_node)
 void	execute_pipe_cmd(t_minishell *shell, t_ast_node *cmd_node)
 {
 	if (pipe(shell->pipes) == -1)
-			handle_error("Error creating pipe", 1, EXIT_FAILURE);
+		handle_error("Error creating pipe", 1, EXIT_FAILURE);
 	shell->fd_write = shell->pipes[1];
 	shell->last_cmd = 0;
 	if (cmd_node->left)

@@ -61,7 +61,7 @@ void	build_token(t_token **tokens, char **input, int *i, int *is_file)
 
 	type = token_type(input[*i]);
 	if (*is_file)
-		{
+	{
 		add_token_back(tokens, create_token(AST_FILE, input[*i]));
 		*is_file = 0;
 	}

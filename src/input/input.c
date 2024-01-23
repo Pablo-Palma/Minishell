@@ -127,18 +127,14 @@ int	handle_input(t_minishell *shell, char *input)
 	tokens = lexer(ft_split(parsed_input, ' '));
 	handle_envp(shell, tokens);
 	if (!tokens)
-	{
-		ft_printf("ERROR generating tokens\n");
-		return (-1);
-	}
+		handle_error("ERROR generating tokens", 0, -1);
 	if (handle_doc(shell, tokens))
 		return (1);
 	ast = build_ast(tokens);
 	if (!ast)
 	{
-		ft_printf("ERROR building AST\n");
 		free_tokens(tokens);
-		return (-1);
+		handle_error("ERROR building AST\n", 0, -1);
 	}
 	execute_ast_command(shell, ast);
 	free_ast(ast);

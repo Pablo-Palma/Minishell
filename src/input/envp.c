@@ -23,10 +23,13 @@ char	*ft_switch(t_minishell *shell, t_token *token, int i, int cnt)
 	{
 		if (!ft_strncmp(&token->value[i + 1], shell->envp[j], cnt - i - 1))
 		{
-			value = ft_calloc(1, ft_strlen(token->value) + ft_strlen(shell->envp[j]) - 2 * (cnt - i));
+			value = ft_calloc(1, ft_strlen(token->value)
+					+ ft_strlen(shell->envp[j]) - 2 * (cnt - i));
 			ft_strncpy(value, token->value, i);
-			ft_strncpy(value, &(shell->envp[j][cnt-i]), ft_strlen(&(shell->envp[j][cnt-i])));
-			ft_strncpy(value, &token->value[cnt], ft_strlen(&token->value[cnt]));
+			ft_strncpy(value, &(shell->envp[j][cnt - i]),
+				ft_strlen(&(shell->envp[j][cnt - i])));
+			ft_strncpy(value, &token->value[cnt],
+				ft_strlen(&token->value[cnt]));
 			free(token->value);
 			token->value = value;
 			return (value);
@@ -41,10 +44,11 @@ void	switch_envp(t_minishell *shell, t_token *token, int i)
 	int		cnt;
 
 	cnt = i + 1;
-	if ((token->value[i]  == '$' && token->value[i + 1] == '?')
+	if ((token->value[i] == '$' && token->value[i + 1] == '?')
 		|| token->type == AST_HEREDOC_DELIM)
 		return ;
-	while (token->value[cnt] && token->value[cnt] != ' ' && token->value[cnt] != '\'')
+	while (token->value[cnt] && token->value[cnt] != ' '
+		&& token->value[cnt] != '\'')
 		cnt++;
 	if (!token->value[1] || token->value[1] == '?')
 		return ;
@@ -54,7 +58,8 @@ void	switch_envp(t_minishell *shell, t_token *token, int i)
 		new_value = ft_calloc(1, ft_strlen(token->value) - (cnt - i));
 		ft_strncpy(new_value, token->value, i);
 		ft_strncpy(new_value, "", 0);
-		ft_strncpy(new_value, &token->value[cnt], ft_strlen(&token->value[cnt]));
+		ft_strncpy(new_value, &token->value[cnt],
+			ft_strlen(&token->value[cnt]));
 		free(token->value);
 		token->value = new_value;
 	}

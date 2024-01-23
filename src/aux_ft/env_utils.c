@@ -49,7 +49,6 @@ void	add_var_envp(char ***envp, const char *new_var)
 	}
 	new_envp[i] = ft_strdup(new_var);
 	new_envp[i + 1] = NULL;
-	//free(*envp);
 	*envp = new_envp;
 }
 

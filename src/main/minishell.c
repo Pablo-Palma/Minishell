@@ -37,6 +37,6 @@ int	minishell(char **envp)
 		}
 		free(input);
 	}
-	printf("Saliendo de minishell...\n");
+	printf("exit\n");
 	return (0);
 }
