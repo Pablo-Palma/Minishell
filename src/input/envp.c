@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 13:00:47 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/23 00:30:29 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/23 15:09:21 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*ft_switch(t_minishell *shell, t_token *token, int i, int cnt)
 		if (!ft_strncmp(&token->value[i + 1], shell->envp[j], cnt - i - 1))
 		{
 			value = ft_calloc(1, ft_strlen(token->value)
-					+ ft_strlen(shell->envp[j]) - 2 * (cnt - i));
+					+ ft_strlen(shell->envp[j]) - 2 * (cnt - i) + 1);
 			ft_strncpy(value, token->value, i);
 			ft_strncpy(value, &(shell->envp[j][cnt - i]),
 				ft_strlen(&(shell->envp[j][cnt - i])));
@@ -55,7 +55,7 @@ void	switch_envp(t_minishell *shell, t_token *token, int i)
 	new_value = ft_switch(shell, token, i, cnt);
 	if (!new_value)
 	{
-		new_value = ft_calloc(1, ft_strlen(token->value) - (cnt - i));
+		new_value = ft_calloc(1, ft_strlen(token->value) - (cnt - i) + 1);
 		ft_strncpy(new_value, token->value, i);
 		ft_strncpy(new_value, "", 0);
 		ft_strncpy(new_value, &token->value[cnt],
