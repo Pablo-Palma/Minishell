@@ -107,9 +107,9 @@ void	execute_single_command(t_minishell *shell, char *value)
 		select_exec(shell, args);
 	else if (!special_builtin(shell, args) && !handle_builtin(shell, args))
 	{
-		path = get_path(args[0], getenv("PATH"));
+		path = get_path(args[0], my_getenv(shell->envp, "PATH"));
 		if (!path)
-			perror("Path Error: ");
+			exit_status(shell, args[0], 127);
 		else
 		{
 			execute_single_cmd_process(shell, args, path);

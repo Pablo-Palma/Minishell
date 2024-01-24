@@ -12,6 +12,24 @@
 
 #include "minishell.h"
 
+char	*my_getenv(char **envp, const char *name)
+{
+	int	len;
+	int	i;
+
+	i = 0;
+	len = ft_strlen(name);
+	if (name == NULL || envp == NULL)
+		return (NULL);
+	while (envp[i] != NULL)
+	{
+		if (ft_strncmp(envp[i], name, len) == 0 && envp[i][len] == '=')
+			return (envp[i] + len + 1);
+		i++;
+	}
+	return (NULL);
+}
+
 void	free_env(char ***env)
 {
 	int	i;

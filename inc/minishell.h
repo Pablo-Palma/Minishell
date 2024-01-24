@@ -158,6 +158,7 @@ int			exit_command(t_minishell *shell, char **cmd_args);
 //signal
 void		setup_signal_handlers(void);
 void		handle_sigint(int sig);
+void		exit_status(t_minishell *shell, const char *msg, int status);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //
@@ -181,6 +182,7 @@ void		reset_minishell(t_minishell *shell);
 char		**split_cmd(const char *cmd, const char *delimiters);
 char		*ft_strndup(const char *src, int n);
 char		*ft_double(t_minishell *shell, char *src, int i);
+char		*my_getenv(char **envp, const char *name);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //
