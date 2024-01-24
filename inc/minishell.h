@@ -140,7 +140,7 @@ void		execute_single_cmd_process(t_minishell *shell, char **args,
 
 //built-in
 int			handle_builtin(t_minishell *shell, char **cmd_args);
-int			handle_special_builtin(t_minishell *shell, char **cmd_args);
+int			special_builtin(t_minishell *shell, char **cmd_args);
 void		echo_command(char **cmd_args);
 void		env_command(t_minishell *shell);
 void		pwd_command(void);

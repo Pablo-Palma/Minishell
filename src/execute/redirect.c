@@ -39,7 +39,6 @@ int	output_redirection(t_minishell *shell, t_ast_node *cmd_node)
 
 int	output_append_redirection(t_minishell *shell, t_ast_node *cmd_node)
 {
-
 	close(shell->fd_write);
 	shell->fd_write = open(cmd_node->value,
 			O_WRONLY | O_CREAT | O_APPEND, 0777);

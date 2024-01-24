@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int	handle_special_builtin(t_minishell *shell, char **cmd_args)
+int	special_builtin(t_minishell *shell, char **cmd_args)
 {
 	if (strncmp(cmd_args[0], "cd", 3) == 0)
 	{
