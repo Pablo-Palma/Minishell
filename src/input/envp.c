@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 13:00:47 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/24 20:51:22 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/24 21:13:44 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,6 @@ char	*ft_switch(t_minishell *shell, t_token *token, int i, int cnt)
 				ft_strlen(&(shell->envp[j][cnt - i])));
 			ft_strncpy(value, &token->value[cnt],
 				ft_strlen(&token->value[cnt]));
-			free(token->value);
-			token->value = value;
 			return (value);
 		}
 	}
@@ -44,24 +42,22 @@ void	switch_envp(t_minishell *shell, t_token *token, int i)
 	int		cnt;
 
 	cnt = i + 1;
+	new_value = NULL;
 	if (token->type == AST_HEREDOC_DELIM)
 		return ;
+	if (!token->value[cnt] || ft_isspace(token->value[cnt]))
+		new_value = empty_env_switch(shell, token->value, i, i + 1);
 	while (token->value[cnt] && token->value[cnt] != ' '
 		&& token->value[cnt] != '\'')
 		cnt++;
 	if (!token->value[1] || token->value[1] == '?' || token->value[1] == '$')
 		return ;
-	new_value = ft_switch(shell, token, i, cnt);
 	if (!new_value)
-	{
-		new_value = ft_calloc(1, ft_strlen(token->value) - (cnt - i) + 1);
-		ft_strncpy(new_value, token->value, i);
-		ft_strncpy(new_value, "", 0);
-		ft_strncpy(new_value, &token->value[cnt],
-			ft_strlen(&token->value[cnt]));
-		free(token->value);
-		token->value = new_value;
-	}
+		new_value = ft_switch(shell, token, i, cnt);
+	if (!new_value)
+		new_value = empty_env_switch(shell, token->value, i, cnt);
+	free(token->value);
+	token->value = new_value;
 }
 
 void	echo_double(t_minishell *shell, t_token *token, int i)

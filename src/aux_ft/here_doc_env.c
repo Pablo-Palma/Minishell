@@ -6,13 +6,13 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 11:53:25 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/24 20:50:19 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/24 21:07:21 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*doc_switch(t_minishell *shell, char *src, int cnt, int i)
+char	*doc_switch(t_minishell *shell, char *src, int i, int cnt)
 {
 	int		j;
 	char	*value;
@@ -35,7 +35,7 @@ char	*doc_switch(t_minishell *shell, char *src, int cnt, int i)
 	return (value);
 }
 
-char	*empty_switch(t_minishell *shell, char *src, int cnt, int i)
+char	*empty_env_switch(t_minishell *shell, char *src, int i, int cnt)
 {
 	char	*value;
 
@@ -86,9 +86,9 @@ char	*doc_envp(t_minishell *shell, char *src)
 		&& src[cnt] != 34 && src[cnt] != '\n')
 		cnt++;
 	if (!line)
-		line = doc_switch(shell, src, cnt, i);
+		line = doc_switch(shell, src, i, cnt);
 	if (!line)
-		line = empty_switch(shell, src, cnt, i);
+		line = empty_env_switch(shell, src, i, cnt);
 	free(src);
 	return (line);
 }
