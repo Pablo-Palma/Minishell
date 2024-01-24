@@ -19,7 +19,6 @@
 
 int	main(int argc, char **argv, char **envp)
 {
-	//atexit(leaks);
 	(void)argv;
 	if (argc == 1)
 		minishell(envp);

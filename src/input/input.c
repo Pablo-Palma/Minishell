@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 22:53:13 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/24 10:09:49 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/24 14:42:47 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,18 +103,19 @@ int	handle_doc(t_minishell *shell, t_token *tokens)
 		if (current_token->type == AST_HEREDOC)
 		{
 			if (!current_token->next)
+			{
+				free_tokens(tokens);
 				return (1);
+			}
 			delimiter_token = current_token->next;
 			if (delimiter_token && delimiter_token->type == AST_HEREDOC_DELIM)
 			{
 				if (g_sigint_recived == SIGINT_HD_RECIVED)
 					return (1);
 				proccess_heredoc(shell, delimiter_token->value);
-				current_token = current_token->next;
 			}
 		}
-		else
-			current_token = current_token->next;
+		current_token = current_token->next;
 	}
 	return (0);
 }
