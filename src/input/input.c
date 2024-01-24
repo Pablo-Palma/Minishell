@@ -86,7 +86,6 @@ int	strip_quotes(char *quoted_str, char *unquoted_str)
 			unquoted_str[j++] = quoted_str[i];
 		i++;
 	}
-	printf("last quote: %c\n", last_quote);
 	unquoted_str[j] = 0;
 	if (last_quote)
 		return (-1);

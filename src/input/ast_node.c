@@ -39,7 +39,8 @@ void	add_red_out(t_ast_node **root, t_token *token, t_ast_node **file)
 	t_ast_node	*redirect;
 
 	redirect = create_ast_node(token->type, token->value);
-	redirect->right = (*file);
+	if (*file)
+		redirect->right = (*file);
 	if (!(*root))
 		(*root) = redirect;
 	else if ((*root)->type == AST_PIPE)
@@ -57,5 +58,6 @@ void	add_red_out(t_ast_node **root, t_token *token, t_ast_node **file)
 void	add_red_in(t_ast_node **root, t_token *token, t_ast_node **file)
 {
 	(*root) = create_ast_node(token->type, token->value);
-	(*root)->right = (*file);
+	if (*file)
+		(*root)->right = (*file);
 }

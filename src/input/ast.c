@@ -40,6 +40,7 @@ t_ast_node	*build_ast(t_token *tokens)
 	token_iter = get_last_token(tokens);
 	root = NULL;
 	redirect_in = NULL;
+	file = NULL;
 	while (token_iter)
 	{
 		if (token_iter->type == AST_FILE)

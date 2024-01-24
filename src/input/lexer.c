@@ -37,8 +37,8 @@ int	build_heredoc(char **input, int *i, t_token **tokens)
 	if (input[*i] != NULL)
 	{
 		if (add_token_back(tokens, create_token(AST_HEREDOC_DELIM,
-				input[*i])) == -1)
-				return (-1);
+					input[*i])) == -1)
+			return (-1);
 		(*i)++;
 	}
 	(*i)--;
@@ -142,12 +142,14 @@ t_token	*lexer(char **input)
 	is_file = 0;
 	tokens = NULL;
 	while (input[++i])
+	{
 		if (build_token(&tokens, input, &i, &is_file) == -1)
 		{
 			free_tokens(tokens);
 			ft_free_arrays(input);
 			return (NULL);
 		}
+	}
 	ft_free_arrays(input);
 	return (tokens);
 }

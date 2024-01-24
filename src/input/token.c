@@ -26,7 +26,7 @@ t_token	*create_token(t_type type, char *value)
 	new_token->envvar = 0;
 	new_token->value = malloc(ft_strlen(value) + 1);
 	envvar = strip_quotes(value, new_token->value);
-	printf("Value: %s, Type: %d %d, envvar: %d\n", value, AST_FILE, type, envvar);
+	//printf("Value: %s, Type: %d %d, envvar: %d\n", value, AST_FILE, type, envvar);
 	if (envvar == -1)
 	{
 		free(new_token->value);
