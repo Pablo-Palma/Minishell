@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/24 20:51:11 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/24 21:08:18 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,16 +161,25 @@ void		handle_sigint(int sig);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //
-//									AUX_FT									 //
+//									ENVP									 //
 //																			 //
 ///////////////////////////////////////////////////////////////////////////////
 
-//aux_ft
 void		add_var_envp(char ***envp, const char *new_var);
 void		update_env_var(char ***envp, const char *key, const char *value);
 char		*doc_envp(t_minishell *shell, char *src);
 void		increment_shlvl(t_minishell *shell);
 void		free_env(char ***env);
+char		*ft_double(t_minishell *shell, char *src, int i);
+char		*empty_env_switch(t_minishell *shell, char *src, int i, int cnt);
+
+///////////////////////////////////////////////////////////////////////////////
+//																			 //
+//									AUX_FT									 //
+//																			 //
+///////////////////////////////////////////////////////////////////////////////
+
+//aux_ft
 void		free_shell(t_minishell *shell);
 char		**split_cmd(const char *cmd, const char *delimiters);
 char		*get_path(char *cmd, const char *env_path);
@@ -180,7 +189,6 @@ void		init_minishell(t_minishell *shell, char **env);
 void		reset_minishell(t_minishell *shell);
 char		**split_cmd(const char *cmd, const char *delimiters);
 char		*ft_strndup(const char *src, int n);
-char		*ft_double(t_minishell *shell, char *src, int i);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //
