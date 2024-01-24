@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 13:00:47 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/24 17:48:46 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/24 20:51:22 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	echo_double(t_minishell *shell, t_token *token, int i)
 	char	*aux;
 
 	aux = token->value;
-	token->value = ft_double(shell, token->value, i, i + 2);
+	token->value = ft_double(shell, token->value, i);
 	free(aux);
 }
 

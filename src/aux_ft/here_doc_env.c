@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 11:53:25 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/23 15:11:08 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/24 20:50:19 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,11 @@ char	*empty_switch(t_minishell *shell, char *src, int cnt, int i)
 	return (value);
 }
 
-char	*ft_double(t_minishell *shell, char *src, int i, int cnt)
+char	*ft_double(t_minishell *shell, char *src, int i)
 {
 	char	*line;
 	char	*pid;
+	int		cnt = i + 2;
 
 	if (src[i + 1] == '$')
 		pid = ft_itoa(shell->shell_pid);
@@ -61,7 +62,7 @@ char	*ft_double(t_minishell *shell, char *src, int i, int cnt)
 	line = ft_calloc(1, ft_strlen(src) + ft_strlen(pid) - 1);
 	ft_strncpy(line, src, i);
 	ft_strncpy(line, pid, (int)ft_strlen(pid));
-	ft_strncpy(line, &src[cnt + 1], ft_strlen(&src[cnt + 1]));
+	ft_strncpy(line, &src[cnt], ft_strlen(&src[cnt]));
 	free(pid);
 	return (line);
 }
@@ -80,7 +81,7 @@ char	*doc_envp(t_minishell *shell, char *src)
 	if (!src[i] || src[i] == '\n')
 		return (NULL);
 	if (src[cnt] == '$' || src[cnt] == '?')
-		line = ft_double(shell, src, i, cnt);
+		line = ft_double(shell, src, i);
 	while (src[cnt] && src[cnt] != ' ' && src[cnt] != 39
 		&& src[cnt] != 34 && src[cnt] != '\n')
 		cnt++;
