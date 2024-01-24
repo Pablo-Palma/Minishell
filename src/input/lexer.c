@@ -104,32 +104,25 @@ t_token	*build_file_token(char **input, int *i)
 int	build_token(t_token **tokens, char **input, int *i, int *is_file)
 {
 	t_type	type;
+	int		status;
 
 	type = token_type(input[*i]);
 	if (*is_file)
 	{
-		if (add_token_back(tokens, build_file_token(input, i)) == -1)
-			return (-1);
+		status = add_token_back(tokens, build_file_token(input, i));
 		*is_file = 0;
 	}
 	else if (type == AST_COMMAND)
-	{
-		if (add_token_back(tokens, build_command_token(input, i)) == -1)
-			return (-1);
-	}
+		status = add_token_back(tokens, build_command_token(input, i));
 	else if (type == AST_HEREDOC)
-	{
-		if (build_heredoc(input, i, tokens) == -1)
-			return (-1);
-	}
+		status = build_heredoc(input, i, tokens);
 	else
 	{
 		if (type != AST_PIPE)
 			*is_file = 1;
-		if (add_token_back(tokens, create_token(type, input[*i])) == -1)
-			return (-1);
+		status = add_token_back(tokens, create_token(type, input[*i]));
 	}
-	return (1);
+	return (status);
 }
 
 t_token	*lexer(char **input)

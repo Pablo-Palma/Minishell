@@ -102,6 +102,8 @@ int	handle_doc(t_minishell *shell, t_token *tokens)
 	{
 		if (current_token->type == AST_HEREDOC)
 		{
+			if (!current_token->next)
+				return (1);
 			delimiter_token = current_token->next;
 			if (delimiter_token && delimiter_token->type == AST_HEREDOC_DELIM)
 			{
