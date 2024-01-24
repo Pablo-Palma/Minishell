@@ -127,7 +127,7 @@ int	handle_input(t_minishell *shell, char *input)
 	char		*parsed_input;
 
 	parsed_input = handle_operators(input);
-	tokens = lexer(split_cmd(parsed_input, " "));
+	tokens = lexer(ft_split(parsed_input, ' '));
 	free(parsed_input);
 	handle_envp(shell, tokens);
 	if (!tokens)
