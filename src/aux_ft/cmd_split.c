@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   command_split.c                                    :+:      :+:    :+:   */
+/*   cmd_split.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 18:27:38 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/07 12:58:23 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/24 17:06:55 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,11 @@ static int	count_args(const char *cmd, const char *delimiters)
 			in_double_quote = !in_double_quote;
 		else if (!in_single_quote && !in_double_quote
 			&& ft_strchr(delimiters, *cmd) != NULL)
+		{
+			while (*cmd && ft_strchr(delimiters, *cmd))
+				cmd++;
 			count++;
+		}
 		cmd++;
 	}
 	return (count + 1);
@@ -58,6 +62,7 @@ static char	*copy_arg(const char **src, const char *delimiters)
 		end++;
 	}
 	arg = ft_strndup(*src, end - *src + 1);
+	arg[end - *src] = '\0';
 	if (*end != '\0')
 		*src = end + 1;
 	else
