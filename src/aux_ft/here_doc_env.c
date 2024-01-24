@@ -35,21 +35,6 @@ char	*doc_switch(t_minishell *shell, char *src, int cnt, int i)
 	return (value);
 }
 
-char	*exit_switch(t_minishell *shell, char *src, int cnt, int i)
-{
-	char	*value;
-	char	*exit;
-
-	value = NULL;
-	exit = ft_itoa(shell->last_exit_status);
-	value = ft_calloc(1, ft_strlen(src) + ft_strlen(exit) - 2 * (cnt - i) + 1);
-	ft_strncpy(value, src, i);
-	ft_strncpy(value, exit, ft_strlen(exit));
-	ft_strncpy(value, &src[cnt + 1], ft_strlen(&src[cnt + 1]));
-	free(exit);
-	return (value);
-}
-
 char	*empty_switch(t_minishell *shell, char *src, int cnt, int i)
 {
 	char	*value;
@@ -63,6 +48,24 @@ char	*empty_switch(t_minishell *shell, char *src, int cnt, int i)
 	return (value);
 }
 
+char	*ft_double(t_minishell *shell, char *src, int i, int cnt)
+{
+	char	*line;
+	char	*pid;
+
+	if (src[i + 1] == '$')
+		pid = ft_itoa(shell->shell_pid);
+	else
+		pid = ft_itoa(shell->last_exit_status);
+	line = NULL;
+	line = ft_calloc(1, ft_strlen(src) + ft_strlen(pid) - 1);
+	ft_strncpy(line, src, i);
+	ft_strncpy(line, pid, (int)ft_strlen(pid));
+	ft_strncpy(line, &src[cnt + 1], ft_strlen(&src[cnt + 1]));
+	free(pid);
+	return (line);
+}
+
 char	*doc_envp(t_minishell *shell, char *src)
 {
 	char	*line;
@@ -71,15 +74,13 @@ char	*doc_envp(t_minishell *shell, char *src)
 
 	i = 0;
 	line = NULL;
-	while (src[i] != '$' && src[i] != '\n')
+	while (src[i] && src[i] != '$' && src[i] != '\n')
 		i++;
 	cnt = i + 1;
 	if (!src[i] || src[i] == '\n')
 		return (NULL);
-	if (src[cnt] == '$')
-		line = ft_strdup(src);
-	if (src[cnt] == '?')
-		line = exit_switch(shell, src, cnt, i);
+	if (src[cnt] == '$' || src[cnt] == '?')
+		line = ft_double(shell, src, i, cnt);
 	while (src[cnt] && src[cnt] != ' ' && src[cnt] != 39
 		&& src[cnt] != 34 && src[cnt] != '\n')
 		cnt++;

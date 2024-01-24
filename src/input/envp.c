@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 13:00:47 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/23 15:09:21 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/24 17:48:46 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,7 @@ void	switch_envp(t_minishell *shell, t_token *token, int i)
 	int		cnt;
 
 	cnt = i + 1;
-	if ((token->value[i] == '$' && (token->value[i + 1] == '?'))
-		|| token->type == AST_HEREDOC_DELIM)
+	if (token->type == AST_HEREDOC_DELIM)
 		return ;
 	while (token->value[cnt] && token->value[cnt] != ' '
 		&& token->value[cnt] != '\'')
@@ -65,6 +64,15 @@ void	switch_envp(t_minishell *shell, t_token *token, int i)
 	}
 }
 
+void	echo_double(t_minishell *shell, t_token *token, int i)
+{
+	char	*aux;
+
+	aux = token->value;
+	token->value = ft_double(shell, token->value, i, i + 2);
+	free(aux);
+}
+
 void	handle_envp(t_minishell *shell, t_token *node)
 {
 	t_token	*token;
@@ -75,15 +83,15 @@ void	handle_envp(t_minishell *shell, t_token *node)
 	{
 		if (token->envvar)
 		{
-			i = -1;
-			while (token->value[++i])
+			i = 0;
+			while (strchr(token->value, '$'))
 			{
-				if (token->value[i] && token->value[i] == '$')
-				{
-					if (token->value[i + 1] == '$')
-						break ;
+				while (token->value[i] != '$')
+					i++;
+				if (token->value[i + 1] == '$' || token->value[i + 1] == '?')
+					echo_double(shell, token, i);
+				else
 					switch_envp(shell, token, i);
-				}
 			}
 		}
 		token = token->next;
