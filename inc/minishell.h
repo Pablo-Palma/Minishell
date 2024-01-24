@@ -179,6 +179,7 @@ void		ft_strncpy(char *dst, char *src, int n);
 void		init_minishell(t_minishell *shell, char **env);
 void		reset_minishell(t_minishell *shell);
 char		**split_cmd(const char *cmd, const char *delimiters);
+char		*ft_strndup(const char *src, int n);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //

@@ -29,7 +29,8 @@ static int	count_args(const char *cmd, const char *delimiters)
 			in_single_quote = !in_single_quote;
 		else if (*cmd == '\"' && !in_single_quote)
 			in_double_quote = !in_double_quote;
-		else if (!in_single_quote && !in_double_quote &&ft_strchr(delimiters, *cmd) != NULL)
+		else if (!in_single_quote && !in_double_quote
+			&& ft_strchr(delimiters, *cmd) != NULL)
 			count++;
 		cmd++;
 	}
@@ -40,29 +41,23 @@ static char	*copy_arg(const char **src, const char *delimiters)
 {
 	const char	*end;
 	char		*arg;
-	int			len;
-	int			in_single_quote;
-	int			in_double_quote;
+	int			s_quote;
+	int			d_quote;
 
 	end = *src;
-	in_single_quote = 0;
-	in_double_quote = 0;
+	s_quote = 0;
+	d_quote = 0;
 	while (*end)
 	{
-		if (*end == '\'' && !in_double_quote)
-			in_single_quote = !in_single_quote;
-		if (*end == '\"' && !in_single_quote)
-			in_double_quote = !in_double_quote;
-		else if (!in_single_quote && !in_double_quote && ft_strchr(delimiters, *end)  != NULL)
+		if (*end == '\'' && !d_quote)
+			s_quote = !s_quote;
+		if (*end == '\"' && !s_quote)
+			d_quote = !d_quote;
+		else if (!s_quote && !d_quote && ft_strchr(delimiters, *end) != NULL)
 			break ;
 		end++;
 	}
-	len = end - *src;
-	arg = (char *)malloc(sizeof(char) * (len + 1));
-	if (!arg)
-		return (NULL);
-	ft_strlcpy(arg, *src, len + 1);
-	arg[len] = '\0';
+	arg = ft_strndup(*src, end - *src + 1);
 	if (*end != '\0')
 		*src = end + 1;
 	else
