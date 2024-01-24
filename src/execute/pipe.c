@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/22 22:35:47 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/24 09:44:51 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,12 +84,13 @@ void	execute_pipe_cmd(t_minishell *shell, t_ast_node *cmd_node)
 	close(shell->pipes[0]);
 }
 
-void	execute_multiple_cmd(t_minishell *shell, t_ast_node *cmd_node)
+int	execute_multiple_cmd(t_minishell *shell, t_ast_node *cmd_node)
 {
 	g_sigint_recived = 2;
 	if (cmd_node->type == AST_REDIRECT_IN || cmd_node->type == AST_REDIRECT_OUT)
 	{
-		handle_redirect(shell, cmd_node);
+		if (handle_redirect(shell, cmd_node) == -1)
+			return (-1);
 		if (cmd_node->left)
 			execute_single_cmd(shell, cmd_node->left);
 	}
@@ -97,4 +98,5 @@ void	execute_multiple_cmd(t_minishell *shell, t_ast_node *cmd_node)
 		execute_single_cmd(shell, cmd_node);
 	else
 		execute_pipe_cmd(shell, cmd_node);
+	return (1);
 }

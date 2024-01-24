@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 22:53:13 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/23 20:54:46 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/24 10:09:49 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ int	strip_quotes(char *quoted_str, char *unquoted_str)
 			unquoted_str[j++] = quoted_str[i];
 		i++;
 	}
+	printf("last quote: %c\n", last_quote);
 	unquoted_str[j] = 0;
 	if (last_quote)
 		return (-1);

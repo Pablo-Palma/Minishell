@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:37:07 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/23 22:31:12 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/24 10:03:19 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,19 +27,22 @@ int	is_valid(char *input, t_minishell *shell)
 	}
 	return (1);
 }*/
-void	build_heredoc(char **input, int *i, t_token **tokens)
+int	build_heredoc(char **input, int *i, t_token **tokens)
 {
-	add_token_back(tokens, create_token(AST_HEREDOC, input[*i]));
+	if (add_token_back(tokens, create_token(AST_HEREDOC, input[*i])) == -1)
+		return (-1);
 	(*i)++;
 	while (input[*i] != NULL && ft_strlen(input[*i]) == 0)
 		(*i)++;
 	if (input[*i] != NULL)
 	{
-		add_token_back(tokens, create_token(AST_HEREDOC_DELIM,
-				input[*i]));
+		if (add_token_back(tokens, create_token(AST_HEREDOC_DELIM,
+				input[*i])) == -1)
+				return (-1);
 		(*i)++;
 	}
 	(*i)--;
+	return (1);
 }
 
 t_token	*build_command_token(char **input, int *i)
@@ -98,26 +101,35 @@ t_token	*build_file_token(char **input, int *i)
 	return (new_token);
 }
 
-void	build_token(t_token **tokens, char **input, int *i, int *is_file)
+int	build_token(t_token **tokens, char **input, int *i, int *is_file)
 {
 	t_type	type;
 
 	type = token_type(input[*i]);
 	if (*is_file)
 	{
-		add_token_back(tokens, build_file_token(input, i));
+		if (add_token_back(tokens, build_file_token(input, i)) == -1)
+			return (-1);
 		*is_file = 0;
 	}
 	else if (type == AST_COMMAND)
-		add_token_back(tokens, build_command_token(input, i));
+	{
+		if (add_token_back(tokens, build_command_token(input, i)) == -1)
+			return (-1);
+	}
 	else if (type == AST_HEREDOC)
-		build_heredoc(input, i, tokens);
+	{
+		if (build_heredoc(input, i, tokens) == -1)
+			return (-1);
+	}
 	else
 	{
 		if (type != AST_PIPE)
 			*is_file = 1;
-		add_token_back(tokens, create_token(type, input[*i]));
+		if (add_token_back(tokens, create_token(type, input[*i])) == -1)
+			return (-1);
 	}
+	return (1);
 }
 
 t_token	*lexer(char **input)
@@ -130,7 +142,12 @@ t_token	*lexer(char **input)
 	is_file = 0;
 	tokens = NULL;
 	while (input[++i])
-		build_token(&tokens, input, &i, &is_file);
+		if (build_token(&tokens, input, &i, &is_file) == -1)
+		{
+			free_tokens(tokens);
+			ft_free_arrays(input);
+			return (NULL);
+		}
 	ft_free_arrays(input);
 	return (tokens);
 }

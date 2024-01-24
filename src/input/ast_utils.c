@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 13:27:25 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/17 20:44:53 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/24 09:55:36 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,12 @@ t_token	*get_last_token(t_token *token)
 	return (current);
 }
 
-void	add_token_back(t_token **head, t_token *new_token)
+int	add_token_back(t_token **head, t_token *new_token)
 {
 	t_token	*last;
 
 	if (!head || !new_token)
-		return ;
+		return (-1);
 	if (*head)
 	{
 		last = *head;
@@ -52,6 +52,7 @@ void	add_token_back(t_token **head, t_token *new_token)
 	}
 	else
 		*head = new_token;
+	return (1);
 }
 
 void	free_tokens(t_token *tokens)

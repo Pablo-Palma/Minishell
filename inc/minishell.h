@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/23 00:18:16 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/24 09:55:58 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ t_token		*create_token(t_type type, char *value);
 t_token		*build_command_token(char **split_input, int *i);
 t_token		*get_last_token(t_token *token);
 t_type		token_type(char *value);
-void		add_token_back(t_token **head, t_token *new_token);
+int			add_token_back(t_token **head, t_token *new_token);
 void		free_tokens(t_token *token);
 
 //ast
@@ -124,7 +124,7 @@ void		read_from_stdin(t_minishell *shell, const char *delim, int wr_fd);
 void		proccess_heredoc(t_minishell *shell, char *delimiter);
 void		execute_single_cmd(t_minishell *shell, t_ast_node *cmd_node);
 void		execute_pipe_cmd(t_minishell *shell, t_ast_node *cmd_node);
-void		execute_multiple_cmd(t_minishell *shell, t_ast_node *cmd_node);
+int			execute_multiple_cmd(t_minishell *shell, t_ast_node *cmd_node);
 void		handle_fd(t_minishell *shell);
 void		select_exec(t_minishell *shell, char **command);
 void		increment_shlvl(t_minishell *shell);
