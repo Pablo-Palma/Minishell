@@ -178,6 +178,7 @@ void		handle_error(const char *msg, int use_perror, int error_code);
 void		ft_strncpy(char *dst, char *src, int n);
 void		init_minishell(t_minishell *shell, char **env);
 void		reset_minishell(t_minishell *shell);
+char		**split_cmd(const char *cmd, const char *delimiters);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //
