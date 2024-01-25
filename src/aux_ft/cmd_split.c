@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_split.c                                        :+:      :+:    :+:   */
+/*   command_split.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 18:27:38 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/24 17:06:55 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/08 18:54:52 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,7 @@ static int	count_args(const char *cmd, const char *delimiters)
 			in_double_quote = !in_double_quote;
 		else if (!in_single_quote && !in_double_quote
 			&& ft_strchr(delimiters, *cmd) != NULL)
-		{
-			while (*cmd && ft_strchr(delimiters, *cmd))
-				cmd++;
 			count++;
-		}
 		cmd++;
 	}
 	return (count + 1);
@@ -45,24 +41,30 @@ static char	*copy_arg(const char **src, const char *delimiters)
 {
 	const char	*end;
 	char		*arg;
-	int			s_quote;
-	int			d_quote;
+	int			len;
+	int			in_single_quote;
+	int			in_double_quote;
 
 	end = *src;
-	s_quote = 0;
-	d_quote = 0;
+	in_single_quote = 0;
+	in_double_quote = 0;
 	while (*end)
 	{
-		if (*end == '\'' && !d_quote)
-			s_quote = !s_quote;
-		if (*end == '\"' && !s_quote)
-			d_quote = !d_quote;
-		else if (!s_quote && !d_quote && ft_strchr(delimiters, *end) != NULL)
+		if (*end == '\'' && !in_double_quote)
+			in_single_quote = !in_single_quote;
+		if (*end == '\"' && !in_single_quote)
+			in_double_quote = !in_double_quote;
+		else if (!in_single_quote && !in_double_quote
+			&& ft_strchr(delimiters, *end) != NULL)
 			break ;
 		end++;
 	}
-	arg = ft_strndup(*src, end - *src + 1);
-	arg[end - *src] = '\0';
+	len = end - *src;
+	arg = (char *)malloc(sizeof(char) * (len + 1));
+	if (!arg)
+		return (NULL);
+	ft_strlcpy(arg, *src, len + 1);
+	arg[len] = '\0';
 	if (*end != '\0')
 		*src = end + 1;
 	else
@@ -85,7 +87,7 @@ char	**split_cmd(const char *cmd, const char *delimiters)
 	{
 		while (ft_strchr(delimiters, *cmd) != NULL)
 			cmd++;
-		while (*cmd)
+		if (*cmd)
 			args[i++] = copy_arg(&cmd, delimiters);
 		if (!args[i - 1])
 		{
