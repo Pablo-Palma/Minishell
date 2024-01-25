@@ -8,12 +8,13 @@ LIBFT_LIB = $(LIBFT_DIR)/libft.a
 SRC_DIR = src/
 OBJ_DIR = obj/
 
-SRCS =	$(SRC_DIR)aux_ft/ft_strncpy.c			\
-		$(SRC_DIR)aux_ft/ft_strndup.c			\
-		$(SRC_DIR)aux_ft/cmd_split.c			\
-    	$(SRC_DIR)aux_ft/get_path.c				\
+SRCS =	$(SRC_DIR)aux_ft/cmd_split.c			\
 		$(SRC_DIR)aux_ft/env_utils.c			\
+		$(SRC_DIR)aux_ft/ft_strncpy.c			\
+		$(SRC_DIR)aux_ft/ft_strndup.c			\
+    	$(SRC_DIR)aux_ft/get_path.c				\
 		$(SRC_DIR)aux_ft/here_doc_env.c			\
+		$(SRC_DIR)aux_ft/input_split.c			\
 		$(SRC_DIR)aux_ft/utils.c				\
     	$(SRC_DIR)builtins/cd.c					\
     	$(SRC_DIR)builtins/echo.c				\

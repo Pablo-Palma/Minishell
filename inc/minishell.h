@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/24 23:19:10 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/25 18:28:19 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,13 +183,13 @@ char		*my_getenv(char **envp, const char *name);
 
 //aux_ft
 void		free_shell(t_minishell *shell);
-char		**split_cmd(const char *cmd, const char *delimiters);
+char		**split_input(const char *cmd, const char *delimiters);
+char		**split_cmd(const char *s, char *delim);
 char		*get_path(char *cmd, const char *env_path);
 void		handle_error(const char *msg, int use_perror, int error_code);
-void		ft_strncpy(char *dst, char *src, int n);
+void		ft_strncpy(char *dst, const char *src, int n);
 void		init_minishell(t_minishell *shell, char **env);
 void		reset_minishell(t_minishell *shell);
-char		**split_cmd(const char *cmd, const char *delimiters);
 char		*ft_strndup(const char *src, int n);
 
 ///////////////////////////////////////////////////////////////////////////////

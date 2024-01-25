@@ -6,13 +6,13 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 13:54:00 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/23 00:21:53 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/25 18:28:00 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_strncpy(char *dst, char *src, int n)
+void	ft_strncpy(char *dst, const char *src, int n)
 {
 	int	i;
 	int	j;

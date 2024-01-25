@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 22:53:13 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/24 14:42:47 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/25 23:16:58 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,20 @@ int	count_operators(char *input)
 	int	flag;
 	int	counter;
 	int	i;
+	int	last_quote;
 
 	flag = 0;
 	counter = 0;
+	last_quote = 0;
 	i = -1;
 	while (input[++i])
 	{
-		if ((input[i] == '>' || input[i] == '<' || input[i] == '|') && !flag)
+		if (input[i] == last_quote)
+			last_quote = 0;
+		if (!last_quote && (input[i] == 34 || input[i] == 39))
+			last_quote = input[i]; 
+		if ((input[i] == '>' || input[i] == '<' || input[i] == '|')
+			&& !last_quote && !flag)
 		{
 			counter++;
 			flag++;
@@ -40,19 +47,25 @@ char	*handle_operators(char *input)
 	int		i;
 	int		j;
 	int		f;
+	int		last_quote;
 
 	parsed_input = malloc(ft_strlen(input) + count_operators(input) * 2 + 1);
 	i = 0;
 	j = 0;
 	f = 0;
+	last_quote = 0;
 	while (input[i])
 	{
-		if ((input[i] == '>' || input[i] == '<' || input[i] == '|') && !f)
+		if (input[i] == last_quote)
+			last_quote = 0;
+		if (!last_quote && (input[i] == 34 || input[i] == 39))
+			last_quote = input[i];
+		if ((input[i] == '>' || input[i] == '<' || input[i] == '|') && !f && !last_quote)
 		{
 			parsed_input[j++] = ' ';
 			f++;
 		}
-		else if (!(input[i] == '>' || input[i] == '<' || input[i] == '|') && f)
+		else if (!(input[i] == '>' || input[i] == '<' || input[i] == '|') && f && !last_quote)
 		{
 			parsed_input[j++] = ' ';
 			f = 0;
@@ -127,7 +140,7 @@ int	handle_input(t_minishell *shell, char *input)
 	char		*parsed_input;
 
 	parsed_input = handle_operators(input);
-	tokens = lexer(split_cmd(parsed_input, " "));
+	tokens = lexer(split_input(parsed_input, " "));
 	free(parsed_input);
 	handle_envp(shell, tokens);
 	if (!tokens)

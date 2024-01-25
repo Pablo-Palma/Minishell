@@ -1,102 +1,95 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   command_split.c                                    :+:      :+:    :+:   */
+/*   cmd_split.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
+/*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/18 18:27:38 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/08 18:54:52 by pabpalma         ###   ########.fr       */
+/*   Created: 2024/01/25 18:13:21 by jbaeza-c          #+#    #+#             */
+/*   Updated: 2024/01/25 19:09:26 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//falta ver que hacer con comillas sin cerrar
-
-static int	count_args(const char *cmd, const char *delimiters)
+static int	count_words(const char *str, char *delim)
 {
-	int	in_single_quote;
-	int	in_double_quote;
-	int	count;
+	int			flag;
+	int			count;
+	const char	*aux;
 
-	in_single_quote = 0;
-	in_double_quote = 0;
+	aux = str;
+	flag = 0;
 	count = 0;
-	while (*cmd)
+	while (*aux)
 	{
-		if (*cmd == '\'' && !in_double_quote)
-			in_single_quote = !in_single_quote;
-		else if (*cmd == '\"' && !in_single_quote)
-			in_double_quote = !in_double_quote;
-		else if (!in_single_quote && !in_double_quote
-			&& ft_strchr(delimiters, *cmd) != NULL)
+		if (ft_strchr(delim, *aux) && flag)
+			flag = 0;
+		if (!ft_strchr(delim, *aux) && !flag)
+		{
 			count++;
-		cmd++;
+			flag++;
+		}
+		aux++;
 	}
-	return (count + 1);
+	return (count);
 }
 
-static char	*copy_arg(const char **src, const char *delimiters)
+static int	custom_len(const char *s, char *delim)
 {
-	const char	*end;
-	char		*arg;
 	int			len;
-	int			in_single_quote;
-	int			in_double_quote;
+	int			flag;
 
-	end = *src;
-	in_single_quote = 0;
-	in_double_quote = 0;
-	while (*end)
+	len = 0;
+	flag = 0;
+	while (s[len])
 	{
-		if (*end == '\'' && !in_double_quote)
-			in_single_quote = !in_single_quote;
-		if (*end == '\"' && !in_single_quote)
-			in_double_quote = !in_double_quote;
-		else if (!in_single_quote && !in_double_quote
-			&& ft_strchr(delimiters, *end) != NULL)
-			break ;
-		end++;
+		if (ft_strchr(delim, s[len]) && flag)
+			return (len);
+		if (!ft_strchr(delim, s[len]))
+			flag = 1;
+		len++;
 	}
-	len = end - *src;
-	arg = (char *)malloc(sizeof(char) * (len + 1));
-	if (!arg)
-		return (NULL);
-	ft_strlcpy(arg, *src, len + 1);
-	arg[len] = '\0';
-	if (*end != '\0')
-		*src = end + 1;
-	else
-		*src = end;
-	return (arg);
+	return (len);
 }
 
-char	**split_cmd(const char *cmd, const char *delimiters)
+static void	free_tab(char **tab, int size)
 {
-	char	**args;
-	int		arg_count;
-	int		i;
+	int	i;
 
 	i = 0;
-	arg_count = count_args(cmd, delimiters);
-	args = (char **)malloc(sizeof(char *) * (arg_count + 1));
-	if (!args)
-		return (NULL);
-	while (*cmd)
+	while (i < size)
 	{
-		while (ft_strchr(delimiters, *cmd) != NULL)
-			cmd++;
-		if (*cmd)
-			args[i++] = copy_arg(&cmd, delimiters);
-		if (!args[i - 1])
-		{
-			while (--i > 0)
-				free(args[i]);
-			free(args);
-			return (NULL);
-		}
+		free(tab[i]);
+		i++;
 	}
-	args[i] = NULL;
-	return (args);
+	free(tab);
+}
+
+char	**split_cmd(const char *s, char *delim)
+{
+	char	**tab;
+	int		i;
+	int		j;
+	int		len;
+
+	j = count_words(s, delim);
+	i = 0;
+	tab = malloc(sizeof(char *) * (j + 1));
+	if (!tab)
+		return (NULL);
+	while (*s && j > 0)
+	{
+		if (ft_strchr(delim, *s))
+			s++;
+		len = custom_len(s, delim);
+		tab[i] = ft_strndup(s, len + 1);
+		if (!tab[i])
+			return (free_tab(tab, i + 1), NULL);
+		s = s + len;
+		i++;
+		j--;
+	}
+	tab[i] = NULL;
+	return (tab);
 }
