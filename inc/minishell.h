@@ -71,6 +71,7 @@ typedef struct s_minishell
 	int			output_redirect;
 	char		*input_line;
 	t_ast_node	*ast;
+	t_token		*pipe_list;
 	int			last_cmd;
 	int			last_exit_status;
 	int			shell_pid;
