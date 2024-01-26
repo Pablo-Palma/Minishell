@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/25 18:10:48 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/26 00:27:06 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	execute_command_child(t_minishell *shell, t_ast_node *cmd_node)
 	cmd_args = split_cmd(cmd_node->value, " ");
 	if (!cmd_args)
 		handle_error("Error splitting command", 0, 2);
-	cmd_path = get_path(cmd_args[0], getenv("PATH"));
+	cmd_path = get_path(cmd_args[0], my_getenv(shell->envp, "PATH"));
 	if (!cmd_path)
 		handle_error("command not found", 0, 127);
 	handle_fd(shell);

@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 18:13:21 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/25 19:09:26 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/26 11:23:28 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,9 @@ static int	custom_len(const char *s, char *delim)
 	while (s[len])
 	{
 		if (ft_strchr(delim, s[len]) && flag)
-			return (len);
+			flag = 2;
+		if (!ft_strchr(delim, s[len]) && flag == 2)
+			return (len - 1);
 		if (!ft_strchr(delim, s[len]))
 			flag = 1;
 		len++;
@@ -87,6 +89,7 @@ char	**split_cmd(const char *s, char *delim)
 		if (!tab[i])
 			return (free_tab(tab, i + 1), NULL);
 		s = s + len;
+		printf("Value: %s, Len: %d\n", tab[i], len);
 		i++;
 		j--;
 	}
