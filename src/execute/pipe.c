@@ -12,78 +12,6 @@
 
 #include "minishell.h"
 
-void	handle_fd(t_minishell *shell)
-{
-	if (shell->fd_read)
-		if (dup2(shell->fd_read, STDIN_FILENO) == -1)
-			handle_error("Error in dup2_read", 1, EXIT_FAILURE);
-	if ((!shell->last_cmd || shell->output_redirect) && shell->fd_write != 1)
-		if (dup2(shell->fd_write, STDOUT_FILENO) == -1)
-			handle_error("Error in dup2_write", 1, EXIT_FAILURE);
-}
-
-void	execute_command_child(t_minishell *shell, t_ast_node *cmd_node)
-{
-	char	**cmd_args;
-	char	*cmd_path;
-
-	cmd_args = split_cmd(cmd_node->value, " ");
-	if (!cmd_args)
-		handle_error("Error splitting command", 0, 2);
-	cmd_path = get_path(cmd_args[0], my_getenv(shell->envp, "PATH"));
-	if (!cmd_path)
-		handle_error("command not found", 0, 127);
-	handle_fd(shell);
-	close(shell->pipes[0]);
-	close(shell->pipes[1]);
-	execve(cmd_path, cmd_args, shell->envp);
-	ft_free_arrays(cmd_args);
-	handle_error("Error in execve", 1, EXIT_FAILURE);
-	free(cmd_path);
-}
-
-void	execute_single_cmd(t_minishell *shell, t_ast_node *cmd_node)
-{
-	pid_t	pid;
-	int		status;
-
-	pid = fork();
-	if (pid == -1)
-		handle_error("Error in fork", 1, EXIT_FAILURE);
-	if (!pid)
-		execute_command_child(shell, cmd_node);
-	if (shell->output_redirect)
-		close(shell->fd_write);
-	waitpid(pid, &status, 0);
-	close(shell->pipes[1]);
-	if (shell->fd_read)
-		close(shell->fd_read);
-	shell->fd_read = shell->pipes[0];
-	shell->last_cmd = 1;
-	shell->last_exit_status = WEXITSTATUS(status);
-	if (WIFEXITED(status))
-		shell->last_exit_status = WEXITSTATUS(status);
-}
-
-/*void	execute_pipe_cmd(t_minishell *shell, t_ast_node *cmd_node)
-{
-	if (pipe(shell->pipes) == -1)
-		handle_error("Error creating pipe", 1, EXIT_FAILURE);
-	shell->fd_write = shell->pipes[1];
-	shell->last_cmd = 0;
-	if (cmd_node->left)
-		execute_multiple_cmd(shell, cmd_node->left);
-	if (shell->output_redirect)
-	{
-		shell->fd_read = 0;
-		shell->output_redirect = 0;
-	}
-	shell->last_cmd = 1;
-	if (cmd_node->right)
-		execute_multiple_cmd(shell, cmd_node->right);
-	close(shell->pipes[0]);
-}*/
-
 void	wait_for_commands(pid_t last_pid)
 {
 	int	status;
@@ -97,7 +25,30 @@ void	wait_for_commands(pid_t last_pid)
 	}
 }
 
-pid_t	execute_command(t_minishell	*shell, char *cmd_value)
+void	pipe_cat(t_minishell *shell)
+{
+	char	*line;
+	int		special_pipe[2];
+
+	(void)shell;
+	if (pipe(special_pipe) == -1)
+		handle_error("Error creating pipe", 1, EXIT_FAILURE);
+	line = get_next_line(STDIN_FILENO);
+	if (line)
+	{
+		write (special_pipe[1], line, ft_strlen(line));
+		if (line)
+			free(line);
+	}
+	close(special_pipe[1]);
+	if (special_pipe[0] != STDIN_FILENO)
+	{
+		dup2(special_pipe[0], STDIN_FILENO);
+		close(special_pipe[0]);
+	}
+}
+
+pid_t	execute_command(t_minishell	*shell, char *value)
 {
 	pid_t pid = fork();
 	char	**args;
@@ -117,7 +68,9 @@ pid_t	execute_command(t_minishell	*shell, char *cmd_value)
             dup2(shell->fd_write, STDOUT_FILENO);
             close(shell->fd_write);
         }
-		args = split_cmd(cmd_value, " ");
+		args = split_cmd(value, " ");
+		if (!ft_strncmp(args[0], "cat", 3) && args[1] == NULL)
+			pipe_cat(shell);
 		path = get_path(args[0], my_getenv(shell->envp, "PATH"));
 		execve(path, args, shell->envp);
 		handle_error ("Execve Error", 1, EXIT_FAILURE);
@@ -141,7 +94,6 @@ void	close_fds(int *pipe_fds, int *fd_in)
 
 void	setup_pipes(t_minishell *shell, t_token *cmd_list)
 {
-	int	pipe_fds[2];
 	int	fd_in = 0;
 	pid_t	pid = 0;
 	pid_t	last_pid = 0;
@@ -151,9 +103,9 @@ void	setup_pipes(t_minishell *shell, t_token *cmd_list)
 	{
 		if (current_cmd->next != NULL)
 		{
-			if (pipe(pipe_fds) == -1)
+			if (pipe(shell->pipes) == -1)
 				handle_error("Error creating pipe", 1, EXIT_FAILURE);
-			shell->fd_write = pipe_fds[1];
+			shell->fd_write = shell->pipes[1];
 			shell->fd_read = fd_in;
 		}
 		else
@@ -163,9 +115,9 @@ void	setup_pipes(t_minishell *shell, t_token *cmd_list)
 		}
 		pid = execute_command(shell, current_cmd->value);
 		last_pid = pid;
-		close_fds(&pipe_fds[1], &fd_in);
+		close_fds(&shell->pipes[1], &fd_in);
 		if (current_cmd->next != NULL)
-			fd_in = pipe_fds[0];
+			fd_in = shell->pipes[0];
 		current_cmd = current_cmd->next;
 	}
 	if (fd_in != 0)
