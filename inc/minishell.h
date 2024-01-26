@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/25 18:28:19 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/26 19:19:12 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,8 @@ int			count_operators(char *input);
 char		*handle_operators(char *input);
 void		handle_envp(t_minishell *shell, t_token *node);
 void		switch_envp(t_minishell *shell, t_token *token, int i);
-int			strip_quotes(char *quoted_str, char *unquoted_str);
+int			open_quotes(char *str);
+char		*strip_quotes(char *input);
 int			is_valid(char *input, t_minishell *shell);
 
 ///////////////////////////////////////////////////////////////////////////////

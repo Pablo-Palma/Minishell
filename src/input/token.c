@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 23:49:08 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/24 10:06:10 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/26 16:29:09 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ t_token	*create_token(t_type type, char *value)
 	new_token->next = NULL;
 	new_token->prev = NULL;
 	new_token->envvar = 0;
-	new_token->value = malloc(ft_strlen(value) + 1);
-	envvar = strip_quotes(value, new_token->value);
+	new_token->value = ft_strdup(value);
+	envvar = open_quotes(value);
 	if (envvar == -1)
 	{
 		free(new_token->value);

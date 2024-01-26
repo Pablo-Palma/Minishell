@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:11:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/25 18:42:50 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/26 19:24:11 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void	execute_output_redirect(t_minishell *shell, t_ast_node *node)
 	pid_t	pid;
 	int		fd_out;
 
+	node->right->value = strip_quotes(node->right->value);
 	pid = fork();
 	if (!pid)
 	{
@@ -101,7 +102,6 @@ void	execute_single_command(t_minishell *shell, char *value)
 	if (handle_signal(shell, value))
 		return ;
 	args = split_cmd(value, " ");
-	//args = ft_split(value, ' ');
 	if (!*args)
 		return ;
 	if (ft_strncmp(args[0], "./", 2) == 0)

@@ -6,33 +6,39 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 18:27:38 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/25 18:12:02 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/26 22:00:41 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	count_args(const char *cmd, const char *delimiters)
+static int	count_args(const char *cmd, const char *delim)
 {
-	int	in_single_quote;
-	int	in_double_quote;
+	int	s_quote;
+	int	d_quote;
+	int	flag;
 	int	count;
 
-	in_single_quote = 0;
-	in_double_quote = 0;
+	s_quote = 0;
+	d_quote = 0;
 	count = 0;
+	flag = 0;
 	while (*cmd)
 	{
-		if (*cmd == '\'' && !in_double_quote)
-			in_single_quote = !in_single_quote;
-		else if (*cmd == '\"' && !in_single_quote)
-			in_double_quote = !in_double_quote;
-		else if (!in_single_quote && !in_double_quote
-			&& ft_strchr(delimiters, *cmd) != NULL)
+		if (*cmd == '\'' && !d_quote)
+			s_quote = !s_quote;
+		if (*cmd == '\"' && !s_quote)
+			d_quote = !d_quote;
+		if (!s_quote && !d_quote && ft_strchr(delim, *cmd) && flag)
+			flag = 0;
+		if (!ft_strchr(delim, *cmd) && !flag)
+		{
 			count++;
+			flag++;
+		}
 		cmd++;
 	}
-	return (count + 1);
+	return (count);
 }
 
 static char	*copy_arg(const char **src, const char *delimiters)
@@ -77,7 +83,7 @@ char	**split_input(const char *cmd, const char *delimiters)
 		return (NULL);
 	while (*cmd)
 	{
-		while (ft_strchr(delimiters, *cmd) != NULL)
+		while (*cmd && ft_strchr(delimiters, *cmd) != NULL)
 			cmd++;
 		if (*cmd)
 			args[i++] = copy_arg(&cmd, delimiters);

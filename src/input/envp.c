@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 13:00:47 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/24 21:13:44 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/27 00:00:28 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	switch_envp(t_minishell *shell, t_token *token, int i)
 	if (!token->value[cnt] || ft_isspace(token->value[cnt]))
 		new_value = empty_env_switch(shell, token->value, i, i + 1);
 	while (token->value[cnt] && token->value[cnt] != ' '
-		&& token->value[cnt] != '\'')
+		&& token->value[cnt] != '\'' && token->value[cnt] != '\"')
 		cnt++;
 	if (!token->value[1] || token->value[1] == '?' || token->value[1] == '$')
 		return ;
