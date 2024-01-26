@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 22:53:13 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/24 14:42:47 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/27 00:05:45 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,20 @@ int	count_operators(char *input)
 	int	flag;
 	int	counter;
 	int	i;
+	int	last_quote;
 
 	flag = 0;
 	counter = 0;
+	last_quote = 0;
 	i = -1;
 	while (input[++i])
 	{
-		if ((input[i] == '>' || input[i] == '<' || input[i] == '|') && !flag)
+		if (input[i] == last_quote)
+			last_quote = 0;
+		if (!last_quote && (input[i] == 34 || input[i] == 39))
+			last_quote = input[i]; 
+		if ((input[i] == '>' || input[i] == '<' || input[i] == '|')
+			&& !last_quote && !flag)
 		{
 			counter++;
 			flag++;
@@ -40,19 +47,25 @@ char	*handle_operators(char *input)
 	int		i;
 	int		j;
 	int		f;
+	int		last_quote;
 
-	parsed_input = malloc(ft_strlen(input) + count_operators(input) * 2 + 1);
+	parsed_input = calloc(1, ft_strlen(input) + count_operators(input) * 2 + 1);
 	i = 0;
 	j = 0;
 	f = 0;
+	last_quote = 0;
 	while (input[i])
 	{
-		if ((input[i] == '>' || input[i] == '<' || input[i] == '|') && !f)
+		if (input[i] == last_quote)
+			last_quote = 0;
+		if (!last_quote && (input[i] == 34 || input[i] == 39))
+			last_quote = input[i];
+		if ((input[i] == '>' || input[i] == '<' || input[i] == '|') && !f && !last_quote)
 		{
 			parsed_input[j++] = ' ';
 			f++;
 		}
-		else if (!(input[i] == '>' || input[i] == '<' || input[i] == '|') && f)
+		else if (!(input[i] == '>' || input[i] == '<' || input[i] == '|') && f && !last_quote)
 		{
 			parsed_input[j++] = ' ';
 			f = 0;
@@ -63,30 +76,24 @@ char	*handle_operators(char *input)
 	return (parsed_input);
 }
 
-int	strip_quotes(char *quoted_str, char *unquoted_str)
+int	open_quotes(char *str)
 {
 	int		i;
-	int		j;
 	int		envvar;
 	char	last_quote;
 
-	i = 0;
-	j = 0;
+	i = -1;
 	last_quote = 0;
 	envvar = 1;
-	while (quoted_str[i])
+	while (str[++i])
 	{
-		if (last_quote == 39 && quoted_str[i] == '$')
+		if (last_quote == 39 && str[i] == '$')
 			envvar = 0;
-		if ((quoted_str[i] == 39 || quoted_str[i] == 34) && last_quote == 0)
-			last_quote = quoted_str[i];
-		else if (quoted_str[i] == last_quote)
+		if ((str[i] == 39 || str[i] == 34) && last_quote == 0)
+			last_quote = str[i];
+		else if (str[i] == last_quote)
 			last_quote = 0;
-		else
-			unquoted_str[j++] = quoted_str[i];
-		i++;
 	}
-	unquoted_str[j] = 0;
 	if (last_quote)
 		return (-1);
 	return (envvar);
@@ -127,11 +134,11 @@ int	handle_input(t_minishell *shell, char *input)
 	char		*parsed_input;
 
 	parsed_input = handle_operators(input);
-	tokens = lexer(ft_split(parsed_input, ' '));
+	tokens = lexer(split_input(parsed_input, " "));
 	free(parsed_input);
-	handle_envp(shell, tokens);
 	if (!tokens)
 		return (-1);
+	handle_envp(shell, tokens);
 	if (handle_doc(shell, tokens))
 		return (1);
 	ast = build_ast(tokens);

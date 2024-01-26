@@ -36,6 +36,8 @@ char	*get_path(char *cmd, const char *env_path)
 	i = 0;
 	if (cmd[0] == '/' && access(cmd, X_OK) == 0)
 		return (ft_strdup(cmd));
+	if (!env_path)
+		return (NULL);
 	dirs = ft_split(env_path, ':');
 	if (!dirs)
 		return (NULL);

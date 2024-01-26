@@ -15,6 +15,12 @@
 
 volatile sig_atomic_t	g_sigint_recived = SIGINT_NORMAL;
 
+void	exit_status(t_minishell *shell, const char *msg, int status)
+{
+	perror(msg);
+	shell->last_exit_status = status;
+}
+
 void	handle_sigint(int sig)
 {
 	(void)sig;

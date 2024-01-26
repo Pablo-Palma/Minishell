@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strndup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
+/*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 18:27:38 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/07 12:58:23 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/26 23:06:35 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ char	*ft_strndup(const char *src, int n)
 {
 	char	*dst;
 
-	dst = (char *)malloc(n);
+	dst = (char *)calloc(1, n);
 	if (!dst)
 		return (NULL);
 	ft_strlcpy(dst, src, n);
