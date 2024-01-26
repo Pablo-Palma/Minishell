@@ -64,7 +64,7 @@ typedef struct s_minishell
 	char		**og_envp;
 	char		*executable_path;
 	int			pipes[2];
-	int			nb_pipes;
+	int			special_cat;
 	int			fd_read;
 	int			fd_write;
 	int			input_redirect;

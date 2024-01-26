@@ -82,7 +82,7 @@ pid_t	execute_command(t_minishell	*shell, char *value)
             close(shell->fd_write);
         }
 		args = split_cmd(value, " ");
-		if (!ft_strncmp(args[0], "cat", 4) && args[1] == NULL && shell->nb_pipes == 1)
+		if (!ft_strncmp(args[0], "cat", 4) && args[1] == NULL && shell->special_cat == 1)
 			pipe_cat(shell);
 		path = get_path(args[0], my_getenv(shell->envp, "PATH"));
 		execve(path, args, shell->envp);
@@ -101,7 +101,7 @@ void	close_fds(int *pipe_fds, int *fd_in)
 	if (*fd_in != 0)
 	{
 		close(*fd_in);
-		*fd_in = 0;
+		*fd_in = STDIN_FILENO;
 	}
 }
 
@@ -129,7 +129,10 @@ void	setup_pipes(t_minishell *shell, t_token *cmd_list)
 		pid = execute_command(shell, current_cmd->value);
 		last_pid = pid;
 		close_fds(&shell->pipes[1], &fd_in);
-		if (current_cmd->next != NULL && ft_strncmp(current_cmd->value, "cat", 4))
+		//si quitas la condicion special_cat funciona para pipes normales
+		//tengo que ver si es que no se está poniendo bien la condicion
+		//de convertir special cat a 1 y cerrar procesos
+		if (current_cmd->next != NULL && shell->special_cat != 1)
 		{
 			fd_in = shell->pipes[0];
 		}
@@ -164,8 +167,7 @@ void	create_list(t_minishell *shell, t_ast_node *cmd_node)
 		current_node = current_node->right;
 	}
 	shell->pipe_list = cmd_list;
-	shell->nb_pipes = cat_tokens(cmd_list);
-	//printf("%d\n", shell->nb_pipes);
+	shell->special_cat = cat_tokens(cmd_list);
 }
 
 int	execute_multiple_cmd(t_minishell *shell, t_ast_node *cmd_node)

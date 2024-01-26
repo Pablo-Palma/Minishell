@@ -70,7 +70,7 @@ void	init_minishell(t_minishell *shell, char **envp)
 	shell->input_line = NULL;
 	shell->ast = NULL;
 	shell->last_cmd = 0;
-	shell->nb_pipes = 0;
+	shell->special_cat = 0;
 	shell->last_exit_status = 0;
 	shell->shell_pid = 0;
 }
