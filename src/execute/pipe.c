@@ -12,17 +12,18 @@
 
 #include "minishell.h"
 
-int count_tokens(t_token *token_list)
+int cat_tokens(t_token *token_list)
 {
-    int count = 0;
-    t_token *current_token = token_list;
-    while (current_token != NULL) {
-        count++;
-        current_token = current_token->next;
-    }
-    return count;
-}
+    t_token	*current_token = token_list;
 
+	if (strncmp(current_token->value, "cat", 3) != 0)
+		return (0);
+	while (current_token->next != NULL)
+		current_token = current_token->next;
+	if (strncmp(current_token->value, "cat", 3) != 0)
+		return (1);
+	return (0);
+}
 
 void	wait_for_commands(pid_t last_pid)
 {
@@ -81,7 +82,7 @@ pid_t	execute_command(t_minishell	*shell, char *value)
             close(shell->fd_write);
         }
 		args = split_cmd(value, " ");
-		if (!ft_strncmp(args[0], "cat", 4) && args[1] == NULL)
+		if (!ft_strncmp(args[0], "cat", 4) && args[1] == NULL && shell->nb_pipes == 1)
 			pipe_cat(shell);
 		path = get_path(args[0], my_getenv(shell->envp, "PATH"));
 		execve(path, args, shell->envp);
@@ -163,6 +164,8 @@ void	create_list(t_minishell *shell, t_ast_node *cmd_node)
 		current_node = current_node->right;
 	}
 	shell->pipe_list = cmd_list;
+	shell->nb_pipes = cat_tokens(cmd_list);
+	//printf("%d\n", shell->nb_pipes);
 }
 
 int	execute_multiple_cmd(t_minishell *shell, t_ast_node *cmd_node)
