@@ -12,6 +12,18 @@
 
 #include "minishell.h"
 
+int count_tokens(t_token *token_list)
+{
+    int count = 0;
+    t_token *current_token = token_list;
+    while (current_token != NULL) {
+        count++;
+        current_token = current_token->next;
+    }
+    return count;
+}
+
+
 void	wait_for_commands(pid_t last_pid)
 {
 	int	status;
@@ -69,7 +81,7 @@ pid_t	execute_command(t_minishell	*shell, char *value)
             close(shell->fd_write);
         }
 		args = split_cmd(value, " ");
-		if (!ft_strncmp(args[0], "cat", 3) && args[1] == NULL)
+		if (!ft_strncmp(args[0], "cat", 4) && args[1] == NULL)
 			pipe_cat(shell);
 		path = get_path(args[0], my_getenv(shell->envp, "PATH"));
 		execve(path, args, shell->envp);
@@ -116,8 +128,10 @@ void	setup_pipes(t_minishell *shell, t_token *cmd_list)
 		pid = execute_command(shell, current_cmd->value);
 		last_pid = pid;
 		close_fds(&shell->pipes[1], &fd_in);
-		if (current_cmd->next != NULL)
+		if (current_cmd->next != NULL && ft_strncmp(current_cmd->value, "cat", 4))
+		{
 			fd_in = shell->pipes[0];
+		}
 		current_cmd = current_cmd->next;
 	}
 	if (fd_in != 0)
