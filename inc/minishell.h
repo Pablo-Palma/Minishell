@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/27 13:04:42 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/27 15:11:18 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ typedef struct s_ast_node
 	char				*delimiter;
 	struct s_ast_node	*left;
 	struct s_ast_node	*right;
+	struct s_ast_node	*next;
 }	t_ast_node;
 
 typedef struct s_minishell
@@ -71,7 +72,7 @@ typedef struct s_minishell
 	int			output_redirect;
 	char		*input_line;
 	t_ast_node	*ast;
-	t_token		*pipe_list;
+	t_ast_node	*pipe_list;
 	int			last_cmd;
 	int			last_exit_status;
 	int			shell_pid;
@@ -99,6 +100,7 @@ void		add_pipe(t_ast_node **root, t_token *token);
 void		add_red_out(t_ast_node **root, t_token *token, t_ast_node **file);
 void		add_red_in(t_ast_node **root, t_token *token, t_ast_node **file);
 void		free_ast(t_ast_node *node);
+int			add_ast_back(t_ast_node **head, t_ast_node *new_node);
 
 //parsing
 t_token		*lexer(char **input);

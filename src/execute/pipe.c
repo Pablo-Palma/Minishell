@@ -6,15 +6,15 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/25 18:10:48 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/27 17:20:50 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int cat_tokens(t_token *token_list)
+int cat_tokens(t_ast_node *token_list)
 {
-    t_token	*current_token = token_list;
+    t_ast_node	*current_token = token_list;
 
 	if (strcmp(current_token->value, "cat") != 0)
 		return (0);
@@ -105,13 +105,13 @@ void	close_fds(int *pipe_fds, int *fd_in)
 	}
 }
 
-void	setup_pipes(t_minishell *shell, t_token *cmd_list)
+void	setup_pipes(t_minishell *shell, t_ast_node *cmd_list)
 {
-	int	fd_in = 0;
+	int		fd_in = 0;
 	pid_t	pid = 0;
 	pid_t	last_pid = 0;
 
-	t_token	*current_cmd = cmd_list;
+	t_ast_node	*current_cmd = cmd_list;
 	while (current_cmd != NULL)
 	{
 		if (current_cmd->next != NULL)
@@ -126,13 +126,11 @@ void	setup_pipes(t_minishell *shell, t_token *cmd_list)
 			shell->fd_write = STDOUT_FILENO;
 			shell->fd_read = fd_in;
 		}
-		pid = execute_command(shell, current_cmd->value);
+		pid = execute_multiple_cmd(shell, current_cmd);
 		last_pid = pid;
 		close_fds(&shell->pipes[1], &fd_in);
 		if (current_cmd->next != NULL && shell->special_cat != 1)
-		{
 			fd_in = shell->pipes[0];
-		}
 		current_cmd = current_cmd->next;
 	}
 	if (fd_in != 0)
@@ -142,24 +140,26 @@ void	setup_pipes(t_minishell *shell, t_token *cmd_list)
 
 void	create_list(t_minishell *shell, t_ast_node *cmd_node)
 {
-	t_token	*cmd_list = NULL;
-	t_token	*new_token = NULL;
+	t_ast_node	*cmd_list = NULL;
+//	t_ast_node	*new_node = NULL;
 	t_ast_node	*current_node = cmd_node;
 	while (current_node)
 	{
-		if (current_node->left && current_node->left->type == AST_COMMAND)
+		if (current_node->left && current_node->left->type != AST_PIPE)
 		{
-			new_token = create_token(current_node->left->type, current_node->left->value);
-			if (!new_token)
+			/*new_node = create_ast_node(current_node->left->type, current_node->left->value);
+			if (!new_node)
 				handle_error("Error creating new token", 1, EXIT_FAILURE);
-			add_token_back(&cmd_list, new_token);
+			//add_token_back(&cmd_list, new_node);*/
+			add_ast_back(&cmd_list, current_node->left);
 		}
 		if (current_node->right && current_node->right->type != AST_PIPE)
 		{
-			new_token = create_token(current_node->right->type, current_node->right->value);
-			if (!new_token)
+			/*new_node = create_ast_node(current_node->right->type, current_node->right->value);
+			if (!new_node)
 				handle_error("Error creating new token", 1, EXIT_FAILURE);
-			add_token_back(&cmd_list, new_token);
+			//add_token_back(&cmd_list, new_node);*/
+			add_ast_back(&cmd_list, current_node->right);
 		}
 		current_node = current_node->right;
 	}
@@ -167,7 +167,7 @@ void	create_list(t_minishell *shell, t_ast_node *cmd_node)
 	shell->special_cat = cat_tokens(cmd_list);
 }
 
-int	execute_multiple_cmd(t_minishell *shell, t_ast_node *cmd_node)
+pid_t	execute_multiple_cmd(t_minishell *shell, t_ast_node *cmd_node)
 {
 	g_sigint_recived = 2;
 	if (cmd_node->type == AST_REDIRECT_IN || cmd_node->type == AST_REDIRECT_OUT)
@@ -175,14 +175,15 @@ int	execute_multiple_cmd(t_minishell *shell, t_ast_node *cmd_node)
 		if (handle_redirect(shell, cmd_node) == -1)
 			return (-1);
 		if (cmd_node->left)
-			execute_single_cmd(shell, cmd_node->left);
+			return (execute_multiple_cmd(shell, cmd_node->left));
 	}
-	else if (cmd_node->type == AST_COMMAND)
-		execute_single_cmd(shell, cmd_node);
 	else
-	{
-		create_list(shell, cmd_node);
-		setup_pipes(shell, shell->pipe_list);
-	}
+		return(execute_command(shell, cmd_node->value));
 	return (1);
+}
+
+void execute_pipe_cmd(t_minishell *shell, t_ast_node *cmd_node)
+{
+	create_list(shell, cmd_node);
+	setup_pipes(shell, shell->pipe_list);
 }

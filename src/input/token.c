@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 23:49:08 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/27 12:56:16 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/27 15:03:39 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,17 @@ t_type	token_type(char *value)
 	else if (ft_strncmp(value, ">", 1) == 0)
 		return (AST_REDIRECT_OUT);
 	return (AST_COMMAND);
+}
+
+void	free_tokens(t_token *tokens)
+{
+	t_token	*next;
+
+	while (tokens)
+	{
+		next = tokens->next;
+		free(tokens->value);
+		free(tokens);
+		tokens = next;
+	}
 }
