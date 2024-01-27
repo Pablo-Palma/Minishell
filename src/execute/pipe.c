@@ -16,7 +16,7 @@ int cat_tokens(t_token *token_list)
 {
     t_token	*current_token = token_list;
 
-	if (strncmp(current_token->value, "cat", 3) != 0)
+	if (strcmp(current_token->value, "cat") != 0)
 		return (0);
 	while (current_token->next != NULL)
 		current_token = current_token->next;
@@ -129,9 +129,6 @@ void	setup_pipes(t_minishell *shell, t_token *cmd_list)
 		pid = execute_command(shell, current_cmd->value);
 		last_pid = pid;
 		close_fds(&shell->pipes[1], &fd_in);
-		//si quitas la condicion special_cat funciona para pipes normales
-		//tengo que ver si es que no se está poniendo bien la condicion
-		//de convertir special cat a 1 y cerrar procesos
 		if (current_cmd->next != NULL && shell->special_cat != 1)
 		{
 			fd_in = shell->pipes[0];
