@@ -101,7 +101,7 @@ void	execute_single_command(t_minishell *shell, char *value)
 
 	if (handle_signal(shell, value))
 		return ;
-	args = ft_split(value, ' ');
+	args = split_cmd(value, " ");
 	if (!*args)
 		return ;
 	if (ft_strncmp(args[0], "./", 2) == 0)
