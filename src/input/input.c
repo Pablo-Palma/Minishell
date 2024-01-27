@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 22:53:13 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/25 23:16:58 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/27 13:04:56 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ char	*handle_operators(char *input)
 	int		f;
 	int		last_quote;
 
-	parsed_input = malloc(ft_strlen(input) + count_operators(input) * 2 + 1);
+	parsed_input = calloc(1, ft_strlen(input) + count_operators(input) * 2 + 1);
 	i = 0;
 	j = 0;
 	f = 0;
@@ -76,30 +76,24 @@ char	*handle_operators(char *input)
 	return (parsed_input);
 }
 
-int	strip_quotes(char *quoted_str, char *unquoted_str)
+int	open_quotes(char *str)
 {
 	int		i;
-	int		j;
 	int		envvar;
 	char	last_quote;
 
-	i = 0;
-	j = 0;
+	i = -1;
 	last_quote = 0;
 	envvar = 1;
-	while (quoted_str[i])
+	while (str[++i])
 	{
-		if (last_quote == 39 && quoted_str[i] == '$')
+		if (last_quote == 39 && str[i] == '$')
 			envvar = 0;
-		if ((quoted_str[i] == 39 || quoted_str[i] == 34) && last_quote == 0)
-			last_quote = quoted_str[i];
-		else if (quoted_str[i] == last_quote)
+		if ((str[i] == 39 || str[i] == 34) && last_quote == 0)
+			last_quote = str[i];
+		else if (str[i] == last_quote)
 			last_quote = 0;
-		else
-			unquoted_str[j++] = quoted_str[i];
-		i++;
 	}
-	unquoted_str[j] = 0;
 	if (last_quote)
 		return (-1);
 	return (envvar);
