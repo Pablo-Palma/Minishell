@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 23:49:08 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/28 13:49:52 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/28 15:39:02 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ t_token	*create_token(t_type type, char *value)
 
 t_type	token_type(char *value)
 {
-	if (ft_strncmp(value, "||", 1) == 0)
+	if (ft_strncmp(value, "||", 2) == 0)
 		return (AST_AND);
 	else if (ft_strncmp(value, "|", 1) == 0)
 		return (AST_PIPE);

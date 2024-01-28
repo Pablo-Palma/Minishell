@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/28 15:29:59 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/28 15:42:21 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ void	create_list(t_minishell *shell, t_ast_node *cmd_node)
 {
 	t_ast_node	*cmd_list = NULL;
 	t_ast_node	*current_node = cmd_node;
-	while (current_node && current_node->type == AST_PIPE)
+	while (current_node)
 	{
 		if (current_node->left && current_node->left->type != AST_PIPE)
 			add_ast_back(&cmd_list, current_node->left);
@@ -174,6 +174,14 @@ pid_t	execute_multiple_cmd(t_minishell *shell, t_ast_node *cmd_node)
 
 void execute_pipe_cmd(t_minishell *shell, t_ast_node *cmd_node)
 {
+	t_ast_node	*node;
+
 	create_list(shell, cmd_node);
+	node = shell->pipe_list;
+	while (node)
+	{
+		printf("Value: %s\n", node->value);
+		node = node->next;
+	}
 	setup_pipes(shell, shell->pipe_list);
 }
