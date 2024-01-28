@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/28 16:45:29 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/28 17:50:08 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ pid_t	execute_command(t_minishell	*shell, char *value)
 		handle_error ("Fork Error", 1, EXIT_FAILURE);
 	else if (pid == 0)
 	{
-		close(shell->pipes[0]);
 		if (shell->fd_read != STDIN_FILENO)
     	{
     		dup2(shell->fd_read, STDIN_FILENO);
@@ -84,11 +83,10 @@ pid_t	execute_command(t_minishell	*shell, char *value)
        		close(shell->fd_write);
     	}
 		args = split_cmd(value, " ");
-//		if (!ft_strncmp(args[0], "cat", 4) && args[1] == NULL && shell->special_cat == 1)
-//			pipe_cat(shell);
 		if (handle_builtin(shell, args) || special_builtin(shell, args))
 			exit(0);
 		path = get_path(args[0], my_getenv(shell->envp, "PATH"));
+		close(shell->pipes[0]);
 		execve(path, args, shell->envp);
 		handle_error ("Execve Error", 1, EXIT_FAILURE);
 	}
@@ -122,19 +120,19 @@ void	setup_pipes(t_minishell *shell, t_ast_node *cmd_list)
 		{
 			if (pipe(shell->pipes) == -1)
 				handle_error("Error creating pipe", 1, EXIT_FAILURE);
-			shell->fd_write = shell->pipes[1];
+			if (!shell->output_redirect)
+				shell->fd_write = shell->pipes[1];
 			shell->fd_read = fd_in;
 		}
 		else
 		{
-			if (!shell->output_redirect)
-				shell->fd_write = STDOUT_FILENO;
+			shell->fd_write = STDOUT_FILENO;
 			shell->fd_read = fd_in;
 		}
 		pid = execute_multiple_cmd(shell, current_cmd);
 		last_pid = pid;
 		close_fds(&shell->pipes[1], &fd_in);
-		if (current_cmd->next != NULL && shell->special_cat != 1)
+		if (current_cmd->next != NULL)
 			fd_in = shell->pipes[0];
 		current_cmd = current_cmd->next;
 	}
@@ -156,7 +154,6 @@ void	create_list(t_minishell *shell, t_ast_node *cmd_node)
 		current_node = current_node->right;
 	}
 	shell->pipe_list = cmd_list;
-	shell->special_cat = cat_tokens(cmd_list);
 }
 
 pid_t	execute_multiple_cmd(t_minishell *shell, t_ast_node *cmd_node)
