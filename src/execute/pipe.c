@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/28 17:50:08 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/28 17:54:46 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,6 +132,8 @@ void	setup_pipes(t_minishell *shell, t_ast_node *cmd_list)
 		pid = execute_multiple_cmd(shell, current_cmd);
 		last_pid = pid;
 		close_fds(&shell->pipes[1], &fd_in);
+		if (shell->fd_write != STDOUT_FILENO)
+			close (shell->fd_write);
 		if (current_cmd->next != NULL)
 			fd_in = shell->pipes[0];
 		current_cmd = current_cmd->next;
