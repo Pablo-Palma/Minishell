@@ -1,17 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipe.c                                             :+:      :+:    :+:   */
+/*   2pipe.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/25 18:10:48 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/28 13:02:02 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/*void	execute_pipe_cmd(t_minishell *shell, t_ast_node *cmd_node)
 void	handle_fd(t_minishell *shell)
 {
 	if (shell->fd_read)
@@ -65,7 +66,6 @@ void	execute_single_cmd(t_minishell *shell, t_ast_node *cmd_node)
 		shell->last_exit_status = WEXITSTATUS(status);
 }
 
-/*void	execute_pipe_cmd(t_minishell *shell, t_ast_node *cmd_node)
 {
 	if (pipe(shell->pipes) == -1)
 		handle_error("Error creating pipe", 1, EXIT_FAILURE);

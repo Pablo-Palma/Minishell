@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/28 11:40:46 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/28 13:41:54 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,27 +63,30 @@ void	pipe_cat(t_minishell *shell)
 
 pid_t	execute_command(t_minishell	*shell, char *value)
 {
-	pid_t pid = fork();
+	pid_t 	pid;
 	char	**args;
 	char	*path;
 
+	pid = fork();
 	if (pid == -1)
 		handle_error ("Fork Error", 1, EXIT_FAILURE);
 	else if (pid == 0)
 	{
 		if (shell->fd_read != STDIN_FILENO)
-        {
-            dup2(shell->fd_read, STDIN_FILENO);
-            close(shell->fd_read);
-        }
-        if (shell->fd_write != STDOUT_FILENO)
-        {
-            dup2(shell->fd_write, STDOUT_FILENO);
-            close(shell->fd_write);
-        }
+    	{
+    		dup2(shell->fd_read, STDIN_FILENO);
+       		close(shell->fd_read);
+    	}
+   		if (shell->fd_write != STDOUT_FILENO)
+    	{
+        	dup2(shell->fd_write, STDOUT_FILENO);
+       		close(shell->fd_write);
+    	}
 		args = split_cmd(value, " ");
 		if (!ft_strncmp(args[0], "cat", 4) && args[1] == NULL && shell->special_cat == 1)
 			pipe_cat(shell);
+		if (handle_builtin(shell, args) || special_builtin(shell, args))
+			exit(0);
 		path = get_path(args[0], my_getenv(shell->envp, "PATH"));
 		execve(path, args, shell->envp);
 		handle_error ("Execve Error", 1, EXIT_FAILURE);
