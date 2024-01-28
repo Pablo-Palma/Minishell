@@ -179,10 +179,7 @@ void execute_pipe_cmd(t_minishell *shell, t_ast_node *cmd_node)
 
 	create_list(shell, cmd_node);
 	node = shell->pipe_list;
-	while (node)
-	{
-		printf("Value: %s\n", node->value);
+	while (node && node->next)
 		node = node->next;
-	}
 	setup_pipes(shell, shell->pipe_list);
 }

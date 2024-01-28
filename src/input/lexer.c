@@ -134,6 +134,8 @@ t_token	*lexer(char **input)
 	i = -1;
 	is_file = 0;
 	tokens = NULL;
+	if (!input)
+		return (NULL);
 	while (input[++i])
 	{
 		if (build_token(&tokens, input, &i, &is_file) == -1)
