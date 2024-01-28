@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/27 17:20:50 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/28 11:40:46 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,26 +141,13 @@ void	setup_pipes(t_minishell *shell, t_ast_node *cmd_list)
 void	create_list(t_minishell *shell, t_ast_node *cmd_node)
 {
 	t_ast_node	*cmd_list = NULL;
-//	t_ast_node	*new_node = NULL;
 	t_ast_node	*current_node = cmd_node;
 	while (current_node)
 	{
 		if (current_node->left && current_node->left->type != AST_PIPE)
-		{
-			/*new_node = create_ast_node(current_node->left->type, current_node->left->value);
-			if (!new_node)
-				handle_error("Error creating new token", 1, EXIT_FAILURE);
-			//add_token_back(&cmd_list, new_node);*/
 			add_ast_back(&cmd_list, current_node->left);
-		}
 		if (current_node->right && current_node->right->type != AST_PIPE)
-		{
-			/*new_node = create_ast_node(current_node->right->type, current_node->right->value);
-			if (!new_node)
-				handle_error("Error creating new token", 1, EXIT_FAILURE);
-			//add_token_back(&cmd_list, new_node);*/
 			add_ast_back(&cmd_list, current_node->right);
-		}
 		current_node = current_node->right;
 	}
 	shell->pipe_list = cmd_list;
