@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/28 13:53:44 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/29 14:37:49 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,14 @@ typedef struct s_ast_node
 	struct s_ast_node	*next;
 }	t_ast_node;
 
+typedef struct s_tree
+{
+	t_ast_node	*root;
+	t_ast_node	*branch;
+	t_ast_node	*file;
+	t_ast_node	*red_in;
+}	t_tree;
+
 typedef struct s_minishell
 {
 	char		**envp;
@@ -101,8 +109,10 @@ void		add_cmd(t_ast_node **root, t_token *token);
 void		add_pipe(t_ast_node **root, t_token *token);
 void		add_red_out(t_ast_node **root, t_token *token, t_ast_node **file);
 void		add_red_in(t_ast_node **root, t_token *token, t_ast_node **file);
+void		add_sequence(t_tree *tree, t_token *token);
 void		free_ast(t_ast_node *node);
 int			add_ast_back(t_ast_node **head, t_ast_node *new_node);
+void		insert_redirection(t_ast_node **root, t_ast_node **redirect_in);
 
 //parsing
 t_token		*lexer(char **input);
