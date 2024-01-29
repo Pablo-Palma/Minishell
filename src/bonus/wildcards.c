@@ -6,24 +6,21 @@
 /*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 11:14:03 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/29 14:38:34 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/29 15:27:45 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <dirent.h>
 #include <minishell.h>
 
+//int	match_pattern
+
 int	count_elements(char **array)
 {
 	int	count = 0;
 
 	while(array && array[count])
-	{
-		if (ft_strncmp(array[count], ".", 1) == 0)
-			array++;
-		else
 			count++;
-	}
 	return (count);
 }
 
@@ -40,7 +37,10 @@ int	count_files(void)
 		return (0);
 	}
 	while ((entry = readdir(dir)) != NULL)
-		count++;
+	{
+		if (entry->d_name[0] != '.')
+			count++;
+	}
 	closedir(dir);
 	return (count);
 }
@@ -61,11 +61,8 @@ char	**command(char **args, char **files)
 	}
 	while (files[j])
 	{
-		if(ft_strncmp(files[j], ".", 1) != 0)
-		{
-			command[i++] = ft_strdup(files[j]);
-			free(files[j]);
-		}
+		command[i++] = ft_strdup(files[j]);
+		free(files[j]);
 		j++;
 	}
 	free(files);
@@ -84,7 +81,7 @@ char	**expand_wildcards(char **args)
 
 	while(args[i])
 	{
-		if (ft_strncmp(args[i], "*", 2) == 0)
+		if (ft_strncmp(args[i], "*", 1) == 0)
 			break;
 		i++;
 	}
@@ -103,8 +100,11 @@ char	**expand_wildcards(char **args)
 	i = 0;
 	while ((entry = readdir(dir)) != NULL)
 	{
-		files[i] = ft_strdup(entry->d_name);
-		i++;
+		if (entry->d_name[0] != '.')
+		{
+			files[i] = ft_strdup(entry->d_name);
+			i++;
+		}
 	}
 	files[i] = NULL;
 	closedir(dir);
