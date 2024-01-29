@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 20:35:26 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/23 00:24:01 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/29 15:31:47 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ void	add_red_out(t_ast_node **root, t_token *token, t_ast_node **file)
 	redirect = create_ast_node(token->type, token->value);
 	if (*file)
 		redirect->right = (*file);
+	*file = NULL;
 	if (!(*root))
 		(*root) = redirect;
 	else if ((*root)->type == AST_PIPE)
@@ -60,4 +61,23 @@ void	add_red_in(t_ast_node **root, t_token *token, t_ast_node **file)
 	(*root) = create_ast_node(token->type, token->value);
 	if (*file)
 		(*root)->right = (*file);
+	*file = NULL;
+}
+
+void	add_sequence(t_tree *tree, t_token *token)
+{
+	t_ast_node	*node;
+
+	node = create_ast_node(token->type, token->value);
+	insert_redirection(&tree->branch, &tree->red_in);
+	tree->red_in = NULL;
+	if (!tree->root)
+		node->right = tree->branch;
+	else
+	{
+		node->right = tree->root;
+		node->right->left = tree->branch;
+	}
+	tree->branch = NULL;
+	tree->root = node;
 }

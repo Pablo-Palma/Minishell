@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:11:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/28 20:39:17 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/29 21:30:44 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,19 @@ void	execute_ast_command(t_minishell *shell, t_ast_node *node)
 		perror("Nodo AST or Shell as NULL");
 		return ;
 	}
-	if (node->type == AST_COMMAND)
+	if (node->type == AST_OR)
+	{
+		execute_ast_command(shell, node->left);
+		if (shell->last_exit_status)
+			execute_ast_command(shell, node->right);
+	}
+	else if (node->type == AST_AND)
+	{
+		execute_ast_command(shell, node->left);
+		if (!shell->last_exit_status)
+			execute_ast_command(shell, node->right);
+	}
+	else if (node->type == AST_COMMAND)
 		execute_single_command(shell, node->value);
 	else if (node->type == AST_REDIRECT_OUT)
 		execute_output_redirect(shell, node);
