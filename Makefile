@@ -27,7 +27,6 @@ SRCS =	$(SRC_DIR)aux_ft/cmd_split.c			\
     	$(SRC_DIR)execute/execute.c 			\
 		$(SRC_DIR)execute/heredoc.c				\
 		$(SRC_DIR)execute/pipe.c				\
-		$(SRC_DIR)execute/2pipe.c				\
 		$(SRC_DIR)execute/programs.c			\
 		$(SRC_DIR)execute/redirect.c			\
 		$(SRC_DIR)input/ast_node.c				\
@@ -39,7 +38,8 @@ SRCS =	$(SRC_DIR)aux_ft/cmd_split.c			\
 		$(SRC_DIR)input/token.c 				\
 		$(SRC_DIR)main/main.c 					\
     	$(SRC_DIR)main/minishell.c				\
-    	$(SRC_DIR)signal/signal.c 
+    	$(SRC_DIR)signal/signal.c 				\
+		$(SRC_DIR)bonus/wildcards.c
 
 OBJS = $(SRCS:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
 

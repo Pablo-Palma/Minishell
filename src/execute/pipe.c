@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/29 21:30:19 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/29 21:48:13 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ pid_t	execute_command(t_minishell	*shell, char *value)
 {
 	pid_t 	pid;
 	char	**args;
+	char	**cmd;
+	char	**files;
 	char	*path;
 
 	pid = fork();
@@ -83,6 +85,13 @@ pid_t	execute_command(t_minishell	*shell, char *value)
        		close(shell->fd_write);
     	}
 		args = split_cmd(value, " ");
+		files = expand_wildcards(args);
+		if (files && *files)
+			cmd = command(args, files);
+		else
+			cmd = args;
+		if (!*cmd)
+			return (-1);
 		if (handle_builtin(shell, args) || special_builtin(shell, args))
 			exit(0);
 		path = get_path(args[0], my_getenv(shell->envp, "PATH"));

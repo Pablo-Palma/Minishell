@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:11:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/29 21:30:44 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/29 21:51:48 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,12 +109,19 @@ int	handle_signal(t_minishell *shell, char *value)
 void	execute_single_command(t_minishell *shell, char *value)
 {
 	char	**args;
+	char	**files;
+	char	**cmd;
 	char	*path;
 
 	if (handle_signal(shell, value))
 		return ;
 	args = split_cmd(value, " ");
-	if (!*args)
+	files = expand_wildcards(args);
+	if (files && *files)
+		cmd = command(args, files);
+	else
+		cmd = args;
+	if (!*cmd)
 		return ;
 	if (ft_strncmp(args[0], "./", 2) == 0)
 		select_exec(shell, args);
