@@ -6,12 +6,29 @@
 /*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 11:14:03 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/29 19:29:42 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/29 23:42:42 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <dirent.h>
 #include <minishell.h>
+
+void	split_pattern(const char *pattern, char **dir_path, char **file_pattern)
+{
+	char *last_slash;
+
+	last_slash = ft_strrchr(pattern, '/');
+	if (last_slash != NULL)
+	{
+		*dir_path = ft_strndup(pattern, last_slash - pattern + 1);
+		*file_pattern = ft_strdup(last_slash + 1);
+	}
+	else
+	{
+		*dir_path = ft_strdup(".");
+		*file_pattern = ft_strdup(pattern);
+	}
+}
 
 int    match_pattern(const char *filename, const char *pattern)
 {
@@ -62,13 +79,13 @@ int	count_elements(char **array)
 	return (count);
 }
 
-int	count_files(char *pattern)
+int	count_files(char *pattern, char *dir_path)
 {
 	DIR				*dir;
 	struct dirent	*entry;
 	int				count = 0;
 
-	dir = opendir(".");
+	dir = opendir(dir_path);
 	if (dir == NULL)
 	{
 		perror("opendir");
@@ -111,11 +128,27 @@ char	**command(char **args, char **files)
 	return (command);
 }
 
+char	*concatenate_path(const char *dir_path, const char *filename)
+{
+	char	*full_path;
+	char	*temp_path;
+
+	if (dir_path[ft_strlen(dir_path) - 1] != '/')
+		temp_path = ft_strjoin(dir_path, "/");
+	else
+		temp_path = ft_strdup(dir_path);
+	full_path = ft_strjoin(temp_path, filename);
+	free(temp_path);
+	return (full_path);
+}
+
 char	**expand_wildcards(char **args)
 {
 	DIR				*dir;
 	struct dirent	*entry;
 	char			*pattern = NULL;
+	char			*file_pattern = NULL;
+	char			*dir_path = NULL;
 	char			**files;
 	int				i = 0;
 	int				count = 0;
@@ -133,11 +166,12 @@ char	**expand_wildcards(char **args)
 		return (NULL);
 	if (args[i] == NULL)
 		return (NULL);
-	count = count_files(pattern);
+	split_pattern(pattern, &dir_path, &file_pattern);
+	count = count_files(file_pattern, dir_path);
 	files = malloc(sizeof(char *) * (count + 1));
 	if (!files)
 		return (NULL);
-	dir = opendir(".");
+	dir = opendir(dir_path);
 	if (dir == NULL)
 	{
 		perror("opendir");
@@ -146,9 +180,9 @@ char	**expand_wildcards(char **args)
 	i = 0;
 	while ((entry = readdir(dir)) != NULL)
 	{
-		if (match_pattern(entry->d_name, pattern))
+		if (match_pattern(entry->d_name, file_pattern))
 		{
-			files[i] = ft_strdup(entry->d_name);
+			files[i] = concatenate_path(dir_path, entry->d_name);
 			i++;
 		}
 	}
