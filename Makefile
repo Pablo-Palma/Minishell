@@ -15,6 +15,7 @@ SRCS =	$(SRC_DIR)aux_ft/cmd_split.c			\
     	$(SRC_DIR)aux_ft/get_path.c				\
 		$(SRC_DIR)aux_ft/here_doc_env.c			\
 		$(SRC_DIR)aux_ft/input_split.c			\
+		$(SRC_DIR)aux_ft/quotes.c				\
 		$(SRC_DIR)aux_ft/utils.c				\
     	$(SRC_DIR)builtins/cd.c					\
     	$(SRC_DIR)builtins/echo.c				\
@@ -24,10 +25,11 @@ SRCS =	$(SRC_DIR)aux_ft/cmd_split.c			\
     	$(SRC_DIR)builtins/handle_builtin.c		\
     	$(SRC_DIR)builtins/pwd.c				\
 		$(SRC_DIR)builtins/unset.c				\
+		$(SRC_DIR)execute/execute_utils.c		\
     	$(SRC_DIR)execute/execute.c 			\
 		$(SRC_DIR)execute/heredoc.c				\
+		$(SRC_DIR)execute/pipe_utils.c			\
 		$(SRC_DIR)execute/pipe.c				\
-		$(SRC_DIR)execute/2pipe.c				\
 		$(SRC_DIR)execute/programs.c			\
 		$(SRC_DIR)execute/redirect.c			\
 		$(SRC_DIR)input/ast_node.c				\

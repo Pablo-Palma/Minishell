@@ -6,27 +6,12 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:37:07 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/24 10:03:19 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/30 00:03:50 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
-int	is_valid(char *input, t_minishell *shell)
-{
-	while (*input && (!isascii(*input) || (*input == 39 || *input == 34
-				|| *input == '<' || *input == '>' || *input == '?'
-				|| *input == '/' || *input == '!')))
-		input++;
-	if (*input == '\0')
-	{
-		printf("minishell: command not found\n");
-		shell->last_exit_status = 127;
-		return (0);
-	}
-	return (1);
-}*/
 int	build_heredoc(char **input, int *i, t_token **tokens)
 {
 	if (add_token_back(tokens, create_token(AST_HEREDOC, input[*i])) == -1)

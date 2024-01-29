@@ -6,13 +6,13 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 22:53:13 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/28 15:41:50 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/30 00:17:44 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	count_operators(char *input, char *operators)
+int	count_op(char *input, char *operators)
 {
 	int	flag;
 	int	counter;
@@ -41,15 +41,13 @@ int	count_operators(char *input, char *operators)
 	return (counter);
 }
 
-char	*handle_operators(char *input, char *operators)
+void	handle_operators(char *input, char *p_input, char *operators)
 {
-	char	*p_input;
 	int		i;
 	int		j;
 	int		f;
 	int		last_quote;
 
-	p_input = calloc(1, ft_strlen(input) + count_operators(input, operators) * 2 + 1);
 	i = 0;
 	j = 0;
 	f = 0;
@@ -60,43 +58,16 @@ char	*handle_operators(char *input, char *operators)
 			last_quote = 0;
 		if (!last_quote && (input[i] == 34 || input[i] == 39))
 			last_quote = input[i];
-		if (ft_strchr(operators, input[i]) && !f && !last_quote)
+		if ((ft_strchr(operators, input[i]) && !f && !last_quote)
+			|| (!ft_strchr(operators, input[i]) && f && !last_quote))
 		{
 			p_input[j++] = ' ';
-			f++;
-		}
-		else if (!ft_strchr(operators, input[i]) && f && !last_quote)
-		{
-			p_input[j++] = ' ';
-			f = 0;
+			f = 1;
+			if (!ft_strchr(operators, input[i]))
+				f = 0;
 		}
 		p_input[j++] = input[i++];
 	}
-	p_input[j] = 0;
-	return (p_input);
-}
-
-int	open_quotes(char *str)
-{
-	int		i;
-	int		envvar;
-	char	last_quote;
-
-	i = -1;
-	last_quote = 0;
-	envvar = 1;
-	while (str[++i])
-	{
-		if (last_quote == 39 && str[i] == '$')
-			envvar = 0;
-		if ((str[i] == 39 || str[i] == 34) && last_quote == 0)
-			last_quote = str[i];
-		else if (str[i] == last_quote)
-			last_quote = 0;
-	}
-	if (last_quote)
-		return (-1);
-	return (envvar);
 }
 
 int	handle_doc(t_minishell *shell, t_token *tokens)
@@ -131,11 +102,12 @@ int	handle_input(t_minishell *shell, char *input)
 {
 	t_token		*tokens;
 	t_ast_node	*ast;
-	char		*parsed_input;
+	char		*p_input;
 
-	parsed_input = handle_operators(input, "<>|&");
-	tokens = lexer(split_input(parsed_input, " "));
-	free(parsed_input);
+	p_input = calloc(1, ft_strlen(input) + count_op(input, "<>|&") * 2 + 1);
+	handle_operators(input, p_input, "<>|&");
+	tokens = lexer(split_input(p_input, " "));
+	free(p_input);
 	handle_envp(shell, tokens);
 	if (!tokens)
 		return (-1);

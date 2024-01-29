@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 08:14:43 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/10 13:39:18 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/30 00:00:11 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	handle_builtin(t_minishell *shell, char **cmd_args)
 	if (strncmp(cmd_args[0], "echo", 5) == 0)
 	{
 		if (cmd_args[1] && ft_strncmp(cmd_args[1], "$$", 3) == 0)
-			execute_single_cmd_process(shell, cmd_args, path);
+			single_cmd_process(shell, cmd_args, path);
 		else if (cmd_args[1] && ft_strncmp(cmd_args[1], "$?", 3) == 0)
 			printf("%d\n", shell->last_exit_status);
 		else
