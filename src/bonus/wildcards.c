@@ -6,37 +6,51 @@
 /*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 11:14:03 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/29 16:16:54 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/29 19:29:42 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <dirent.h>
 #include <minishell.h>
 
-int	match_pattern(const char *filename, const char *pattern)
+int    match_pattern(const char *filename, const char *pattern)
 {
-	int	pat_len = ft_strlen(pattern);
-	int	filename_len = ft_strlen(filename);
-	char	*star = ft_strchr(pattern, '*');
-	int	prefix_len = star - pattern;
-	int	suffix_len = pat_len - prefix_len - 1;
+    const char    *pat_ptr = pattern;
+    const char    *file_ptr = filename;
+    const char    *last_match = NULL;
 
-	if (filename[0] == '.')
-		return (0);
-	if (ft_strncmp(pattern, "*", 2) == 0)
-		return(1);
-	if (pattern[pat_len - 1] == '*')
-        return ft_strncmp(filename, pattern, pat_len - 1) == 0;
-	if (pattern[0] == '*')
-		return ft_strncmp(filename + filename_len - (pat_len - 1), pattern + 1, pat_len - 1) == 0;
-	else
-	{
-		if (prefix_len > filename_len || suffix_len > filename_len)
-			return (0);
-		return ft_strncmp(filename, pattern, prefix_len) == 0 &&
-				ft_strncmp(filename + filename_len - suffix_len + 1, star + 1,suffix_len) == 0;
-	}
-	//return ft_strncmp(filename, pattern, pat_len) == 0;
+    if (filename[0] == '.')
+        return (0);
+    while (*pat_ptr && *file_ptr)
+    {
+        if (*pat_ptr == '*') // MANEJAMOS ASTERISCO AL INICIO
+        {
+            while (*pat_ptr == '*')
+              pat_ptr++;
+            if (!pat_ptr) //solo un asterisco
+                return 1;
+            while (*file_ptr && *file_ptr != *pat_ptr) //recorrer filename hasta encontrar coicidencia
+                file_ptr++;
+        }
+        else //MANEJAMOS ASTERISCO AL FINAL
+        {
+            if (*file_ptr == *pat_ptr) //Mientras coicidan recorremos
+            {
+                last_match = pat_ptr;
+                file_ptr++;
+                pat_ptr++;
+            }
+            else
+                return (0);
+        }
+            if (*file_ptr && !*pat_ptr)
+              pat_ptr = last_match;
+    }
+	while (*pat_ptr == '*')
+		pat_ptr++;
+    if (!*file_ptr && !*pat_ptr)
+        return (1);
+    return (0);
 }
 
 int	count_elements(char **array)

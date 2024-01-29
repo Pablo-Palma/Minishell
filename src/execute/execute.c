@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:11:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/29 13:37:04 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/29 18:12:33 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ void	execute_single_command(t_minishell *shell, char *value)
 		return ;
 	args = split_cmd(value, " ");
 	files = expand_wildcards(args);
-	if (files)
+	if (files && *files)
 		cmd = command(args, files);
 	else
 		cmd = args;
@@ -127,6 +127,5 @@ void	execute_single_command(t_minishell *shell, char *value)
 	if (g_sigint_recived == SIGINT_RECIVED)
 		shell->last_exit_status = 130;
 	g_sigint_recived = SIGINT_NORMAL;
-	//ft_free_arrays(args);
 	ft_free_arrays(cmd);
 }
