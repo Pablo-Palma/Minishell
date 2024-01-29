@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:11:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/28 20:39:17 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/29 13:37:04 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,28 +97,36 @@ int	handle_signal(t_minishell *shell, char *value)
 void	execute_single_command(t_minishell *shell, char *value)
 {
 	char	**args;
+	char	**files;
+	char	**cmd;
 	char	*path;
 
 	if (handle_signal(shell, value))
 		return ;
 	args = split_cmd(value, " ");
-	if (!*args)
+	files = expand_wildcards(args);
+	if (files)
+		cmd = command(args, files);
+	else
+		cmd = args;
+	if (!*cmd)
 		return ;
-	if (ft_strncmp(args[0], "./", 2) == 0)
-		select_exec(shell, args);
-	else if (!special_builtin(shell, args) && !handle_builtin(shell, args))
+	if (ft_strncmp(cmd[0], "./", 2) == 0)
+		select_exec(shell, cmd);
+	else if (!special_builtin(shell, cmd) && !handle_builtin(shell, cmd))
 	{
-		path = get_path(args[0], my_getenv(shell->envp, "PATH"));
+		path = get_path(cmd[0], my_getenv(shell->envp, "PATH"));
 		if (!path)
-			exit_status(shell, args[0], 127);
+			exit_status(shell, cmd[0], 127);
 		else
 		{
-			execute_single_cmd_process(shell, args, path);
+			execute_single_cmd_process(shell, cmd, path);
 			free(path);
 		}
 	}
 	if (g_sigint_recived == SIGINT_RECIVED)
 		shell->last_exit_status = 130;
 	g_sigint_recived = SIGINT_NORMAL;
-	ft_free_arrays(args);
+	//ft_free_arrays(args);
+	ft_free_arrays(cmd);
 }

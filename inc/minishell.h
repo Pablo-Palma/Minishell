@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/28 13:53:44 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/29 13:02:10 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,5 +206,14 @@ char		*ft_strndup(const char *src, int n);
 
 //minishell
 int			minishell(char **envp);
+
+///////////////////////////////////////////////////////////////////////////////
+//																			 //
+//									BONUS									 //
+//																			 //
+///////////////////////////////////////////////////////////////////////////////
+
+char	**expand_wildcards(char **args);
+char	**command(char **args, char **files);
 
 #endif

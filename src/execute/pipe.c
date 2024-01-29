@@ -6,24 +6,11 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/28 17:54:46 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/29 13:42:16 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int cat_tokens(t_ast_node *token_list)
-{
-    t_ast_node	*current_token = token_list;
-
-	if (strcmp(current_token->value, "cat") != 0)
-		return (0);
-	while (current_token->next != NULL)
-		current_token = current_token->next;
-	if (strncmp(current_token->value, "cat", 3) != 0)
-		return (1);
-	return (0);
-}
 
 void	wait_for_commands(pid_t last_pid)
 {
@@ -38,33 +25,12 @@ void	wait_for_commands(pid_t last_pid)
 	}
 }
 
-void	pipe_cat(t_minishell *shell)
-{
-	char	*line;
-	int		special_pipe[2];
-
-	(void)shell;
-	if (pipe(special_pipe) == -1)
-		handle_error("Error creating pipe", 1, EXIT_FAILURE);
-	line = get_next_line(STDIN_FILENO);
-	if (line)
-	{
-		write (special_pipe[1], line, ft_strlen(line));
-		if (line)
-			free(line);
-	}
-	close(special_pipe[1]);
-	if (special_pipe[0] != STDIN_FILENO)
-	{
-		dup2(special_pipe[0], STDIN_FILENO);
-		close(special_pipe[0]);
-	}
-}
-
 pid_t	execute_command(t_minishell	*shell, char *value)
 {
 	pid_t 	pid;
 	char	**args;
+	char	**cmd;
+	char	**files;
 	char	*path;
 
 	pid = fork();
@@ -83,11 +49,18 @@ pid_t	execute_command(t_minishell	*shell, char *value)
        		close(shell->fd_write);
     	}
 		args = split_cmd(value, " ");
-		if (handle_builtin(shell, args) || special_builtin(shell, args))
+		files = expand_wildcards(args);
+		if (files)
+			cmd = command(args, files);
+		else
+			cmd = args;
+		if (!*cmd)
+			return (-1);
+		if (handle_builtin(shell, cmd) || special_builtin(shell, cmd))
 			exit(0);
-		path = get_path(args[0], my_getenv(shell->envp, "PATH"));
+		path = get_path(cmd[0], my_getenv(shell->envp, "PATH"));
 		close(shell->pipes[0]);
-		execve(path, args, shell->envp);
+		execve(path, cmd, shell->envp);
 		handle_error ("Execve Error", 1, EXIT_FAILURE);
 	}
 	return (pid);
