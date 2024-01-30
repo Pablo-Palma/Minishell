@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/30 00:47:18 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/30 14:13:20 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ pid_t	execute_command(t_minishell	*shell, char *value)
 	char	**args;
 	char	*path;
 
+	set_sigquit();
 	pid = fork();
 	if (pid == -1)
 		handle_error ("Fork Error", 1, EXIT_FAILURE);
