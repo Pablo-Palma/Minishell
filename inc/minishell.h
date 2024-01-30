@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/30 10:41:55 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/30 10:59:48 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <sys/wait.h>
+# include <dirent.h>
 
 extern volatile sig_atomic_t	g_sigint_recived;
 
@@ -189,6 +190,8 @@ int			exit_command(t_minishell *shell, char **cmd_args);
 void		setup_signal_handlers(void);
 void		handle_sigint(int sig);
 void		exit_status(t_minishell *shell, const char *msg, int status);
+void		handle_sigquit(int sig);
+void		ignore_sigquit(void);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //

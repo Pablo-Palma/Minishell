@@ -43,6 +43,7 @@ SRCS =	$(SRC_DIR)aux_ft/array_size.c			\
 		$(SRC_DIR)main/main.c 					\
     	$(SRC_DIR)main/minishell.c				\
     	$(SRC_DIR)signal/signal.c 				\
+		$(SRC_DIR)signal/signal_2.c 			\
 		$(SRC_DIR)bonus/wildcards_2.c			\
 		$(SRC_DIR)bonus/wildcards.c
 

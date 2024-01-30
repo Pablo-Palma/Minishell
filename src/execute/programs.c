@@ -1,15 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   subshell.c                                         :+:      :+:    :+:   */
+/*   programs.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 12:45:38 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/08 18:51:41 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/30 11:03:32 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include <termios.h>
+
 #include "minishell.h"
 
 void	execute_subshell(t_minishell *shell, char **args)
@@ -31,14 +31,12 @@ void	execute_subshell(t_minishell *shell, char **args)
 			exit(EXIT_FAILURE);
 		}
 	}
-	else
-	{
-		waitpid(pid, &status, 0);
-		signal(SIGINT, handle_sigint);
-		g_sigint_recived = SIGINT_NORMAL;
-		if (WIFEXITED(status))
-			shell->last_exit_status = WEXITSTATUS(status);
-	}
+	waitpid(pid, &status, 0);
+	signal(SIGINT, handle_sigint);
+	signal(SIGQUIT, handle_sigquit);
+	g_sigint_recived = SIGINT_NORMAL;
+	if (WIFEXITED(status))
+		shell->last_exit_status = WEXITSTATUS(status);
 }
 
 void	execute_program(t_minishell *shell, char **args)

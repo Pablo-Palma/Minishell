@@ -6,11 +6,10 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 11:14:03 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/30 10:46:12 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/30 11:13:49 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <dirent.h>
 #include <minishell.h>
 
 char	**command(char **args, char **files)
@@ -83,14 +82,14 @@ static char	**wildcard_exit(t_wildcard *wc, int n, char *error)
 		perror(error);
 	if (wc->dir)
 		closedir(wc->dir);
-	if (wc->pat)
-		free(wc->pat);
 	if (wc->f_pat)
 		free(wc->f_pat);
 	if (wc->dir_path)
 		free(wc->dir_path);
 	if (!n)
 	{
+		if (wc->pat)
+			free(wc->pat);
 		if (wc->files)
 			free(wc->files);
 		return (NULL);
@@ -106,11 +105,11 @@ char	**expand_wildcards(char **args)
 	init_wildcard(&wc);
 	wc.pat = find_wildcard(args);
 	if (!wc.pat)
-		return (wildcard_exit(&wc, 0, "Files Error"));
+		return (wildcard_exit(&wc, 0, NULL));
 	split_pattern(wc.pat, &(wc.dir_path), &(wc.f_pat));
 	wc.files = malloc(sizeof(char *) * (cnt_files(wc.f_pat, wc.dir_path) + 1));
 	if (!wc.files)
-		return (wildcard_exit(&wc, 0, "Files Error"));
+		return (wildcard_exit(&wc, 0, NULL));
 	wc.dir = opendir(wc.dir_path);
 	if (wc.dir == NULL)
 		return (wildcard_exit(&wc, 0, "Opendir Error"));

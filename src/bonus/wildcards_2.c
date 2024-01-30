@@ -6,11 +6,10 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 09:49:15 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/30 10:41:51 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/30 10:52:54 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <dirent.h>
 #include <minishell.h>
 
 void	split_pattern(const char *pat, char **dir_path, char **file_pat)

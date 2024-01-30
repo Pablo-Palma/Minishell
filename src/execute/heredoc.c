@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 16:45:29 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/22 15:47:23 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/30 11:01:00 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ void	read_from_stdin(t_minishell *shell, const char *delim, int write_fd)
 
 	while (1)
 	{
+		signal(SIGQUIT, handle_sigquit);
 		ft_printf("> ");
 		line = get_next_line(STDIN_FILENO);
 		if (!line || g_sigint_recived == SIGINT_RECIVED)
