@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   subshell.c                                         :+:      :+:    :+:   */
+/*   programs.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 12:45:38 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/08 18:51:41 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/30 07:52:45 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <termios.h>
@@ -35,6 +35,7 @@ void	execute_subshell(t_minishell *shell, char **args)
 	{
 		waitpid(pid, &status, 0);
 		signal(SIGINT, handle_sigint);
+		signal(SIGQUIT, handle_sigquit);
 		g_sigint_recived = SIGINT_NORMAL;
 		if (WIFEXITED(status))
 			shell->last_exit_status = WEXITSTATUS(status);

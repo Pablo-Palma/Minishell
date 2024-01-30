@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 19:12:18 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/30 01:10:49 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/30 08:02:07 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,9 @@ void	handle_sigint(int sig)
 
 void	handle_sigquit(int sig)
 {
+	struct	sigaction sa;
 	(void)sig;
+	memset(&sa, 0, sizeof(sa));
 	if (g_sigint_recived == SIGINT_COMMAND)
 		write(1, "Quit: 3\n", 8);
 	else
@@ -87,5 +89,9 @@ void	setup_signal_handlers(void)
 	sa.sa_flags = SA_RESTART;
 	sigaction(SIGQUIT, &sa, NULL);
 	
-	ignore_sigquit();
+	/*sa.sa_handler = handle_sigchld;;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = SA_NOCLDSOTP | SA_RESTART;;
+	sigaction(SIGCHLD, &sa, NULL);*/
+	
 }
