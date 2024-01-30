@@ -6,19 +6,20 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/30 12:52:13 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/30 19:19:37 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# define MAX_PATH				260 //As a convention
+# define MAX_PATH				260
 # define SIGINT_NORMAL			0
 # define SIGINT_RECIVED			1
 # define SIGINT_COMMAND			2
 # define SIGINT_HD				3
 # define SIGINT_HD_RECIVED		4
+# define SIGINT_SUBSHELL		5
 
 # include "libft.h"
 # include <signal.h>

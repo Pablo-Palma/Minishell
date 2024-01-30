@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 19:12:18 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/30 10:57:23 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/30 19:18:08 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,11 @@ void	setup_signal_handlers(void)
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = SA_RESTART;
 	sigaction(SIGQUIT, &sa, NULL);
-	sa.sa_handler = handle_sigchild;
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = SA_NOCLDSTOP | SA_RESTART;
-	sigaction(SIGCHLD, &sa, NULL);
+	if (g_sigint_recived == SIGINT_SUBSHELL)
+	{
+		sa.sa_handler = handle_sigchild;
+		sigemptyset(&sa.sa_mask);
+		sa.sa_flags = SA_NOCLDSTOP | SA_RESTART;
+		sigaction(SIGCHLD, &sa, NULL);
+	}
 }
