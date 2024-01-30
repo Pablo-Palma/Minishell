@@ -8,13 +8,15 @@ LIBFT_LIB = $(LIBFT_DIR)/libft.a
 SRC_DIR = src/
 OBJ_DIR = obj/
 
-SRCS =	$(SRC_DIR)aux_ft/cmd_split.c			\
+SRCS =	$(SRC_DIR)aux_ft/array_size.c			\
+		$(SRC_DIR)aux_ft/cmd_split.c			\
 		$(SRC_DIR)aux_ft/env_utils.c			\
 		$(SRC_DIR)aux_ft/ft_strncpy.c			\
 		$(SRC_DIR)aux_ft/ft_strndup.c			\
     	$(SRC_DIR)aux_ft/get_path.c				\
 		$(SRC_DIR)aux_ft/here_doc_env.c			\
 		$(SRC_DIR)aux_ft/input_split.c			\
+		$(SRC_DIR)aux_ft/quotes.c				\
 		$(SRC_DIR)aux_ft/utils.c				\
     	$(SRC_DIR)builtins/cd.c					\
     	$(SRC_DIR)builtins/echo.c				\
@@ -24,8 +26,10 @@ SRCS =	$(SRC_DIR)aux_ft/cmd_split.c			\
     	$(SRC_DIR)builtins/handle_builtin.c		\
     	$(SRC_DIR)builtins/pwd.c				\
 		$(SRC_DIR)builtins/unset.c				\
+		$(SRC_DIR)execute/execute_utils.c 		\
     	$(SRC_DIR)execute/execute.c 			\
 		$(SRC_DIR)execute/heredoc.c				\
+		$(SRC_DIR)execute/pipe_utils.c			\
 		$(SRC_DIR)execute/pipe.c				\
 		$(SRC_DIR)execute/programs.c			\
 		$(SRC_DIR)execute/redirect.c			\
@@ -39,6 +43,7 @@ SRCS =	$(SRC_DIR)aux_ft/cmd_split.c			\
 		$(SRC_DIR)main/main.c 					\
     	$(SRC_DIR)main/minishell.c				\
     	$(SRC_DIR)signal/signal.c 				\
+		$(SRC_DIR)bonus/wildcards_2.c			\
 		$(SRC_DIR)bonus/wildcards.c
 
 OBJS = $(SRCS:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)

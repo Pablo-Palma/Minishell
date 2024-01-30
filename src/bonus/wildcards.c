@@ -6,98 +6,29 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 11:14:03 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/29 21:46:53 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/30 10:12:25 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <dirent.h>
 #include <minishell.h>
 
-int    match_pattern(const char *filename, const char *pattern)
-{
-    const char    *pat_ptr = pattern;
-    const char    *file_ptr = filename;
-    const char    *last_match = NULL;
-
-    if (filename[0] == '.')
-        return (0);
-    while (*pat_ptr && *file_ptr)
-    {
-        if (*pat_ptr == '*') // MANEJAMOS ASTERISCO AL INICIO
-        {
-            while (*pat_ptr == '*')
-              pat_ptr++;
-            if (!pat_ptr) //solo un asterisco
-                return 1;
-            while (*file_ptr && *file_ptr != *pat_ptr) //recorrer filename hasta encontrar coicidencia
-                file_ptr++;
-        }
-        else //MANEJAMOS ASTERISCO AL FINAL
-        {
-            if (*file_ptr == *pat_ptr) //Mientras coicidan recorremos
-            {
-                last_match = pat_ptr;
-                file_ptr++;
-                pat_ptr++;
-            }
-            else
-                return (0);
-        }
-            if (*file_ptr && !*pat_ptr)
-              pat_ptr = last_match;
-    }
-	while (*pat_ptr == '*')
-		pat_ptr++;
-    if (!*file_ptr && !*pat_ptr)
-        return (1);
-    return (0);
-}
-
-int	count_elements(char **array)
-{
-	int	count = 0;
-
-	while(array && array[count])
-			count++;
-	return (count);
-}
-
-int	count_files(char *pattern)
-{
-	DIR				*dir;
-	struct dirent	*entry;
-	int				count = 0;
-
-	dir = opendir(".");
-	if (dir == NULL)
-	{
-		perror("opendir");
-		return (0);
-	}
-	while ((entry = readdir(dir)) != NULL)
-	{
-		if (match_pattern(entry->d_name, pattern))
-			count++;
-	}
-	closedir(dir);
-	return (count);
-}
-
 char	**command(char **args, char **files)
 {
-	char	**command = NULL;
-	int		i = 0;
-	int		j = 0;
-	int		count = count_elements(args) + count_elements(files);
+	char	**command;
+	int		i;
+	int		j;
 
-	command = malloc(sizeof(char *) * (count));
-	while (args[i])
+	command = malloc(sizeof(char *) * (count_elem(args) + count_elem(files)));
+	i = -1;
+	j = 0;
+	while (args[++i])
 	{
 		if (ft_strchr(args[i], '*'))
 			break ;
 		command[i] = ft_strdup(args[i]);
-		free(args[i]);
-		i++;
+		if (args[i])
+			free(args[i]);
 	}
 	while (files[j])
 	{
@@ -111,33 +42,51 @@ char	**command(char **args, char **files)
 	return (command);
 }
 
+char	*concatenate_path(const char *dir_path, const char *filename)
+{
+	char	*full_path;
+	char	*temp_path;
+
+	if (dir_path[ft_strlen(dir_path) - 1] != '/')
+		temp_path = ft_strjoin(dir_path, "/");
+	else
+		temp_path = ft_strdup(dir_path);
+	full_path = ft_strjoin(temp_path, filename);
+	free(temp_path);
+	return (full_path);
+}
+
 char	**expand_wildcards(char **args)
 {
 	DIR				*dir;
 	struct dirent	*entry;
-	char			*pattern = NULL;
+	char			*pattern;
+	char			*file_pattern;
+	char			*dir_path;
 	char			**files;
-	int				i = 0;
-	int				count = 0;
+	int				i;
 
-	while(args[i])
+	pattern = NULL;
+	file_pattern = NULL;
+	dir_path = NULL;
+	i = -1;
+	while(args[++i])
 	{
 		if (ft_strchr(args[i], '*'))
 		{
 			pattern = args[i];
 			break;
 		}
-		i++;
 	}
 	if (!pattern)
 		return (NULL);
 	if (args[i] == NULL)
 		return (NULL);
-	count = count_files(pattern);
-	files = malloc(sizeof(char *) * (count + 1));
+	split_pattern(pattern, &dir_path, &file_pattern);
+	files = malloc(sizeof(char *) * (count_files(file_pattern, dir_path) + 1));
 	if (!files)
 		return (NULL);
-	dir = opendir(".");
+	dir = opendir(dir_path);
 	if (dir == NULL)
 	{
 		perror("opendir");
@@ -146,13 +95,17 @@ char	**expand_wildcards(char **args)
 	i = 0;
 	while ((entry = readdir(dir)) != NULL)
 	{
-		if (match_pattern(entry->d_name, pattern))
+		if (match_pattern(entry->d_name, file_pattern))
 		{
-			files[i] = ft_strdup(entry->d_name);
+			files[i] = concatenate_path(dir_path, entry->d_name);
 			i++;
 		}
 	}
 	files[i] = NULL;
 	closedir(dir);
+	if (dir_path)
+		free(dir_path);
+	if (file_pattern)
+		free(file_pattern);
 	return (files);
 }

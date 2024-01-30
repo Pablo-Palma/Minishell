@@ -1,27 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_split.c                                        :+:      :+:    :+:   */
+/*   array_size.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/25 18:13:21 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/30 00:23:17 by jbaeza-c         ###   ########.fr       */
+/*   Created: 2024/01/30 09:47:27 by jbaeza-c          #+#    #+#             */
+/*   Updated: 2024/01/30 09:47:48 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	**split_cmd(const char *s, char *delim)
+int	count_elem(char **array)
 {
-	char	**tab;
-	int		i;
+	int	count;
 
-	i = -1;
-	tab = split_input(s, delim);
-	if (!tab)
-		return (NULL);
-	while (tab[++i])
-		tab[i] = strip_quotes(tab[i]);
-	return (tab);
+	count = 0;
+	while(array && array[count])
+			count++;
+	return (count);
 }

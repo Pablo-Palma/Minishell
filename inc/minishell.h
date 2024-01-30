@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/29 21:41:18 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/30 09:57:31 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,8 +117,8 @@ void		insert_redirection(t_ast_node **root, t_ast_node **redirect_in);
 //parsing
 t_token		*lexer(char **input);
 int			handle_input(t_minishell *shell, char *input);
-int			count_operators(char *input, char *operators);
-char		*handle_operators(char *input, char *operators);
+int			count_op(char *input, char *operators);
+void		handle_operators(char *input, char *p_input, char *operators);
 void		handle_envp(t_minishell *shell, t_token *node);
 void		switch_envp(t_minishell *shell, t_token *token, int i);
 int			open_quotes(char *str);
@@ -131,22 +131,26 @@ int			is_valid(char *input, t_minishell *shell);
 //																			 //
 ///////////////////////////////////////////////////////////////////////////////
 
-//execute
-int			handle_redirect(t_minishell *shell, t_ast_node *cmd_node);
+//main execution
 void		execute_ast_command(t_minishell *shell, t_ast_node *node);
-void		execute_output_redirect(t_minishell *shell, t_ast_node *node);
-void		execute_single_command(t_minishell *shell, char *value);
+void		execute_pipe_cmd(t_minishell *shell, t_ast_node *cmd_node);
+
+//execute_utils
+int			handle_redirect(t_minishell *shell, t_ast_node *cmd_node);
 void		read_from_stdin(t_minishell *shell, const char *delim, int wr_fd);
 void		proccess_heredoc(t_minishell *shell, char *delimiter);
-void		execute_single_cmd(t_minishell *shell, t_ast_node *cmd_node);
-void		execute_pipe_cmd(t_minishell *shell, t_ast_node *cmd_node);
-int			execute_multiple_cmd(t_minishell *shell, t_ast_node *cmd_node);
 int			handle_fd(t_minishell *shell);
 void		select_exec(t_minishell *shell, char **command);
 void		increment_shlvl(t_minishell *shell);
 void		redirect_stdin(t_minishell *shell);
-void		execute_single_cmd_process(t_minishell *shell, char **args,
-				char *path);
+void		single_cmd_process(t_minishell *shell, char **args, char *path);
+
+char	**handle_wildcards(char *value);
+void	establish_fd(t_minishell *shell, t_ast_node *node, int *fd_in);
+void	close_fds(int *pipe_fds, int *fd_in);
+int	handle_dup(t_minishell *shell);
+void	create_list(t_minishell *shell, t_ast_node *cmd_node);
+int	handle_signal(t_minishell *shell, char *value);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //
@@ -207,6 +211,7 @@ void		ft_strncpy(char *dst, const char *src, int n);
 void		init_minishell(t_minishell *shell, char **env);
 void		reset_minishell(t_minishell *shell);
 char		*ft_strndup(const char *src, int n);
+int			count_elem(char **array);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //
@@ -225,5 +230,8 @@ int			minishell(char **envp);
 
 char	**expand_wildcards(char **args);
 char	**command(char **args, char **files);
+void	split_pattern(const char *pat, char **dir_path, char **file_pat);
+int		match_pattern(const char *filename, const char *pattern);
+int		count_files(char *pattern, char *dir_path);
 
 #endif
