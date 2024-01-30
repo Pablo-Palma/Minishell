@@ -6,7 +6,7 @@
 /*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 11:14:03 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/29 23:42:42 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/30 10:03:40 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,8 @@ char	**command(char **args, char **files)
 		if (ft_strchr(args[i], '*'))
 			break ;
 		command[i] = ft_strdup(args[i]);
-		free(args[i]);
+		if (args[i])
+			free(args[i]);
 		i++;
 	}
 	while (files[j])
@@ -188,5 +189,11 @@ char	**expand_wildcards(char **args)
 	}
 	files[i] = NULL;
 	closedir(dir);
+	if (*dir_path)
+		free(dir_path);
+	dir_path = NULL;
+	if(*file_pattern)
+		free(file_pattern);
+	file_pattern = NULL;
 	return (files);
 }
