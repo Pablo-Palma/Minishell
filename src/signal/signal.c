@@ -6,12 +6,13 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 19:12:18 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/30 08:02:07 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/30 09:06:36 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <sys/ioctl.h>
+#include <errno.h>
 
 volatile sig_atomic_t	g_sigint_recived = SIGINT_NORMAL;
 
@@ -48,10 +49,8 @@ void	handle_sigquit(int sig)
 	memset(&sa, 0, sizeof(sa));
 	if (g_sigint_recived == SIGINT_COMMAND)
 		write(1, "Quit: 3\n", 8);
-	else
-	{
-		write(1, "wow_hd\n", 7);
-	}
+	else if(g_sigint_recived == SIGINT_HD)
+		ignore_sigquit();
 }
 
 void	ignore_sigquit(void)
@@ -74,6 +73,18 @@ void	set_sigquit(void)
 	sigaction(SIGQUIT, &sa, NULL);
 }
 
+void	handle_sigchild(int sig)
+{
+	(void)sig;
+	int saved_errno;
+
+	saved_errno = errno;
+	while (waitpid(-1, NULL, WNOHANG) > 0)
+	{
+
+	}
+	errno = saved_errno;
+}
 
 void	setup_signal_handlers(void)
 {
@@ -89,9 +100,9 @@ void	setup_signal_handlers(void)
 	sa.sa_flags = SA_RESTART;
 	sigaction(SIGQUIT, &sa, NULL);
 	
-	/*sa.sa_handler = handle_sigchld;;
+	sa.sa_handler = handle_sigchild;
 	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = SA_NOCLDSOTP | SA_RESTART;;
-	sigaction(SIGCHLD, &sa, NULL);*/
+	sa.sa_flags = SA_NOCLDSTOP | SA_RESTART;;
+	sigaction(SIGCHLD, &sa, NULL);
 	
 }
