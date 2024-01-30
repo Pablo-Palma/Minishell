@@ -20,39 +20,19 @@ char	**command(char **args, char **files)
 
 	command = malloc(sizeof(char *) * (count_elem(args) + count_elem(files)));
 	i = -1;
-	j = 0;
+	j = -1;
 	while (args[++i])
 	{
 		if (ft_strchr(args[i], '*'))
 			break ;
 		command[i] = ft_strdup(args[i]);
-		if (args[i])
-			free(args[i]);
 	}
-	while (files[j])
-	{
+	while (files[++j])
 		command[i++] = ft_strdup(files[j]);
-		free(files[j]);
-		j++;
-	}
-	free(files);
-	free(args);
+	ft_free_arrays(files);
+	ft_free_arrays(args);
 	command[i] = NULL;
 	return (command);
-}
-
-char	*concatenate_path(const char *dir_path, const char *filename)
-{
-	char	*full_path;
-	char	*temp_path;
-
-	if (dir_path[ft_strlen(dir_path) - 1] != '/')
-		temp_path = ft_strjoin(dir_path, "/");
-	else
-		temp_path = ft_strdup(dir_path);
-	full_path = ft_strjoin(temp_path, filename);
-	free(temp_path);
-	return (full_path);
 }
 
 static char	*find_wildcard(char **args)
@@ -62,7 +42,7 @@ static char	*find_wildcard(char **args)
 	i = -1;
 	while (args[++i])
 		if (ft_strchr(args[i], '*'))
-			return (args[i]);
+			return (ft_strdup(args[i]));
 	return (NULL);
 }
 
@@ -86,10 +66,10 @@ static char	**wildcard_exit(t_wildcard *wc, int n, char *error)
 		free(wc->f_pat);
 	if (wc->dir_path)
 		free(wc->dir_path);
+	if (wc->pat)
+		free(wc->pat);
 	if (!n)
 	{
-		if (wc->pat)
-			free(wc->pat);
 		if (wc->files)
 			free(wc->files);
 		return (NULL);
@@ -118,9 +98,9 @@ char	**expand_wildcards(char **args)
 	while (wc.entry != NULL)
 	{
 		if (match_pattern(wc.entry->d_name, wc.f_pat))
-			wc.files[i++] = concatenate_path(wc.dir_path, wc.entry->d_name);	
+			wc.files[i++] = concatenate_path(wc.dir_path, wc.entry->d_name);
 		wc.entry = readdir(wc.dir);
-	}	
+	}
 	wc.files[i] = NULL;
 	return (wildcard_exit(&wc, 1, NULL));
 }

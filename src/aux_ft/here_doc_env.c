@@ -52,8 +52,9 @@ char	*ft_double(t_minishell *shell, char *src, int i)
 {
 	char	*line;
 	char	*pid;
-	int		cnt = i + 2;
+	int		cnt;
 
+	cnt = i + 2;
 	if (src[i + 1] == '$')
 		pid = ft_itoa(shell->shell_pid);
 	else

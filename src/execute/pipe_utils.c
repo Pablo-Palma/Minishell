@@ -46,24 +46,27 @@ void	close_fds(int *pipe_fds, int *fd_in)
 int	handle_dup(t_minishell *shell)
 {
 	if (shell->fd_read != STDIN_FILENO)
-    {
-    	if (dup2(shell->fd_read, STDIN_FILENO) == -1)
+	{
+		if (dup2(shell->fd_read, STDIN_FILENO) == -1)
 			return (-1);
-    	close(shell->fd_read);
-    }
-   	if (shell->fd_write != STDOUT_FILENO)
-    {
-    	if (dup2(shell->fd_write, STDOUT_FILENO) == -1)
+		close(shell->fd_read);
+	}
+	if (shell->fd_write != STDOUT_FILENO)
+	{
+		if (dup2(shell->fd_write, STDOUT_FILENO) == -1)
 			return (-1);
-    	close(shell->fd_write);
-    }
+		close(shell->fd_write);
+	}
 	return (1);
 }
 
 void	create_list(t_minishell *shell, t_ast_node *cmd_node)
 {
-	t_ast_node	*cmd_list = NULL;
-	t_ast_node	*current_node = cmd_node;
+	t_ast_node	*cmd_list;
+	t_ast_node	*current_node;
+
+	cmd_list = NULL;
+	current_node = cmd_node;
 	while (current_node && current_node->type == AST_PIPE)
 	{
 		if (current_node->left && current_node->left->type != AST_PIPE)

@@ -156,12 +156,12 @@ void		increment_shlvl(t_minishell *shell);
 void		redirect_stdin(t_minishell *shell);
 void		single_cmd_process(t_minishell *shell, char **args, char *path);
 
-char	**handle_wildcards(char *value);
-void	establish_fd(t_minishell *shell, t_ast_node *node, int *fd_in);
-void	close_fds(int *pipe_fds, int *fd_in);
-int	handle_dup(t_minishell *shell);
-void	create_list(t_minishell *shell, t_ast_node *cmd_node);
-int	handle_signal(t_minishell *shell, char *value);
+char		**handle_wildcards(char *value);
+void		establish_fd(t_minishell *shell, t_ast_node *node, int *fd_in);
+void		close_fds(int *pipe_fds, int *fd_in);
+int			handle_dup(t_minishell *shell);
+void		create_list(t_minishell *shell, t_ast_node *cmd_node);
+int			handle_signal(t_minishell *shell, char *value);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //
@@ -192,7 +192,7 @@ void		handle_sigint(int sig);
 void		exit_status(t_minishell *shell, const char *msg, int status);
 void		handle_sigquit(int sig);
 void		ignore_sigquit(void);
-void    	set_sigquit(void);
+void		set_sigquit(void);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //
@@ -242,10 +242,11 @@ int			minishell(char **envp);
 //																			 //
 ///////////////////////////////////////////////////////////////////////////////
 
-char	**expand_wildcards(char **args);
-char	**command(char **args, char **files);
-void	split_pattern(const char *pat, char **dir_path, char **file_pat);
-int		match_pattern(const char *filename, const char *pattern);
-int		cnt_files(char *pattern, char *dir_path);
+char		**expand_wildcards(char **args);
+char		**command(char **args, char **files);
+void		split_pattern(const char *pat, char **dir_path, char **file_pat);
+int			match_pattern(const char *filename, const char *pattern);
+int			cnt_files(char *pattern, char *dir_path);
+char		*concatenate_path(const char *dir_path, const char *filename);
 
 #endif

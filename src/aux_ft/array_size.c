@@ -17,7 +17,7 @@ int	count_elem(char **array)
 	int	count;
 
 	count = 0;
-	while(array && array[count])
-			count++;
+	while (array && array[count])
+		count++;
 	return (count);
 }

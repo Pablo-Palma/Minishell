@@ -28,7 +28,7 @@ int	count_op(char *input, char *operators)
 		if (input[i] == last_quote)
 			last_quote = 0;
 		if (!last_quote && (input[i] == 34 || input[i] == 39))
-			last_quote = input[i]; 
+			last_quote = input[i];
 		if (ft_strchr(operators, input[i])
 			&& !last_quote && !flag)
 		{

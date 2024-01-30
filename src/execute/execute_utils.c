@@ -42,15 +42,12 @@ void	single_cmd_process(t_minishell *shell, char **args, char *path)
 		if (execve(path, args, shell->envp) == -1)
 			handle_error("Execve Error", 1, EXIT_FAILURE);
 	}
-	else
-	{
-		if (!shell->shell_pid)
-			shell->shell_pid = ((int)pid - 1);
-		if (args[1] && ft_strncmp(args[1], "$$", 3) == 0)
-			printf("%d\n", shell->shell_pid);
-		if (shell->fd_read != STDIN_FILENO)
-			close(shell->fd_read);
-		if (waitpid(pid, &status, 0) != -1 && WIFEXITED(status))
-			shell->last_exit_status = WEXITSTATUS(status);
-	}
+	if (!shell->shell_pid)
+		shell->shell_pid = ((int)pid - 1);
+	if (args[1] && ft_strncmp(args[1], "$$", 3) == 0)
+		printf("%d\n", shell->shell_pid);
+	if (shell->fd_read != STDIN_FILENO)
+		close(shell->fd_read);
+	if (waitpid(pid, &status, 0) != -1 && WIFEXITED(status))
+		shell->last_exit_status = WEXITSTATUS(status);
 }

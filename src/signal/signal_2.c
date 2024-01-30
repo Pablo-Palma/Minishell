@@ -42,12 +42,12 @@ void	handle_sigint(int sig)
 
 void	handle_sigquit(int sig)
 {
-	struct	sigaction sa;
+	struct sigaction	sa;
+
 	(void)sig;
 	memset(&sa, 0, sizeof(sa));
 	if (g_sigint_recived == SIGINT_COMMAND)
 		write(1, "Quit: 3\n", 8);
-	else if(g_sigint_recived == SIGINT_HD)
+	else if (g_sigint_recived == SIGINT_HD)
 		ignore_sigquit();
 }
-

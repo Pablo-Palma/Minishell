@@ -14,20 +14,22 @@
 
 void	wait_for_commands(pid_t last_pid)
 {
-	int	status;
+	int		status;
 	pid_t	pid;
 
 	waitpid(last_pid, &status, 0);
-	while ((pid = waitpid(-1, &status, 0)) > 0)
+	pid = waitpid(-1, &status, 0);
+	while (pid > 0)
 	{
 		if (pid == last_pid)
-			break;
+			break ;
+		pid = waitpid(-1, &status, 0);
 	}
 }
 
 pid_t	execute_command(t_minishell	*shell, char *value)
 {
-	pid_t 	pid;
+	pid_t	pid;
 	char	**args;
 	char	*path;
 
@@ -62,17 +64,17 @@ pid_t	execute_multiple_cmd(t_minishell *shell, t_ast_node *cmd_node)
 			return (execute_multiple_cmd(shell, cmd_node->left));
 	}
 	else
-		return(execute_command(shell, cmd_node->value));
+		return (execute_command(shell, cmd_node->value));
 	return (1);
 }
 
-void execute_pipe_cmd(t_minishell *shell, t_ast_node *cmd_node)
+void	execute_pipe_cmd(t_minishell *shell, t_ast_node *cmd_node)
 {
-	int		fd_in;
-	pid_t	pid;
-	pid_t	last_pid;
+	int			fd_in;
+	pid_t		pid;
+	pid_t		last_pid;
 	t_ast_node	*current_cmd;
-	
+
 	fd_in = 0;
 	pid = 0;
 	last_pid = 0;

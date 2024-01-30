@@ -12,9 +12,23 @@
 
 #include <minishell.h>
 
+char	*concatenate_path(const char *dir_path, const char *filename)
+{
+	char	*full_path;
+	char	*temp_path;
+
+	if (dir_path[ft_strlen(dir_path) - 1] != '/')
+		temp_path = ft_strjoin(dir_path, "/");
+	else
+		temp_path = ft_strdup(dir_path);
+	full_path = ft_strjoin(temp_path, filename);
+	free(temp_path);
+	return (full_path);
+}
+
 void	split_pattern(const char *pat, char **dir_path, char **file_pat)
 {
-	char *last_slash;
+	char	*last_slash;
 
 	last_slash = ft_strrchr(pat, '/');
 	if (last_slash != NULL)
@@ -27,14 +41,12 @@ void	split_pattern(const char *pat, char **dir_path, char **file_pat)
 		*dir_path = ft_strdup(".");
 		*file_pat = ft_strdup(pat);
 	}
-	if (last_slash)
-		free(last_slash);
 }
 
 static int	aux_match(const char **pat, const char **file, const char **last)
 {
 	if (*(*pat) == '*')
-    {
+	{
 		while (*(*pat) == '*')
 			(*pat)++;
 		if (!(*pat))
@@ -93,10 +105,12 @@ int	cnt_files(char *pattern, char *dir_path)
 		perror("opendir");
 		return (0);
 	}
-	while ((entry = readdir(dir)) != NULL)
+	entry = readdir(dir);
+	while (entry != NULL)
 	{
 		if (match_pattern(entry->d_name, pattern))
 			count++;
+		entry = readdir(dir);
 	}
 	closedir(dir);
 	return (count);
