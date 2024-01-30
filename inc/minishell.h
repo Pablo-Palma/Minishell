@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/30 10:59:48 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/30 12:52:13 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,6 +192,7 @@ void		handle_sigint(int sig);
 void		exit_status(t_minishell *shell, const char *msg, int status);
 void		handle_sigquit(int sig);
 void		ignore_sigquit(void);
+void    	set_sigquit(void);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //
