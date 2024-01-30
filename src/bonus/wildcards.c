@@ -6,7 +6,7 @@
 /*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 11:14:03 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/29 23:42:42 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/30 12:39:36 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,8 @@ char	*concatenate_path(const char *dir_path, const char *filename)
 	char	*full_path;
 	char	*temp_path;
 
+	if (strncmp(dir_path, ".", 2) == 0)
+		return (ft_strdup(filename));
 	if (dir_path[ft_strlen(dir_path) - 1] != '/')
 		temp_path = ft_strjoin(dir_path, "/");
 	else
@@ -186,6 +188,10 @@ char	**expand_wildcards(char **args)
 			i++;
 		}
 	}
+	if (file_pattern)
+		free(file_pattern);
+	if (dir_path)
+		free(dir_path);
 	files[i] = NULL;
 	closedir(dir);
 	return (files);
