@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/29 13:02:10 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/30 00:31:53 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,6 +165,9 @@ int			exit_command(t_minishell *shell, char **cmd_args);
 void		setup_signal_handlers(void);
 void		handle_sigint(int sig);
 void		exit_status(t_minishell *shell, const char *msg, int status);
+void    	handle_sigquit(int sig);
+void		set_sigquit(void);
+void		ignore_sigquit(void);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //

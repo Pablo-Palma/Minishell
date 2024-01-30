@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:11:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/29 18:12:33 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/30 00:57:56 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void	execute_single_cmd_process(t_minishell *shell, char **args, char *path)
 	pid_t	pid;
 	int		status;
 
+	set_sigquit();
 	pid = fork();
 	if (pid == -1)
 		perror("Fork Error");

@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:21:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/24 17:20:36 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/30 00:57:30 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ int	minishell(char **envp)
 	setup_signal_handlers();
 	while (1)
 	{
+		ignore_sigquit();
 		input = readline("minishell> ");
 		if (g_sigint_recived)
 			g_sigint_recived = SIGINT_NORMAL;
