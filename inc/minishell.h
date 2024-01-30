@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/30 09:57:31 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/30 10:41:55 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,16 @@ typedef enum t_type
 	AST_AND,
 	AST_OR,
 }	t_type;
+
+typedef struct s_wildcard
+{
+	DIR				*dir;
+	struct dirent	*entry;
+	char			*pat;
+	char			*f_pat;
+	char			*dir_path;
+	char			**files;
+}	t_wildcard;
 
 typedef struct s_token
 {
@@ -232,6 +242,6 @@ char	**expand_wildcards(char **args);
 char	**command(char **args, char **files);
 void	split_pattern(const char *pat, char **dir_path, char **file_pat);
 int		match_pattern(const char *filename, const char *pattern);
-int		count_files(char *pattern, char *dir_path);
+int		cnt_files(char *pattern, char *dir_path);
 
 #endif

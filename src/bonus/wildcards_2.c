@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 09:49:15 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/30 09:58:44 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/30 10:41:51 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	match_pattern(const char *filename, const char *pattern)
 	return (0);
 }
 
-int	count_files(char *pattern, char *dir_path)
+int	cnt_files(char *pattern, char *dir_path)
 {
 	DIR				*dir;
 	struct dirent	*entry;
