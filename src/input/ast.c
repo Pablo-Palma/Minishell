@@ -6,28 +6,29 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 13:32:58 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/31 15:16:06 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/31 20:01:10 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	insert_redirection(t_ast_node **root, t_ast_node **redirect_in)
+void	insert_redirection(t_ast_node **root, t_ast_node **redirect)
 {
-	if (!(*redirect_in))
+	if (!(*redirect))
 		return ;
 	if (!(*root))
-		*root = *redirect_in;
+		*root = *redirect;
 	else if ((*root)->type == AST_COMMAND)
 	{
-		(*redirect_in)->left = *root;
-		*root = *redirect_in;
+		(*redirect)->left = *root;
+		*root = *redirect;
 	}
 	else
 	{
-		(*redirect_in)->left = (*root)->left;
-		(*root)->left = *redirect_in;
+		(*redirect)->left = (*root)->left;
+		(*root)->left = *redirect;
 	}
+	*redirect = NULL;
 }
 
 static void	set_tree(t_tree *tree)
@@ -37,6 +38,28 @@ static void	set_tree(t_tree *tree)
 	tree->branch = NULL;
 	tree->file = NULL;
 	tree->red_in = NULL;
+	tree->hd = NULL;
+	tree->delim = NULL;
+}
+
+static void	build_tree(t_tree *tree, t_token *token)
+{
+	if (token->type == AST_FILE)
+		tree->file = create_ast_node(token->type, token->value);
+	else if (token->type == AST_HEREDOC_DELIM)
+		tree->delim = create_ast_node(token->type, token->value);
+	else if (token->type == AST_REDIRECT_IN && !tree->red_in)
+		add_red_in(&tree->red_in, token, &tree->file);
+	else if (token->type == AST_HEREDOC && !tree->hd)
+		add_red_in(&tree->hd, token, &tree->delim);
+	else if (token->type == AST_PIPE)
+		add_pipe(&tree->branch, token);
+	else if (token->type == AST_REDIRECT_OUT)
+		add_red_out(&tree->branch, token, &tree->file);
+	else if (token->type == AST_COMMAND || token->type == AST_SUBSHELL_EX)
+		add_cmd(&tree->branch, token);
+	else
+		add_sequence(tree, token);
 }
 
 t_ast_node	*build_ast(t_token *tokens)
@@ -48,20 +71,11 @@ t_ast_node	*build_ast(t_token *tokens)
 	set_tree(&tree);
 	while (token_iter)
 	{
-		if (token_iter->type == AST_FILE)
-			tree.file = create_ast_node(token_iter->type, token_iter->value);
-		else if (token_iter->type == AST_REDIRECT_IN && !tree.red_in)
-			add_red_in(&tree.red_in, token_iter, &tree.file);
-		else if (token_iter->type == AST_PIPE)
-			add_pipe(&tree.branch, token_iter);
-		else if (token_iter->type == AST_REDIRECT_OUT)
-			add_red_out(&tree.branch, token_iter, &tree.file);
-		else if (token_iter->type == AST_COMMAND || token_iter->type == AST_SUBSHELL_EX)
-			add_cmd(&tree.branch, token_iter);
-		else
-			add_sequence(&tree, token_iter);
+		build_tree(&tree, token_iter);
 		token_iter = token_iter->prev;
 	}
+	insert_redirection(&tree.branch, &tree.red_in);
+	insert_redirection(&tree.branch, &tree.hd);
 	if (!tree.root)
 		return (tree.branch);
 	tree.root->left = tree.branch;

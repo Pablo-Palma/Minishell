@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 22:53:13 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/30 00:25:46 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/31 19:58:03 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,8 +111,8 @@ int	handle_input(t_minishell *shell, char *input)
 	handle_envp(shell, tokens);
 	if (!tokens)
 		return (-1);
-	if (handle_doc(shell, tokens))
-		return (1);
+//	if (handle_doc(shell, tokens))
+//		return (1);
 	ast = build_ast(tokens);
 	if (!ast)
 	{
