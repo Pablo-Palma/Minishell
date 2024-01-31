@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 20:35:26 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/29 15:31:47 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/31 13:14:45 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,11 @@ void	add_sequence(t_tree *tree, t_token *token)
 		node->right = tree->branch;
 	else
 	{
-		node->right = tree->root;
-		node->right->left = tree->branch;
+		tree->root->left = node;
+		node->right = tree->branch;
 	}
 	tree->branch = NULL;
+	if (!tree->real_root)
+		tree->real_root = node;
 	tree->root = node;
 }

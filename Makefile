@@ -53,7 +53,6 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	@$(MAKE) bonus -C $(LIBFT_DIR)
-	@echo "libft compiled successfully!"
 	@$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -o $(NAME) $(OBJS) $(LIBFT_LIB) -lreadline
 	@echo "minishell compiled successfully!"
 

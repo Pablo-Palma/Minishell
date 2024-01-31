@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 13:32:58 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/29 15:40:47 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/01/31 13:16:20 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void	insert_redirection(t_ast_node **root, t_ast_node **redirect_in)
 static void	set_tree(t_tree *tree)
 {
 	tree->root = NULL;
+	tree->real_root = NULL;
 	tree->branch = NULL;
 	tree->file = NULL;
 	tree->red_in = NULL;
@@ -64,5 +65,5 @@ t_ast_node	*build_ast(t_token *tokens)
 	if (!tree.root)
 		return (tree.branch);
 	tree.root->left = tree.branch;
-	return (tree.root);
+	return (tree.real_root);
 }

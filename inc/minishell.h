@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/30 19:19:37 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/31 13:15:33 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ typedef struct s_ast_node
 typedef struct s_tree
 {
 	t_ast_node	*root;
+	t_ast_node	*real_root;
 	t_ast_node	*branch;
 	t_ast_node	*file;
 	t_ast_node	*red_in;
