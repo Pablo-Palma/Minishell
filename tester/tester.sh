@@ -26,11 +26,12 @@ commands=(
     '(echo "A" && echo "B" | grep "B") || echo "C"'
     '(nonexistentcommand && echo "B") || echo "Fallback"'
     'true && false || echo "Recovered"'
+	'echo 1 && (echo 2 || echo 3) | echo 4'
 )
 
 for cmd in "${commands[@]}"; do
     check_command "$cmd"
 done
 
-rm bash_output.txt minishell_output.txt
+##rm bash_output.txt minishell_output.txt
 
