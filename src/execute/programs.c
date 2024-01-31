@@ -6,33 +6,34 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 12:45:38 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/31 15:41:20 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/31 15:45:58 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void execute_subshell_ex(t_minishell *shell, char *sub_expression)
+void	execute_subshell_ex(t_minishell *shell, char *sub_expression)
 {
-	pid_t pid;
-	int status;
-	char *args[] = {"/bin/sh", "-c", sub_expression, NULL};
+	pid_t	pid;
+	int		status;
+	char	*args[] = {"/bin/sh", "-c", sub_expression, NULL};
 
 	pid = fork();
 	status = 0;
 	signal(SIGINT, SIG_IGN);
 	if (pid == -1)
-	    return;
-	if (pid == 0) {
-	    increment_shlvl(shell);
-	    if (execve("/bin/sh", args, shell->og_envp) == -1) {
-	        perror("execve");
-	        exit(EXIT_FAILURE);
-	    }
+		return ;
+	if (pid == 0)
+	{
+		increment_shlvl(shell);
+		if (execve("/bin/sh", args, shell->og_envp) == -1)
+		{
+			perror("execve");
+			exit(EXIT_FAILURE);
+		}
 	}
 	waitpid(pid, &status, 0);
 }
-
 
 void	execute_subshell(t_minishell *shell, char **args)
 {

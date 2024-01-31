@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:37:07 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/31 15:08:42 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/31 15:52:56 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,37 +86,37 @@ t_token	*build_file_token(char **input, int *i)
 	return (new_token);
 }
 
-t_token *build_bracket_token(char **input, int *i)
+t_token	*build_bracket_token(char **input, int *i)
 {
 	char	*command;
 	char	*temp;
 	t_token	*new_token;
-	int		found_open = 1;
-	
+	int		found_open;
+
+	found_open = 1;
 	command = ft_strdup(input[*i]);
 	(*i)++;
 	while (input[*i] != NULL)
 	{
 		if (found_open)
 		{
-		    temp = command;
-		    command = ft_strjoin(command, " ");
-		    free(temp);
-		    temp = command;
-		    command = ft_strjoin(command, input[*i]);
-		    free(temp);
+			temp = command;
+			command = ft_strjoin(command, " ");
+			free(temp);
+			temp = command;
+			command = ft_strjoin(command, input[*i]);
+			free(temp);
 		}
 		if (token_type(input[*i]) == AST_BRA_CLOSE && found_open)
-		    found_open = 0;
+			found_open = 0;
 		(*i)++;
 		if (!found_open)
-			break;
+			break ;
 	}
 	new_token = create_token(AST_SUBSHELL_EX, command);
 	free(command);
-	return new_token;
+	return (new_token);
 }
-
 
 int	build_token(t_token **tokens, char **input, int *i, int *is_file)
 {
@@ -134,7 +134,7 @@ int	build_token(t_token **tokens, char **input, int *i, int *is_file)
 	else if (type == AST_HEREDOC)
 		status = build_heredoc(input, i, tokens);
 	else if (type == AST_BRA_OPEN)
-        status = add_token_back(tokens, build_bracket_token(input, i));
+		status = add_token_back(tokens, build_bracket_token(input, i));
 	else
 	{
 		if (type == AST_REDIRECT_IN || type == AST_REDIRECT_OUT)
