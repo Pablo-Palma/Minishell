@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 13:32:58 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/31 13:16:20 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/31 15:16:06 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ t_ast_node	*build_ast(t_token *tokens)
 			add_pipe(&tree.branch, token_iter);
 		else if (token_iter->type == AST_REDIRECT_OUT)
 			add_red_out(&tree.branch, token_iter, &tree.file);
-		else if (token_iter->type == AST_COMMAND)
+		else if (token_iter->type == AST_COMMAND || token_iter->type == AST_SUBSHELL_EX)
 			add_cmd(&tree.branch, token_iter);
 		else
 			add_sequence(&tree, token_iter);

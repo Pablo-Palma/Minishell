@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/31 13:15:33 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/01/31 15:22:49 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,9 @@ typedef enum t_type
 	AST_HEREDOC_DELIM,
 	AST_AND,
 	AST_OR,
+	AST_BRA_OPEN,
+	AST_BRA_CLOSE,
+	AST_SUBSHELL_EX,
 }	t_type;
 
 typedef struct s_wildcard
@@ -157,6 +160,7 @@ void		select_exec(t_minishell *shell, char **command);
 void		increment_shlvl(t_minishell *shell);
 void		redirect_stdin(t_minishell *shell);
 void		single_cmd_process(t_minishell *shell, char **args, char *path);
+void 		execute_subshell_ex(t_minishell *shell, char *sub_expression);
 
 char		**handle_wildcards(char *value);
 void		establish_fd(t_minishell *shell, t_ast_node *node, int *fd_in);
