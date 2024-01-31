@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/31 23:27:10 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/01 00:08:23 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,8 @@ typedef struct s_tree
 	t_ast_node	*branch;
 	t_ast_node	*file;
 	t_ast_node	*red_in;
+	t_ast_node	*hd;
+	t_ast_node	*delim;
 }	t_tree;
 
 typedef struct s_minishell
