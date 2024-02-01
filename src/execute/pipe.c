@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/01 16:14:17 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/01 16:30:41 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,14 @@ pid_t	execute_command(t_minishell	*shell, char *value)
 	else if (pid == 0)
 	{
 		if (handle_dup(shell) == -1)
+		{
+			if (shell->hd_pipes == 1)
+			{
+				shell->hd_pipes = 0;
+				exit(0);
+			}
 			handle_error ("Dup error", 1, EXIT_FAILURE);
+		}
 		args = handle_wildcards(value);
 		if (!args)
 			return (-1);
