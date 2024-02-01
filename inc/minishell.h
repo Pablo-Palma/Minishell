@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/01 12:05:55 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/01 16:02:04 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ typedef struct s_minishell
 	char		**og_envp;
 	char		*executable_path;
 	int			pipes[2];
-	int			special_cat;
+	int			hd_pipes;
 	int			fd_read;
 	int			fd_write;
 	int			input_redirect;
