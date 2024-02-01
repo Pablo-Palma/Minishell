@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 20:35:26 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/01 12:15:44 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/01 16:07:49 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,18 +98,19 @@ void	add_red_in(t_ast_node **root, t_token *token, t_ast_node **file)
 void	add_sequence(t_tree *tree, t_token *token)
 {
 	t_ast_node	*node;
+	t_ast_node	*iter;
 
 	node = create_ast_node(token->type, token->value);
+	iter = tree->root;
 	insert_redirection(&tree->branch, &tree->red_in);
+	node->right = tree->branch;
+	tree->branch = NULL;
 	if (!tree->root)
-		node->right = tree->branch;
+		tree->root = node;
 	else
 	{
-		tree->root->left = node;
-		node->right = tree->branch;
+		while (iter->left)
+			iter = iter->left;
+		iter->left = node;
 	}
-	tree->branch = NULL;
-	if (!tree->real_root)
-		tree->real_root = node;
-	tree->root = node;
 }

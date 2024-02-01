@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 22:53:13 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/01 12:27:42 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/01 13:55:22 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	count_op(char *input, char *operators)
 	{
 		if (input[i] == last_quote)
 			last_quote = 0;
-		if (!last_quote && (input[i] == 34 || input[i] == 39))
+		else if (!last_quote && (input[i] == 34 || input[i] == 39))
 			last_quote = input[i];
 		if (ft_strchr(operators, input[i])
 			&& !last_quote && !flag)
@@ -56,7 +56,7 @@ void	handle_operators(char *input, char *p_input, char *operators)
 	{
 		if (input[i] == last_quote)
 			last_quote = 0;
-		if (!last_quote && (input[i] == 34 || input[i] == 39))
+		else if (!last_quote && (input[i] == 34 || input[i] == 39))
 			last_quote = input[i];
 		if ((ft_strchr(operators, input[i]) && !f && !last_quote)
 			|| (!ft_strchr(operators, input[i]) && f && !last_quote))

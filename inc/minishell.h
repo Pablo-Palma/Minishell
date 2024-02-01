@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/01 12:05:55 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/01 13:42:13 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,6 @@ typedef enum t_type
 	AST_HEREDOC_DELIM,
 	AST_AND,
 	AST_OR,
-	AST_BRA_OPEN,
-	AST_BRA_CLOSE,
 	AST_SUBSHELL_EX,
 }	t_type;
 
