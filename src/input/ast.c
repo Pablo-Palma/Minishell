@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 13:32:58 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/31 20:01:10 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/01 12:23:20 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,23 @@
 
 void	insert_redirection(t_ast_node **root, t_ast_node **redirect)
 {
+	t_ast_node	*node;
+
+	node = *root;
 	if (!(*redirect))
 		return ;
-	if (!(*root))
+	if (!node)
 		*root = *redirect;
-	else if ((*root)->type == AST_COMMAND)
+	else if (node->type == AST_COMMAND || node->type == AST_REDIRECT_OUT)
 	{
 		(*redirect)->left = *root;
 		*root = *redirect;
 	}
 	else
 	{
-		(*redirect)->left = (*root)->left;
+		while (node->left && node->left->type == AST_HEREDOC)
+			node = node->left;
+		(*redirect)->left = node->left;
 		(*root)->left = *redirect;
 	}
 	*redirect = NULL;
@@ -38,7 +43,6 @@ static void	set_tree(t_tree *tree)
 	tree->branch = NULL;
 	tree->file = NULL;
 	tree->red_in = NULL;
-	tree->hd = NULL;
 	tree->delim = NULL;
 }
 
@@ -50,8 +54,8 @@ static void	build_tree(t_tree *tree, t_token *token)
 		tree->delim = create_ast_node(token->type, token->value);
 	else if (token->type == AST_REDIRECT_IN && !tree->red_in)
 		add_red_in(&tree->red_in, token, &tree->file);
-	else if (token->type == AST_HEREDOC && !tree->hd)
-		add_red_in(&tree->hd, token, &tree->delim);
+	else if (token->type == AST_HEREDOC)
+		add_hd(&tree->branch, token, &tree->delim);
 	else if (token->type == AST_PIPE)
 		add_pipe(&tree->branch, token);
 	else if (token->type == AST_REDIRECT_OUT)
@@ -75,7 +79,6 @@ t_ast_node	*build_ast(t_token *tokens)
 		token_iter = token_iter->prev;
 	}
 	insert_redirection(&tree.branch, &tree.red_in);
-	insert_redirection(&tree.branch, &tree.hd);
 	if (!tree.root)
 		return (tree.branch);
 	tree.root->left = tree.branch;
