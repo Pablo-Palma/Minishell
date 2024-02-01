@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 09:49:15 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/30 14:07:19 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/01 18:55:44 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ char	*concatenate_path(const char *dir_path, const char *filename)
 	char	*full_path;
 	char	*temp_path;
 
+	if (ft_strncmp(dir_path, ".", 2) == 0)
+		return (ft_strdup(filename));
 	if (dir_path[ft_strlen(dir_path) - 1] != '/')
 		temp_path = ft_strjoin(dir_path, "/");
 	else
