@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/31 23:28:01 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/01 00:46:04 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ pid_t	execute_command(t_minishell	*shell, char *value)
 	else if (pid == 0)
 	{
 		if (handle_dup(shell) == -1)
-			handle_error ("Dup Error", 1, EXIT_FAILURE);
+			handle_error (value, 1, EXIT_FAILURE);
 		args = handle_wildcards(value);
 		if (!args)
 			return (-1);
@@ -65,8 +65,15 @@ pid_t	execute_multiple_cmd(t_minishell *shell, t_ast_node *cmd_node)
 		if (cmd_node->left)
 			return (execute_multiple_cmd(shell, cmd_node->left));
 	}
-	if (cmd_node->type == AST_SUBSHELL_EX)
+	else if (cmd_node->type == AST_SUBSHELL_EX)
 		execute_subshell_ex(shell, cmd_node->value, 1);
+	else if (cmd_node->type == AST_HEREDOC)
+	{
+		if (!cmd_node->right || !cmd_node->left)
+			return (-1);
+		proccess_heredoc(shell, cmd_node->right->value);
+		return (execute_multiple_cmd(shell, cmd_node->left));
+	}
 	else
 		return (execute_command(shell, cmd_node->value));
 	return (1);
