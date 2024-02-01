@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/01 02:26:43 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/01 15:33:55 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,14 @@ pid_t	execute_command(t_minishell	*shell, char *value)
 	else if (pid == 0)
 	{
 		if (handle_dup(shell) == -1)
+		{
+			if (shell->hd_pipes == 1)
+			{
+				shell->hd_pipes = 0;
+				exit(0);
+			}
 			handle_error ("Dup error", 1, EXIT_FAILURE);
+		}
 		args = handle_wildcards(value);
 		if (!args)
 			return (-1);
@@ -69,6 +76,7 @@ pid_t	execute_multiple_cmd(t_minishell *shell, t_ast_node *cmd_node)
 		execute_subshell_ex(shell, cmd_node->value, 1);
 	else if (cmd_node->type == AST_HEREDOC)
 	{
+		shell->hd_pipes = 1;
 		if (!cmd_node->right || !cmd_node->left)
 			return (-1);
 		proccess_heredoc(shell, cmd_node->right->value);

@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 16:45:29 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/01 00:58:05 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/01 15:06:19 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,9 @@
 void	proccess_heredoc(t_minishell *shell, char *delimiter)
 {
 	g_sigint_recived = SIGINT_HD;
-	if (pipe(shell->pipes))
-		handle_error("Error creating pipe", 1, EXIT_FAILURE);
+	if (shell->hd_pipes != 1)
+		if (pipe(shell->pipes))
+			handle_error("Error creating pipe", 1, EXIT_FAILURE);
 	shell->fd_write = shell->pipes[1];
 	shell->fd_read = shell->pipes[0];
 	read_from_stdin(shell, delimiter, shell->fd_write);
