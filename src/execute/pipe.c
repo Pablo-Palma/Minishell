@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/01 02:26:43 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/01 17:14:43 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	wait_for_commands(t_minishell *shell, pid_t last_pid)
 
 	waitpid(last_pid, &status, 0);
 	pid = waitpid(-1, &status, 0);
+	shell->last_exit_status = WEXITSTATUS(status);
 	while (pid > 0)
 	{
 		if (pid == last_pid)
@@ -69,9 +70,11 @@ pid_t	execute_multiple_cmd(t_minishell *shell, t_ast_node *cmd_node)
 		execute_subshell_ex(shell, cmd_node->value, 1);
 	else if (cmd_node->type == AST_HEREDOC)
 	{
+		shell->hd_pipes = 1;
 		if (!cmd_node->right || !cmd_node->left)
 			return (-1);
 		proccess_heredoc(shell, cmd_node->right->value);
+		shell->hd_pipes = 0;
 		return (execute_multiple_cmd(shell, cmd_node->left));
 	}
 	else

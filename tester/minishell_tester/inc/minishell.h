@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/31 23:27:10 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/01 13:42:13 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,6 @@ typedef enum t_type
 	AST_HEREDOC_DELIM,
 	AST_AND,
 	AST_OR,
-	AST_BRA_OPEN,
-	AST_BRA_CLOSE,
 	AST_SUBSHELL_EX,
 }	t_type;
 
@@ -83,6 +81,8 @@ typedef struct s_tree
 	t_ast_node	*branch;
 	t_ast_node	*file;
 	t_ast_node	*red_in;
+	t_ast_node	*hd;
+	t_ast_node	*delim;
 }	t_tree;
 
 typedef struct s_minishell
@@ -125,6 +125,7 @@ void		add_cmd(t_ast_node **root, t_token *token);
 void		add_pipe(t_ast_node **root, t_token *token);
 void		add_red_out(t_ast_node **root, t_token *token, t_ast_node **file);
 void		add_red_in(t_ast_node **root, t_token *token, t_ast_node **file);
+void		add_hd(t_ast_node **root, t_token *token, t_ast_node **delim);
 void		add_sequence(t_tree *tree, t_token *token);
 void		free_ast(t_ast_node *node);
 int			add_ast_back(t_ast_node **head, t_ast_node *new_node);

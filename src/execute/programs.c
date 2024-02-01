@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 12:45:38 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/31 23:26:44 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/01 16:56:52 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	execute_subshell_ex(t_minishell *shell, char *sub_expression, int	is_pipe)
 
 	pid = fork();
 	status = 0;
-	signal(SIGINT, SIG_IGN);
+	//signal(SIGINT, SIG_IGN);
 	if (pid == -1)
 		return ;
 	if (pid == 0)

@@ -33,5 +33,5 @@ for cmd in "${commands[@]}"; do
     check_command "$cmd"
 done
 
-##rm bash_output.txt minishell_output.txt
+rm bash_output.txt minishell_output.txt
 

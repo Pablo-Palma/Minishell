@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 22:53:13 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/30 00:25:46 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/01 13:55:22 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	count_op(char *input, char *operators)
 	{
 		if (input[i] == last_quote)
 			last_quote = 0;
-		if (!last_quote && (input[i] == 34 || input[i] == 39))
+		else if (!last_quote && (input[i] == 34 || input[i] == 39))
 			last_quote = input[i];
 		if (ft_strchr(operators, input[i])
 			&& !last_quote && !flag)
@@ -56,7 +56,7 @@ void	handle_operators(char *input, char *p_input, char *operators)
 	{
 		if (input[i] == last_quote)
 			last_quote = 0;
-		if (!last_quote && (input[i] == 34 || input[i] == 39))
+		else if (!last_quote && (input[i] == 34 || input[i] == 39))
 			last_quote = input[i];
 		if ((ft_strchr(operators, input[i]) && !f && !last_quote)
 			|| (!ft_strchr(operators, input[i]) && f && !last_quote))
@@ -68,34 +68,6 @@ void	handle_operators(char *input, char *p_input, char *operators)
 		}
 		p_input[j++] = input[i++];
 	}
-}
-
-int	handle_doc(t_minishell *shell, t_token *tokens)
-{
-	t_token	*current_token;
-	t_token	*delimiter_token;
-
-	current_token = tokens;
-	while (current_token != NULL)
-	{
-		if (current_token->type == AST_HEREDOC)
-		{
-			if (!current_token->next)
-			{
-				free_tokens(tokens);
-				return (1);
-			}
-			delimiter_token = current_token->next;
-			if (delimiter_token && delimiter_token->type == AST_HEREDOC_DELIM)
-			{
-				if (g_sigint_recived == SIGINT_HD_RECIVED)
-					return (1);
-				proccess_heredoc(shell, delimiter_token->value);
-			}
-		}
-		current_token = current_token->next;
-	}
-	return (0);
 }
 
 int	handle_input(t_minishell *shell, char *input)
@@ -111,8 +83,6 @@ int	handle_input(t_minishell *shell, char *input)
 	handle_envp(shell, tokens);
 	if (!tokens)
 		return (-1);
-	if (handle_doc(shell, tokens))
-		return (1);
 	ast = build_ast(tokens);
 	if (!ast)
 	{

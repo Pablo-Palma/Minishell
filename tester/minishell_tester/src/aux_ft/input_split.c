@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 18:27:38 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/27 12:55:15 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/01 13:38:54 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,26 @@
 
 static int	count_args(const char *cmd, const char *delim)
 {
-	int	s_quote;
-	int	d_quote;
+	int	last_quote;
 	int	flag;
 	int	count;
+	int	brackets;
 
-	s_quote = 0;
-	d_quote = 0;
+	last_quote = 0;
 	count = 0;
 	flag = 0;
+	brackets = 0;
 	while (*cmd)
 	{
-		if (*cmd == '\'' && !d_quote)
-			s_quote = !s_quote;
-		if (*cmd == '\"' && !s_quote)
-			d_quote = !d_quote;
-		if (!s_quote && !d_quote && ft_strchr(delim, *cmd) && flag)
+		if (!last_quote && *cmd == '(')
+			brackets++;
+		else if (!last_quote && *cmd == ')')
+			brackets--;
+		else if (*cmd == last_quote && !brackets)
+			last_quote = 0;
+		else if (!last_quote && (*cmd == 34 || *cmd == 39) && !brackets)
+			last_quote = *cmd;
+		if (!brackets && !last_quote && ft_strchr(delim, *cmd) && flag)
 			flag = 0;
 		if (!ft_strchr(delim, *cmd) && !flag)
 		{
@@ -45,19 +49,23 @@ static char	*copy_arg(const char **src, const char *delimiters)
 {
 	const char	*end;
 	char		*arg;
-	int			s_quote;
-	int			d_quote;
+	int			last_quote;
+	int			brackets;
 
 	end = *src;
-	s_quote = 0;
-	d_quote = 0;
+	last_quote = 0;
+	brackets = 0;
 	while (*end)
 	{
-		if (*end == '\'' && !d_quote)
-			s_quote = !s_quote;
-		if (*end == '\"' && !s_quote)
-			d_quote = !d_quote;
-		else if (!s_quote && !d_quote && ft_strchr(delimiters, *end))
+		if (!last_quote && *end == '(')
+			brackets++;
+		else if (!last_quote && *end == ')')
+			brackets--;
+		if (*end == last_quote && !brackets)
+			last_quote = 0;
+		else if (!last_quote && (*end == 34 || *end == 39) && !brackets)
+			last_quote = *end;
+		else if (!brackets && !last_quote && ft_strchr(delimiters, *end))
 			break ;
 		end++;
 	}

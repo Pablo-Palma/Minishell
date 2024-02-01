@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 20:35:26 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/31 18:24:28 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/01 16:07:49 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,18 @@
 
 void	add_cmd(t_ast_node **root, t_token *token)
 {
-	if (!(*root))
-		(*root) = create_ast_node(token->type, token->value);
+	t_ast_node	*cmd;
+	t_ast_node	*node;
+
+	cmd = create_ast_node(token->type, token->value);
+	node = *root;
+	if (!node)
+		(*root) = cmd;
 	else
 	{
-		if (!(*root)->left)
-			(*root)->left = create_ast_node(token->type, token->value);
-		else
-			(*root)->left->left = create_ast_node(token->type, token->value);
+		while (node->left)
+			node = node->left;
+		node->left = cmd;
 	}
 }
 
@@ -37,22 +41,49 @@ void	add_pipe(t_ast_node **root, t_token *token)
 void	add_red_out(t_ast_node **root, t_token *token, t_ast_node **file)
 {
 	t_ast_node	*redirect;
+	t_ast_node	*node;
 
+	node = *root;
 	redirect = create_ast_node(token->type, token->value);
 	if (*file)
 		redirect->right = (*file);
 	*file = NULL;
-	if (!(*root))
-		(*root) = redirect;
-	else if ((*root)->type == AST_PIPE)
-	{
-		redirect->left = (*root)->left;
-		(*root)->left = redirect;
-	}
-	else
+	if (!node)
+		*root = redirect;
+	else if (node->type == AST_COMMAND)
 	{
 		redirect->left = (*root);
 		(*root) = redirect;
+	}
+	else
+	{
+		while (node->left && node->left != AST_COMMAND)
+			node = node->left;
+		redirect->left = node->left;
+		node->left = redirect;
+	}
+	
+}
+
+void	add_hd(t_ast_node **root, t_token *token, t_ast_node **delim)
+{
+	t_ast_node	*hd;
+
+	hd = create_ast_node(token->type, token->value);
+	if (*delim)
+		hd->right = (*delim);
+	*delim = NULL;
+	if (!(*root))
+		(*root) = hd;
+	else if ((*root)->type == AST_PIPE)
+	{
+		hd->left = (*root)->left;
+		(*root)->left = hd;
+	}
+	else
+	{
+		hd->left = (*root);
+		(*root) = hd;
 	}
 }
 
@@ -67,19 +98,19 @@ void	add_red_in(t_ast_node **root, t_token *token, t_ast_node **file)
 void	add_sequence(t_tree *tree, t_token *token)
 {
 	t_ast_node	*node;
+	t_ast_node	*iter;
 
 	node = create_ast_node(token->type, token->value);
+	iter = tree->root;
 	insert_redirection(&tree->branch, &tree->red_in);
-	tree->red_in = NULL;
+	node->right = tree->branch;
+	tree->branch = NULL;
 	if (!tree->root)
-		node->right = tree->branch;
+		tree->root = node;
 	else
 	{
-		tree->root->left = node;
-		node->right = tree->branch;
+		while (iter->left)
+			iter = iter->left;
+		iter->left = node;
 	}
-	tree->branch = NULL;
-	if (!tree->real_root)
-		tree->real_root = node;
-	tree->root = node;
 }
