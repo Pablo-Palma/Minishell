@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 00:28:50 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/02 09:28:39 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/02 13:52:44 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	single_cmd_process(t_minishell *shell, char **args, char *path)
 		printf("%d\n", shell->shell_pid);
 	if (shell->fd_read != STDIN_FILENO)
 		close(shell->fd_read);
-	if (shell->hd_pipes)
+	if (shell->hd_pipes_read)
 		shell->fd_read = shell->hd_pipes_read;
 	if (waitpid(pid, &status, 0) != -1 && WIFEXITED(status))
 		shell->last_exit_status = WEXITSTATUS(status);

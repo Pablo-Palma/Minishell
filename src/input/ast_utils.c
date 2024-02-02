@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 13:27:25 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/27 15:12:52 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/02 12:37:37 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,17 +60,22 @@ int	add_ast_back(t_ast_node **head, t_ast_node *new_node)
 {
 	t_ast_node	*last;
 
+	new_node->next = NULL;
 	if (!head || !new_node)
 		return (-1);
-	if (*head)
+	if (*head == NULL)
+	{
+		new_node->prev = NULL;
+		*head = new_node;
+	}
+	else
 	{
 		last = *head;
 		while (last->next)
 			last = last->next;
 		last->next = new_node;
+		new_node->prev = last;
 	}
-	else
-		*head = new_node;
 	return (1);
 }
 

@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/02 10:58:41 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/02 14:05:19 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ pid_t	execute_multiple_cmd(t_minishell *shell, t_ast_node *cmd_node)
 		if (!cmd_node->right || !cmd_node->left)
 			return (-1);
 		proccess_heredoc(shell, cmd_node->right->value);
-		cmd_node = cmd_node->next;
 		return (0);
 	}
 	else
@@ -111,8 +110,11 @@ void	execute_pipe_cmd(t_minishell *shell, t_ast_node *cmd_node)
 			close (shell->fd_write);
 		if (current_cmd->next != NULL)
 		{
-			if (shell->hd_pipes_read)
+			if (shell->hd_pipes)
+			{
 				fd_in = shell->hd_pipes_read;
+				shell->hd_pipes = 0;
+			}
 			else
 				fd_in = shell->pipes[0];
 		}
