@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/01 02:26:43 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/02 00:35:24 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,71 @@ pid_t	execute_command(t_minishell	*shell, char *value)
 	return (pid);
 }
 
+void	process_line_hd(t_minishell *shell, char *line)
+{
+	while (strchr(line, '$'))
+		line = doc_envp(shell, line);
+	printf("%s", line);
+	if (line)
+		free(line);
+}
+
+void	read_from_stdin_hd(t_minishell *shell, const char *delim)
+{
+	char	*line;
+
+	while (1)
+	{
+		signal(SIGQUIT, handle_sigquit);
+		line = get_next_line(STDIN_FILENO);
+		if (!line || g_sigint_recived == SIGINT_RECIVED)
+		{
+			g_sigint_recived = SIGINT_HD_RECIVED;
+			if (line)
+				free(line);
+			break ;
+		}
+		if (strncmp(line, delim, ft_strlen(delim)) == 0
+			&& line[ft_strlen(delim)] == '\n')
+		{
+			free(line);
+			break ;
+		}
+		process_line_hd(shell, line);
+	}
+}
+
+void	process_hd_pipe(t_minishell *shell, char *delimiter)
+{
+	g_sigint_recived = SIGINT_HD;
+	read_from_stdin_hd(shell, delimiter);
+	if (g_sigint_recived == SIGINT_HD_RECIVED)
+		close(shell->pipes[0]);
+}
+
+pid_t	execute_hd_cmd(t_minishell	*shell, t_ast_node *node)
+{
+	pid_t	pid;
+
+	set_sigquit();
+	pid = fork();
+	if (pid == -1)
+		handle_error ("Fork Error", 1, EXIT_FAILURE);
+	else if (pid == 0)
+	{
+		if (!node->right)
+			handle_error ("No delimiter for here_doc", 1, EXIT_FAILURE);
+		if (handle_dup(shell) == -1)
+			handle_error (node->right->value, 1, EXIT_FAILURE); //Para saber con cual está fallando devuelve el delimitador
+		process_hd_pipe(shell, node->right->value);
+		close(shell->pipes[0]);
+		close(shell->pipes[1]);
+		exit(0);
+	}
+	waitpid(pid, 0, 0);
+	return (pid);
+}
+
 pid_t	execute_multiple_cmd(t_minishell *shell, t_ast_node *cmd_node)
 {
 	g_sigint_recived = 2;
@@ -68,12 +133,7 @@ pid_t	execute_multiple_cmd(t_minishell *shell, t_ast_node *cmd_node)
 	else if (cmd_node->type == AST_SUBSHELL_EX)
 		execute_subshell_ex(shell, cmd_node->value, 1);
 	else if (cmd_node->type == AST_HEREDOC)
-	{
-		if (!cmd_node->right || !cmd_node->left)
-			return (-1);
-		proccess_heredoc(shell, cmd_node->right->value);
-		return (execute_multiple_cmd(shell, cmd_node->left));
-	}
+		return (execute_hd_cmd(shell, cmd_node));
 	else
 		return (execute_command(shell, cmd_node->value));
 	return (1);

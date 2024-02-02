@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/01 13:42:13 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/01 23:07:22 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ void		execute_pipe_cmd(t_minishell *shell, t_ast_node *cmd_node);
 //execute_utils
 int			handle_redirect(t_minishell *shell, t_ast_node *cmd_node);
 void		read_from_stdin(t_minishell *shell, const char *delim, int wr_fd);
-void		proccess_heredoc(t_minishell *shell, char *delimiter);
+void		process_heredoc(t_minishell *shell, char *delimiter);
 int			handle_fd(t_minishell *shell);
 void		select_exec(t_minishell *shell, char **command);
 void		increment_shlvl(t_minishell *shell);

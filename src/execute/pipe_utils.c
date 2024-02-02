@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 00:34:02 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/30 00:54:35 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/02 00:30:13 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,14 @@ void	create_list(t_minishell *shell, t_ast_node *cmd_node)
 	{
 		if (current_node->left && current_node->left->type != AST_PIPE)
 			add_ast_back(&cmd_list, current_node->left);
+		if (current_node->left->type == AST_HEREDOC && current_node->left->left)
+			add_ast_back(&cmd_list, current_node->left->left);
 		if (current_node->right && current_node->right->type != AST_PIPE)
 			add_ast_back(&cmd_list, current_node->right);
 		current_node = current_node->right;
 	}
+	if (current_node->type == AST_HEREDOC && current_node->left)
+			add_ast_back(&cmd_list, current_node->left);
 	shell->pipe_list = cmd_list;
 }
 

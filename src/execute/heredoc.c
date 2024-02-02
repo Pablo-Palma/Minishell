@@ -6,13 +6,13 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 16:45:29 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/01 00:58:05 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/01 23:47:36 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	proccess_heredoc(t_minishell *shell, char *delimiter)
+void	process_heredoc(t_minishell *shell, char *delimiter)
 {
 	g_sigint_recived = SIGINT_HD;
 	if (pipe(shell->pipes))
@@ -41,7 +41,7 @@ void	read_from_stdin(t_minishell *shell, const char *delim, int write_fd)
 	while (1)
 	{
 		signal(SIGQUIT, handle_sigquit);
-		ft_printf("> ");
+		printf("> ");
 		line = get_next_line(STDIN_FILENO);
 		if (!line || g_sigint_recived == SIGINT_RECIVED)
 		{
