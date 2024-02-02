@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/01 16:30:41 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/02 10:58:41 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,11 @@ pid_t	execute_multiple_cmd(t_minishell *shell, t_ast_node *cmd_node)
 		execute_subshell_ex(shell, cmd_node->value, 1);
 	else if (cmd_node->type == AST_HEREDOC)
 	{
-		shell->hd_pipes = 1;
 		if (!cmd_node->right || !cmd_node->left)
 			return (-1);
 		proccess_heredoc(shell, cmd_node->right->value);
-		return (execute_command(shell, cmd_node->left->value));
+		cmd_node = cmd_node->next;
+		return (0);
 	}
 	else
 		return (execute_command(shell, cmd_node->value));
@@ -101,6 +101,8 @@ void	execute_pipe_cmd(t_minishell *shell, t_ast_node *cmd_node)
 	current_cmd = shell->pipe_list;
 	while (current_cmd != NULL)
 	{
+		if (current_cmd->type == AST_HEREDOC)
+			shell->hd_pipes = 1;
 		establish_fd(shell, current_cmd, &fd_in);
 		pid = execute_multiple_cmd(shell, current_cmd);
 		last_pid = pid;
@@ -108,7 +110,12 @@ void	execute_pipe_cmd(t_minishell *shell, t_ast_node *cmd_node)
 		if (shell->fd_write != STDOUT_FILENO)
 			close (shell->fd_write);
 		if (current_cmd->next != NULL)
-			fd_in = shell->pipes[0];
+		{
+			if (shell->hd_pipes_read)
+				fd_in = shell->hd_pipes_read;
+			else
+				fd_in = shell->pipes[0];
+		}
 		current_cmd = current_cmd->next;
 	}
 	if (fd_in != 0)

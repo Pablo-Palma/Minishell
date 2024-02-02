@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/13 13:24:33 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/28 17:49:28 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/02 11:27:54 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,14 @@ void	redirect_stdin(t_minishell *shell)
 	{
 		dup2(shell->fd_read, STDIN_FILENO);
 		close(shell->fd_read);
+	}
+	if (shell->hd_pipes)
+	{
+		if (shell->fd_write != STDOUT_FILENO)
+		{
+			dup2(shell->fd_write, STDOUT_FILENO);
+			close(shell->fd_write);
+		}
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:11:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/01 00:38:04 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/02 08:26:19 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ static void	execute_heredoc(t_minishell*shell, t_ast_node *node)
 	if (!node->right || !node->left)
 		return ;
 	proccess_heredoc(shell, node->right->value);
-	execute_ast_command(shell, node->left);
+//	execute_ast_command(shell, node->left);
 }
 
 void	execute_ast_command(t_minishell *shell, t_ast_node *node)

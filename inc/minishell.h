@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/01 16:28:59 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/02 09:24:53 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ typedef struct s_minishell
 	char		*executable_path;
 	int			pipes[2];
 	int			hd_pipes;
+	int			hd_pipes_read;
 	int			fd_read;
 	int			fd_write;
 	int			input_redirect;
@@ -171,6 +172,7 @@ void		close_fds(int *pipe_fds, int *fd_in);
 int			handle_dup(t_minishell *shell);
 void		create_list(t_minishell *shell, t_ast_node *cmd_node);
 int			handle_signal(t_minishell *shell, char *value);
+void    	execute_single_command(t_minishell *shell, char *value);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //
