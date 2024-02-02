@@ -17,7 +17,8 @@ check_command() {
     echo "-------------------------------------"
 }
 
-commands=(
+echo "Testing Sequential Operators"
+sequential_commands=(
     'echo "A" && echo "B" || echo "C"'
     '(echo "A" && echo "B") || echo "C"'
     '(echo "A" && (echo "B" || echo "C")) || echo "D"'
@@ -29,9 +30,8 @@ commands=(
 	'echo 1 && (echo 2 || echo 3) | echo 4'
 )
 
-for cmd in "${commands[@]}"; do
+for cmd in "${sequential_commands[@]}"; do
     check_command "$cmd"
 done
 
 rm bash_output.txt minishell_output.txt
-
