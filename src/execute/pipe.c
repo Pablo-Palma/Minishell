@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/02 17:02:51 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/02 17:11:39 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,11 +71,11 @@ pid_t	execute_multiple_cmd(t_minishell *shell, t_ast_node *cmd_node)
 	{
 		if (handle_redirect(shell, cmd_node) == -1)
 		{
-			if (shell->hd_pipes == 1)
+			/*if (shell->hd_pipes == 1)
 			{
-			        shell->hd_pipes = 0;
-			        exit(0);
-			}
+				shell->hd_pipes = 0;
+				exit(0);
+			}*/
 			return (-1);
 		}
 		if (cmd_node->left)
