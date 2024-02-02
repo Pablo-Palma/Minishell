@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:37:07 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/31 18:10:38 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/02 12:46:52 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,38 +86,6 @@ t_token	*build_file_token(char **input, int *i)
 	return (new_token);
 }
 
-t_token	*build_bracket_token(char **input, int *i)
-{
-	char	*command;
-	char	*temp;
-	t_token	*new_token;
-	int		found_open;
-
-	found_open = 1;
-	command = ft_strdup(input[*i]);
-	(*i)++;
-	while (input[*i] != NULL)
-	{
-		if (found_open)
-		{
-			temp = command;
-			command = ft_strjoin(command, " ");
-			free(temp);
-			temp = command;
-			command = ft_strjoin(command, input[*i]);
-			free(temp);
-		}
-		if (token_type(input[*i]) == AST_BRA_CLOSE && found_open)
-			found_open = 0;
-		if (!found_open)
-			break ;
-		(*i)++;
-	}
-	new_token = create_token(AST_SUBSHELL_EX, command);
-	free(command);
-	return (new_token);
-}
-
 int	build_token(t_token **tokens, char **input, int *i, int *is_file)
 {
 	t_type	type;
@@ -133,8 +101,8 @@ int	build_token(t_token **tokens, char **input, int *i, int *is_file)
 		status = add_token_back(tokens, build_command_token(input, i));
 	else if (type == AST_HEREDOC)
 		status = build_heredoc(input, i, tokens);
-	else if (type == AST_BRA_OPEN)
-		status = add_token_back(tokens, build_bracket_token(input, i));
+	else if (type == AST_SUBSHELL_EX)
+		status = add_token_back(tokens, create_token(type, input[*i]));
 	else
 	{
 		if (type == AST_REDIRECT_IN || type == AST_REDIRECT_OUT)

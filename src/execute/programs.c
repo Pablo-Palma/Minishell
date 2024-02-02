@@ -6,13 +6,13 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 12:45:38 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/31 23:26:44 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/02 12:59:41 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	execute_subshell_ex(t_minishell *shell, char *sub_expression, int	is_pipe)
+void	execute_subshell_ex(t_minishell *shell, char *sub_expression, int is_pipe)
 {
 	pid_t	pid;
 	int		status;
