@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 20:35:26 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/02 12:52:18 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/02 16:56:50 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,6 @@ void	add_cmd(t_ast_node **root, t_token *token)
 			node = node->left;
 		node->left = cmd;
 	}
-}
-
-void	add_pipe(t_ast_node **root, t_token *token)
-{
-	t_ast_node	*pipe;
-
-	pipe = create_ast_node(token->type, token->value);
-	pipe->right = (*root);
-	(*root) = pipe;
 }
 
 void	add_red_out(t_ast_node **root, t_token *token, t_ast_node **file)
@@ -62,7 +53,6 @@ void	add_red_out(t_ast_node **root, t_token *token, t_ast_node **file)
 		redirect->left = node->left;
 		node->left = redirect;
 	}
-	
 }
 
 void	add_hd(t_ast_node **root, t_token *token, t_ast_node **delim)

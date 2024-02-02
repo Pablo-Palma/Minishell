@@ -6,11 +6,20 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/02 14:05:19 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/02 17:02:51 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	add_pipe(t_ast_node **root, t_token *token)
+{
+	t_ast_node	*pipe;
+
+	pipe = create_ast_node(token->type, token->value);
+	pipe->right = (*root);
+	(*root) = pipe;
+}
 
 void	wait_for_commands(t_minishell *shell, pid_t last_pid)
 {
@@ -41,14 +50,7 @@ pid_t	execute_command(t_minishell	*shell, char *value)
 	else if (pid == 0)
 	{
 		if (handle_dup(shell) == -1)
-		{
-			if (shell->hd_pipes == 1)
-			{
-				shell->hd_pipes = 0;
-				exit(0);
-			}
 			handle_error ("Dup error", 1, EXIT_FAILURE);
-		}
 		args = handle_wildcards(value);
 		if (!args)
 			return (-1);
@@ -68,12 +70,19 @@ pid_t	execute_multiple_cmd(t_minishell *shell, t_ast_node *cmd_node)
 	if (cmd_node->type == AST_REDIRECT_IN || cmd_node->type == AST_REDIRECT_OUT)
 	{
 		if (handle_redirect(shell, cmd_node) == -1)
+		{
+			if (shell->hd_pipes == 1)
+			{
+			        shell->hd_pipes = 0;
+			        exit(0);
+			}
 			return (-1);
+		}
 		if (cmd_node->left)
 			return (execute_multiple_cmd(shell, cmd_node->left));
 	}
 	else if (cmd_node->type == AST_SUBSHELL_EX)
-		execute_subshell_ex(shell, cmd_node->value, 1);
+		exec_subshell_ex(shell, cmd_node->value, 1);
 	else if (cmd_node->type == AST_HEREDOC)
 	{
 		if (!cmd_node->right || !cmd_node->left)

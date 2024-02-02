@@ -6,18 +6,22 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 12:45:38 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/02 12:59:41 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/02 16:54:41 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	execute_subshell_ex(t_minishell *shell, char *sub_expression, int is_pipe)
+void	exec_subshell_ex(t_minishell *shell, char *sub_expr, int is_pipe)
 {
 	pid_t	pid;
 	int		status;
-	char	*args[] = {"/bin/sh", "-c", sub_expression, NULL};
+	char	*args[4];
 
+	args[0] = "/bin/sh";
+	args[1] = "-c";
+	args[2] = sub_expr;
+	args[3] = NULL;
 	pid = fork();
 	status = 0;
 	signal(SIGINT, SIG_IGN);
@@ -29,13 +33,10 @@ void	execute_subshell_ex(t_minishell *shell, char *sub_expression, int is_pipe)
 			dup2(shell->pipes[1], STDOUT_FILENO);
 		increment_shlvl(shell);
 		if (execve("/bin/sh", args, shell->og_envp) == -1)
-		{
-			perror("execve");
-			exit(EXIT_FAILURE);
-		}
+			handle_error("minishell: expr command error", 1, -1);
 	}
 	waitpid(pid, &status, 0);
-		shell->last_exit_status = WEXITSTATUS(status);
+	shell->last_exit_status = WEXITSTATUS(status);
 }
 
 void	execute_subshell(t_minishell *shell, char **args)

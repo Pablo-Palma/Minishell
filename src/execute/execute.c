@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:11:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/02 12:14:56 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/02 17:08:55 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,14 +88,14 @@ void	execute_input_redirect(t_minishell *shell, t_ast_node *node)
 	return ;
 }
 
-static void execute_and_sequence(t_minishell *shell, t_ast_node *node)
+static void	execute_and_sequence(t_minishell *shell, t_ast_node *node)
 {
 	execute_ast_command(shell, node->left);
 	if (!shell->last_exit_status)
 		execute_ast_command(shell, node->right);
 }
 
-static void execute_or_sequence(t_minishell *shell, t_ast_node *node)
+static void	execute_or_sequence(t_minishell *shell, t_ast_node *node)
 {
 	execute_ast_command(shell, node->left);
 	if (shell->last_exit_status)
@@ -107,7 +107,8 @@ static void	execute_heredoc(t_minishell*shell, t_ast_node *node)
 	if (!node->right || !node->left)
 		return ;
 	proccess_heredoc(shell, node->right->value);
-//	execute_ast_command(shell, node->left);
+	if (shell->hd_pipes != 1)
+		execute_ast_command(shell, node->left);
 }
 
 void	execute_ast_command(t_minishell *shell, t_ast_node *node)
@@ -122,7 +123,7 @@ void	execute_ast_command(t_minishell *shell, t_ast_node *node)
 	else if (node->type == AST_AND)
 		execute_and_sequence(shell, node);
 	else if (node->type == AST_SUBSHELL_EX)
-		execute_subshell_ex(shell, node->value, 0);
+		exec_subshell_ex(shell, node->value, 0);
 	else if (node->type == AST_COMMAND)
 		execute_single_command(shell, node->value);
 	else if (node->type == AST_REDIRECT_OUT)

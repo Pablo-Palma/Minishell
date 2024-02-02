@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/02 14:21:56 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/02 16:43:10 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,7 @@ void		select_exec(t_minishell *shell, char **command);
 void		increment_shlvl(t_minishell *shell);
 void		redirect_stdin(t_minishell *shell);
 void		single_cmd_process(t_minishell *shell, char **args, char *path);
-void 		execute_subshell_ex(t_minishell *shell, char *sub_expression, int is_pipe);
+void 		exec_subshell_ex(t_minishell *shell, char *sub_expr, int is_pipe);
 
 char		**handle_wildcards(char *value);
 void		establish_fd(t_minishell *shell, t_ast_node *node, int *fd_in);
