@@ -28,6 +28,7 @@ SRCS =	$(SRC_DIR)aux_ft/array_size.c			\
 		$(SRC_DIR)builtins/unset.c				\
 		$(SRC_DIR)execute/execute_utils.c 		\
     	$(SRC_DIR)execute/execute.c 			\
+		$(SRC_DIR)execute/heredoc_pipe.c		\
 		$(SRC_DIR)execute/heredoc.c				\
 		$(SRC_DIR)execute/pipe_utils.c			\
 		$(SRC_DIR)execute/pipe.c				\

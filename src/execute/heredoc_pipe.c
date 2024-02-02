@@ -1,40 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   heredoc.c                                          :+:      :+:    :+:   */
+/*   heredoc_pipe.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/07 16:45:29 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/02 18:42:01 by jbaeza-c         ###   ########.fr       */
+/*   Created: 2024/02/02 18:26:12 by jbaeza-c          #+#    #+#             */
+/*   Updated: 2024/02/02 18:28:01 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	process_heredoc(t_minishell *shell, char *delimiter)
-{
-	g_sigint_recived = SIGINT_HD;
-	if (pipe(shell->pipes))
-		handle_error("Error creating pipe", 1, EXIT_FAILURE);
-	shell->fd_write = shell->pipes[1];
-	shell->fd_read = shell->pipes[0];
-	read_from_stdin(shell, delimiter, shell->fd_write);
-	close(shell->pipes[1]);
-	if (g_sigint_recived == SIGINT_HD_RECIVED)
-		close(shell->pipes[0]);
-}
-
-void	process_line(t_minishell *shell, char *line, int write_fd)
+void	process_line_hd(t_minishell *shell, char *line)
 {
 	while (strchr(line, '$'))
 		line = doc_envp(shell, line);
-	write (write_fd, line, ft_strlen(line));
+	printf("%s", line);
 	if (line)
 		free(line);
 }
 
-void	read_from_stdin(t_minishell *shell, const char *delim, int write_fd)
+void	read_from_stdin_hd(t_minishell *shell, const char *delim)
 {
 	char	*line;
 
@@ -45,7 +32,6 @@ void	read_from_stdin(t_minishell *shell, const char *delim, int write_fd)
 		if (!line || g_sigint_recived == SIGINT_RECIVED)
 		{
 			g_sigint_recived = SIGINT_HD_RECIVED;
-			close (write_fd);
 			if (line)
 				free(line);
 			break ;
@@ -56,6 +42,14 @@ void	read_from_stdin(t_minishell *shell, const char *delim, int write_fd)
 			free(line);
 			break ;
 		}
-		process_line(shell, line, write_fd);
+		process_line_hd(shell, line);
 	}
+}
+
+void	process_hd_pipe(t_minishell *shell, char *delimiter)
+{
+	g_sigint_recived = SIGINT_HD;
+	read_from_stdin_hd(shell, delimiter);
+	if (g_sigint_recived == SIGINT_HD_RECIVED)
+		close(shell->pipes[0]);
 }

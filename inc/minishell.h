@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/01 23:07:22 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/02 18:40:55 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ typedef struct s_minishell
 	int			last_cmd;
 	int			last_exit_status;
 	int			shell_pid;
+	int			hd;
 }	t_minishell;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -126,10 +127,8 @@ void		add_pipe(t_ast_node **root, t_token *token);
 void		add_red_out(t_ast_node **root, t_token *token, t_ast_node **file);
 void		add_red_in(t_ast_node **root, t_token *token, t_ast_node **file);
 void		add_hd(t_ast_node **root, t_token *token, t_ast_node **delim);
-void		add_sequence(t_tree *tree, t_token *token);
 void		free_ast(t_ast_node *node);
 int			add_ast_back(t_ast_node **head, t_ast_node *new_node);
-void		insert_redirection(t_ast_node **root, t_ast_node **redirect_in);
 
 //parsing
 t_token		*lexer(char **input);
@@ -151,24 +150,30 @@ int			is_valid(char *input, t_minishell *shell);
 //main execution
 void		execute_ast_command(t_minishell *shell, t_ast_node *node);
 void		execute_pipe_cmd(t_minishell *shell, t_ast_node *cmd_node);
+void		execute_or_sequence(t_minishell *shell, t_ast_node *node);
+void		execute_and_sequence(t_minishell *shell, t_ast_node *node);
+void		single_cmd_process(t_minishell *shell, char **args, char *path);
+void		execute_subshell_ex(t_minishell *shell, char *sub, int is_pipe);
+void		process_heredoc(t_minishell *shell, char *delimiter);
 
 //execute_utils
 int			handle_redirect(t_minishell *shell, t_ast_node *cmd_node);
 void		read_from_stdin(t_minishell *shell, const char *delim, int wr_fd);
-void		process_heredoc(t_minishell *shell, char *delimiter);
 int			handle_fd(t_minishell *shell);
 void		select_exec(t_minishell *shell, char **command);
 void		increment_shlvl(t_minishell *shell);
 void		redirect_stdin(t_minishell *shell);
-void		single_cmd_process(t_minishell *shell, char **args, char *path);
-void 		execute_subshell_ex(t_minishell *shell, char *sub_expression, int is_pipe);
-
+int			handle_signal(t_minishell *shell, char *value);
 char		**handle_wildcards(char *value);
+
 void		establish_fd(t_minishell *shell, t_ast_node *node, int *fd_in);
-void		close_fds(int *pipe_fds, int *fd_in);
+void		close_fds(t_minishell *shell, int *fd_in);
 int			handle_dup(t_minishell *shell);
 void		create_list(t_minishell *shell, t_ast_node *cmd_node);
-int			handle_signal(t_minishell *shell, char *value);
+
+void		read_from_stdin_hd(t_minishell *shell, const char *delim);
+void		process_line_hd(t_minishell *shell, char *line);
+void		process_hd_pipe(t_minishell *shell, char *delimiter);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //

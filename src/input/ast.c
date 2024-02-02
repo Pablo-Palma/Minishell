@@ -6,13 +6,13 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 13:32:58 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/01 16:02:49 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/02 14:19:27 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	insert_redirection(t_ast_node **root, t_ast_node **redirect)
+static void	insert_redirection(t_ast_node **root, t_ast_node **redirect)
 {
 	t_ast_node	*node;
 
@@ -34,6 +34,26 @@ void	insert_redirection(t_ast_node **root, t_ast_node **redirect)
 		(*root)->left = *redirect;
 	}
 	*redirect = NULL;
+}
+
+static void	add_sequence(t_tree *tree, t_token *token)
+{
+	t_ast_node	*node;
+	t_ast_node	*iter;
+
+	node = create_ast_node(token->type, token->value);
+	iter = tree->root;
+	insert_redirection(&tree->branch, &tree->red_in);
+	node->right = tree->branch;
+	tree->branch = NULL;
+	if (!tree->root)
+		tree->root = node;
+	else
+	{
+		while (iter->left)
+			iter = iter->left;
+		iter->left = node;
+	}
 }
 
 static void	set_tree(t_tree *tree)

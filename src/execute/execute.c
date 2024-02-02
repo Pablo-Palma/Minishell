@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:11:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/01 23:07:30 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/02 18:25:07 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	execute_single_command(t_minishell *shell, char *value)
 	ft_free_arrays(args);
 }
 
-void	execute_output_redirect(t_minishell *shell, t_ast_node *node)
+static void	execute_output_redirect(t_minishell *shell, t_ast_node *node)
 {
 	pid_t	pid;
 	int		fd_out;
@@ -66,7 +66,7 @@ void	execute_output_redirect(t_minishell *shell, t_ast_node *node)
 	return ;
 }
 
-void	execute_input_redirect(t_minishell *shell, t_ast_node *node)
+static void	execute_input_redirect(t_minishell *shell, t_ast_node *node)
 {
 	pid_t	pid;
 	int		fd_in;
@@ -86,20 +86,6 @@ void	execute_input_redirect(t_minishell *shell, t_ast_node *node)
 	}
 	waitpid(pid, 0, 0);
 	return ;
-}
-
-static void execute_and_sequence(t_minishell *shell, t_ast_node *node)
-{
-	execute_ast_command(shell, node->left);
-	if (!shell->last_exit_status)
-		execute_ast_command(shell, node->right);
-}
-
-static void execute_or_sequence(t_minishell *shell, t_ast_node *node)
-{
-	execute_ast_command(shell, node->left);
-	if (shell->last_exit_status)
-		execute_ast_command(shell, node->right);
 }
 
 static void	execute_heredoc(t_minishell*shell, t_ast_node *node)

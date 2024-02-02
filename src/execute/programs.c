@@ -6,17 +6,19 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 12:45:38 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/31 23:26:44 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/02 18:47:05 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	execute_subshell_ex(t_minishell *shell, char *sub_expression, int	is_pipe)
+//static void	
+
+void	execute_subshell_ex(t_minishell *shell, char *sub, int is_pipe)
 {
 	pid_t	pid;
 	int		status;
-	char	*args[] = {"/bin/sh", "-c", sub_expression, NULL};
+	char	*args[] = {"/bin/sh", "-c", sub, NULL};
 
 	pid = fork();
 	status = 0;
@@ -35,7 +37,7 @@ void	execute_subshell_ex(t_minishell *shell, char *sub_expression, int	is_pipe)
 		}
 	}
 	waitpid(pid, &status, 0);
-		shell->last_exit_status = WEXITSTATUS(status);
+	shell->last_exit_status = WEXITSTATUS(status);
 }
 
 void	execute_subshell(t_minishell *shell, char **args)

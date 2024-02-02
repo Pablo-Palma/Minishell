@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 00:34:02 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/02 00:30:13 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/02 18:43:19 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,23 +29,28 @@ void	establish_fd(t_minishell *shell, t_ast_node *node, int *fd_in)
 	}
 }
 
-void	close_fds(int *pipe_fds, int *fd_in)
+void	close_fds(t_minishell *shell, int *fd_in)
 {
-	if (*pipe_fds != -1)
+	if (shell->pipes[1] != -1)
 	{
-		close(*pipe_fds);
-		*pipe_fds = -1;
+		close(shell->pipes[1]);
+		shell->pipes[1] = -1;
 	}
 	if (*fd_in != 0)
 	{
 		close(*fd_in);
 		*fd_in = STDIN_FILENO;
 	}
+	if (shell->fd_write != STDOUT_FILENO)
+	{
+		shell->output_redirect = 0;
+		close (shell->fd_write);
+	}
 }
 
 int	handle_dup(t_minishell *shell)
 {
-	if (shell->fd_read != STDIN_FILENO)
+	if (shell->fd_read != STDIN_FILENO && !shell->hd)
 	{
 		if (dup2(shell->fd_read, STDIN_FILENO) == -1)
 			return (-1);
@@ -78,7 +83,7 @@ void	create_list(t_minishell *shell, t_ast_node *cmd_node)
 		current_node = current_node->right;
 	}
 	if (current_node->type == AST_HEREDOC && current_node->left)
-			add_ast_back(&cmd_list, current_node->left);
+		add_ast_back(&cmd_list, current_node->left);
 	shell->pipe_list = cmd_list;
 }
 

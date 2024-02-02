@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 00:28:50 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/30 19:41:54 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/02 18:42:20 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,18 @@ void	single_cmd_process(t_minishell *shell, char **args, char *path)
 		close(shell->fd_read);
 	if (waitpid(pid, &status, 0) != -1 && WIFEXITED(status))
 		shell->last_exit_status = WEXITSTATUS(status);
+}
+
+void	execute_and_sequence(t_minishell *shell, t_ast_node *node)
+{
+	execute_ast_command(shell, node->left);
+	if (!shell->last_exit_status)
+		execute_ast_command(shell, node->right);
+}
+
+void	execute_or_sequence(t_minishell *shell, t_ast_node *node)
+{
+	execute_ast_command(shell, node->left);
+	if (shell->last_exit_status)
+		execute_ast_command(shell, node->right);
 }
