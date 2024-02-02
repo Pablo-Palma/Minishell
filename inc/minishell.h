@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/02 16:43:10 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/02 17:49:43 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,6 +170,8 @@ int			handle_dup(t_minishell *shell);
 void		create_list(t_minishell *shell, t_ast_node *cmd_node);
 int			handle_signal(t_minishell *shell, char *value);
 void    	execute_single_command(t_minishell *shell, char *value);
+void		execute_and_sequence(t_minishell *shell, t_ast_node *node);
+void		execute_heredoc(t_minishell*shell, t_ast_node *node);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //

@@ -6,11 +6,36 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 00:28:50 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/30 19:41:54 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/02 17:48:20 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	execute_and_sequence(t_minishell *shell, t_ast_node *node)
+{
+	execute_ast_command(shell, node->left);
+	if (!shell->last_exit_status)
+		execute_ast_command(shell, node->right);
+}
+
+void	add_pipe(t_ast_node **root, t_token *token)
+{
+	t_ast_node	*pipe;
+
+	pipe = create_ast_node(token->type, token->value);
+	pipe->right = (*root);
+	(*root) = pipe;
+}
+
+void	execute_heredoc(t_minishell*shell, t_ast_node *node)
+{
+	if (!node->right || !node->left)
+		return ;
+	proccess_heredoc(shell, node->right->value);
+	if (shell->hd_pipes != 1)
+		execute_ast_command(shell, node->left);
+}
 
 int	handle_signal(t_minishell *shell, char *value)
 {
@@ -48,6 +73,8 @@ void	single_cmd_process(t_minishell *shell, char **args, char *path)
 		printf("%d\n", shell->shell_pid);
 	if (shell->fd_read != STDIN_FILENO)
 		close(shell->fd_read);
+	if (shell->hd_pipes_read)
+		shell->fd_read = shell->hd_pipes_read;
 	if (waitpid(pid, &status, 0) != -1 && WIFEXITED(status))
 		shell->last_exit_status = WEXITSTATUS(status);
 }

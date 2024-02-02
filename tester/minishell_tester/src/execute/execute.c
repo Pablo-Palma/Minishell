@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:11:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/31 23:27:35 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/02 17:43:53 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,13 @@ void	execute_input_redirect(t_minishell *shell, t_ast_node *node)
 	return ;
 }
 
+static void	execute_or_sequence(t_minishell *shell, t_ast_node *node)
+{
+	execute_ast_command(shell, node->left);
+	if (shell->last_exit_status)
+		execute_ast_command(shell, node->right);
+}
+
 void	execute_ast_command(t_minishell *shell, t_ast_node *node)
 {
 	if (node == NULL || shell == NULL)
@@ -96,25 +103,19 @@ void	execute_ast_command(t_minishell *shell, t_ast_node *node)
 		return ;
 	}
 	if (node->type == AST_OR)
-	{
-		execute_ast_command(shell, node->left);
-		if (shell->last_exit_status)
-			execute_ast_command(shell, node->right);
-	}
+		execute_or_sequence(shell, node);
 	else if (node->type == AST_AND)
-	{
-		execute_ast_command(shell, node->left);
-		if (!shell->last_exit_status)
-			execute_ast_command(shell, node->right);
-	}
-	if (node->type == AST_SUBSHELL_EX)
-		execute_subshell_ex(shell, node->value, 0);
+		execute_and_sequence(shell, node);
+	else if (node->type == AST_SUBSHELL_EX)
+		exec_subshell_ex(shell, node->value, 0);
 	else if (node->type == AST_COMMAND)
 		execute_single_command(shell, node->value);
 	else if (node->type == AST_REDIRECT_OUT)
 		execute_output_redirect(shell, node);
 	else if (node->type == AST_REDIRECT_IN)
 		execute_input_redirect(shell, node);
+	else if (node->type == AST_HEREDOC)
+		execute_heredoc(shell, node);
 	else
 		execute_pipe_cmd(shell, node);
 }

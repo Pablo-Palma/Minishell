@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:28:52 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/31 23:48:35 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/02 17:58:15 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	leaks(void)
 int	main(int argc, char **argv, char **envp)
 {
 	t_minishell	shell;
+
 	if (argc == 1)
 		minishell(envp);
 	else if (argc == 3 && ft_strncmp(argv[1], "-c", 3) == 0)

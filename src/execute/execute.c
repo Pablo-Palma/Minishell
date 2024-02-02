@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:11:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/02 17:08:55 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/02 17:43:53 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,27 +88,11 @@ void	execute_input_redirect(t_minishell *shell, t_ast_node *node)
 	return ;
 }
 
-static void	execute_and_sequence(t_minishell *shell, t_ast_node *node)
-{
-	execute_ast_command(shell, node->left);
-	if (!shell->last_exit_status)
-		execute_ast_command(shell, node->right);
-}
-
 static void	execute_or_sequence(t_minishell *shell, t_ast_node *node)
 {
 	execute_ast_command(shell, node->left);
 	if (shell->last_exit_status)
 		execute_ast_command(shell, node->right);
-}
-
-static void	execute_heredoc(t_minishell*shell, t_ast_node *node)
-{
-	if (!node->right || !node->left)
-		return ;
-	proccess_heredoc(shell, node->right->value);
-	if (shell->hd_pipes != 1)
-		execute_ast_command(shell, node->left);
 }
 
 void	execute_ast_command(t_minishell *shell, t_ast_node *node)

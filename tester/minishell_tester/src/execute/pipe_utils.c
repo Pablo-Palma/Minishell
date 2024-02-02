@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 00:34:02 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/30 00:54:35 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/02 09:57:33 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@ void	establish_fd(t_minishell *shell, t_ast_node *node, int *fd_in)
 			handle_error("Error creating pipe", 1, EXIT_FAILURE);
 		if (!shell->output_redirect)
 			shell->fd_write = shell->pipes[1];
-		shell->fd_read = *fd_in;
+		if (shell->hd_pipes)
+			shell->fd_read = shell->pipes[0];
+		else
+			shell->fd_read = *fd_in;
 	}
 	else
 	{

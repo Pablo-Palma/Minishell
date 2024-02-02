@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 20:46:20 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/23 00:22:21 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/02 09:28:22 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,8 @@ void	init_minishell(t_minishell *shell, char **envp)
 	shell->input_line = NULL;
 	shell->ast = NULL;
 	shell->last_cmd = 0;
-	shell->special_cat = 0;
+	shell->hd_pipes = 0;
+	shell->hd_pipes_read = 0;
 	shell->last_exit_status = 0;
 	shell->shell_pid = 0;
 }

@@ -6,20 +6,11 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/02 17:11:39 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/02 17:44:46 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	add_pipe(t_ast_node **root, t_token *token)
-{
-	t_ast_node	*pipe;
-
-	pipe = create_ast_node(token->type, token->value);
-	pipe->right = (*root);
-	(*root) = pipe;
-}
 
 void	wait_for_commands(t_minishell *shell, pid_t last_pid)
 {
@@ -70,14 +61,7 @@ pid_t	execute_multiple_cmd(t_minishell *shell, t_ast_node *cmd_node)
 	if (cmd_node->type == AST_REDIRECT_IN || cmd_node->type == AST_REDIRECT_OUT)
 	{
 		if (handle_redirect(shell, cmd_node) == -1)
-		{
-			/*if (shell->hd_pipes == 1)
-			{
-				shell->hd_pipes = 0;
-				exit(0);
-			}*/
 			return (-1);
-		}
 		if (cmd_node->left)
 			return (execute_multiple_cmd(shell, cmd_node->left));
 	}
@@ -95,38 +79,44 @@ pid_t	execute_multiple_cmd(t_minishell *shell, t_ast_node *cmd_node)
 	return (1);
 }
 
+pid_t	process_command(t_minishell *shell, t_ast_node *current_cmd, int *fd_in)
+{
+	pid_t	pid;
+
+	pid = 0;
+	if (current_cmd->type == AST_HEREDOC)
+		shell->hd_pipes = 1;
+	establish_fd(shell, current_cmd, fd_in);
+	pid = execute_multiple_cmd(shell, current_cmd);
+	close_fds(&shell->pipes[1], fd_in);
+	if (shell->fd_write != STDOUT_FILENO)
+		close (shell->fd_write);
+	if (current_cmd->next != NULL)
+	{
+		if (shell->hd_pipes)
+		{
+			*fd_in = shell->hd_pipes_read;
+			shell->hd_pipes = 0;
+		}
+		else
+			*fd_in = shell->pipes[0];
+	}
+	return (pid);
+}
+
 void	execute_pipe_cmd(t_minishell *shell, t_ast_node *cmd_node)
 {
 	int			fd_in;
-	pid_t		pid;
 	pid_t		last_pid;
 	t_ast_node	*current_cmd;
 
 	fd_in = 0;
-	pid = 0;
 	last_pid = 0;
 	create_list(shell, cmd_node);
 	current_cmd = shell->pipe_list;
 	while (current_cmd != NULL)
 	{
-		if (current_cmd->type == AST_HEREDOC)
-			shell->hd_pipes = 1;
-		establish_fd(shell, current_cmd, &fd_in);
-		pid = execute_multiple_cmd(shell, current_cmd);
-		last_pid = pid;
-		close_fds(&shell->pipes[1], &fd_in);
-		if (shell->fd_write != STDOUT_FILENO)
-			close (shell->fd_write);
-		if (current_cmd->next != NULL)
-		{
-			if (shell->hd_pipes)
-			{
-				fd_in = shell->hd_pipes_read;
-				shell->hd_pipes = 0;
-			}
-			else
-				fd_in = shell->pipes[0];
-		}
+		last_pid = process_command(shell, current_cmd, &fd_in);
 		current_cmd = current_cmd->next;
 	}
 	if (fd_in != 0)
