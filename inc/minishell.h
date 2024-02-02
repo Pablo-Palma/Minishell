@@ -6,11 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2024/02/02 12:47:04 by jbaeza-c         ###   ########.fr       */
-=======
-/*   Updated: 2024/02/02 12:22:37 by pabpalma         ###   ########.fr       */
->>>>>>> 4ca5fed (multiple hd working with multiple pipes)
+/*   Updated: 2024/02/02 14:21:56 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
