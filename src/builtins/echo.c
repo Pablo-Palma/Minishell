@@ -6,7 +6,7 @@
 /*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 08:22:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/07 08:29:47 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/03 09:01:04 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ void	echo_command(char **cmd_args)
 
 	i = 1;
 	newline = 1;
-	if (cmd_args[1] && strncmp(cmd_args[1], "-n", 2) == 0)
+	while (cmd_args[i] && ft_strncmp(cmd_args[i], "-n", 2) == 0)
 	{
 		newline = 0;
-		i = 2;
+		i++;
 	}
 	while (cmd_args[i])
 	{

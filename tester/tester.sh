@@ -16,9 +16,9 @@ check_command() {
     ./minishell -c "$command" > minishell_output.txt
 
     if diff -q bash_output.txt minishell_output.txt > /dev/null; then
-		echo -e "${RED}KO: Test #${test_id}${NC}"
-    else
 		echo -e "${GREEN}OK: Test #${test_id}${NC}"
+    else
+		echo -e "${RED}KO: Test #${test_id}${NC}"
     fi
 
     echo "-------------------------------------"
