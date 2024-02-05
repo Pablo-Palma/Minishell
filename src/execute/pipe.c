@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/05 14:45:06 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/05 18:11:54 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,6 @@ void	wait_for_commands(t_minishell *shell, pid_t last_pid)
 	waitpid(last_pid, &status, 0);
 	if (WIFEXITED(status))
 		shell->last_exit_status = WEXITSTATUS(status);
-/*	if (WIFSIGNALED(status))
-		shell->last_exit_status = 128 + WTERMSIG(status);*/
 	pid = waitpid(-1, &status, 0);
 	while (pid > 0)
 	{
@@ -52,6 +50,8 @@ pid_t	execute_command(t_minishell	*shell, char *value)
 		if (handle_builtin(shell, args) || special_builtin(shell, args))
 			exit(0);
 		path = get_path(args[0], my_getenv(shell->envp, "PATH"));
+		if (!path)
+			handle_error(args[0], 1, 127);
 		close(shell->pipes[0]);
 		execve(path, args, shell->envp);
 		handle_error ("Execve Error", 1, EXIT_FAILURE);
