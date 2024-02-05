@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 16:45:29 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/02 17:08:26 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/05 13:36:10 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	proccess_heredoc(t_minishell *shell, char *delimiter)
 
 void	process_line(t_minishell *shell, char *line, int write_fd)
 {
-	while (strchr(line, '$'))
+	while (ft_strchr(line, '$'))
 		line = doc_envp(shell, line);
 	write (write_fd, line, ft_strlen(line));
 	if (line)
@@ -61,7 +61,7 @@ void	read_from_stdin(t_minishell *shell, const char *delim, int write_fd)
 				free(line);
 			break ;
 		}
-		if (strncmp(line, delim, ft_strlen(delim)) == 0
+		if (ft_strncmp(line, delim, ft_strlen(delim)) == 0
 			&& line[ft_strlen(delim)] == '\n')
 		{
 			free(line);

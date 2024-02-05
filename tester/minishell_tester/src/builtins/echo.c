@@ -6,24 +6,46 @@
 /*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 08:22:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/07 08:29:47 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/05 12:15:18 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	echo_command(char **cmd_args)
+int	newline_checker(char **cmd_args, int *i)
 {
-	int	i;
+	int	j;
+	int	nl_checker;
 	int	newline;
 
-	i = 1;
-	newline = 1;
-	if (cmd_args[1] && strncmp(cmd_args[1], "-n", 2) == 0)
+	nl_checker = 0;
+	while (cmd_args[*i] && ft_strncmp(cmd_args[*i], "-n", 2) == 0)
 	{
 		newline = 0;
-		i = 2;
+		j = 1;
+		while (cmd_args[*i][j] != '\0')
+		{
+			if (cmd_args[*i][j] != 'n')
+			{
+				if (nl_checker)
+					return (0);
+				return (1);
+			}
+			j++;
+		}
+		(*i)++;
+		nl_checker = 1;
 	}
+	return (newline);
+}
+
+void	echo_command(char **cmd_args)
+{
+	int	newline;
+	int	i;
+
+	i = 1;
+	newline = newline_checker(cmd_args, &i);
 	while (cmd_args[i])
 	{
 		printf("%s", cmd_args[i]);

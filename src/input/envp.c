@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 13:00:47 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/27 13:03:02 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/05 13:36:28 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void	handle_envp(t_minishell *shell, t_token *node)
 		if (token->envvar)
 		{
 			i = 0;
-			while (strchr(token->value, '$'))
+			while (ft_strchr(token->value, '$'))
 			{
 				while (token->value[i] != '$')
 					i++;

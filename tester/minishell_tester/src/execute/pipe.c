@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/02 17:44:46 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/03 08:52:46 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,15 @@ void	wait_for_commands(t_minishell *shell, pid_t last_pid)
 	pid_t	pid;
 
 	waitpid(last_pid, &status, 0);
+	shell->last_exit_status = WEXITSTATUS(status);
 	pid = waitpid(-1, &status, 0);
 	while (pid > 0)
 	{
 		if (pid == last_pid)
 			break ;
 		pid = waitpid(-1, &status, 0);
-		shell->last_exit_status = WEXITSTATUS(status);
+		if (WIFEXITED(status))
+			shell->last_exit_status = WEXITSTATUS(status);
 	}
 }
 

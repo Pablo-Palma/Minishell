@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 22:53:13 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/01 12:27:42 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/05 13:41:20 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int	handle_input(t_minishell *shell, char *input)
 	t_ast_node	*ast;
 	char		*p_input;
 
-	p_input = calloc(1, ft_strlen(input) + count_op(input, "<>|&") * 2 + 1);
+	p_input = ft_calloc(1, ft_strlen(input) + count_op(input, "<>|&") * 2 + 1);
 	handle_operators(input, p_input, "<>|&");
 	tokens = lexer(split_input(p_input, " "));
 	free(p_input);

@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:37:07 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/02 12:46:52 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/05 13:46:31 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,8 @@ t_token	*build_file_token(char **input, int *i)
 
 	file = ft_strdup(input[*i]);
 	(*i)++;
-	while (input[*i] && (strchr(input[*i], '\"') || strchr(input[*i], '\'')))
+	while (input[*i] && (ft_strchr(input[*i], '\"')
+			|| ft_strchr(input[*i], '\'')))
 	{
 		temp = file;
 		file = ft_strjoin(file, " ");
