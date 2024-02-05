@@ -6,7 +6,7 @@
 /*   By: pabpalma <pabpalma>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 08:22:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/05 12:15:18 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/05 13:54:48 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ int	newline_checker(char **cmd_args, int *i)
 	int	newline;
 
 	nl_checker = 0;
+	newline = 1;
 	while (cmd_args[*i] && ft_strncmp(cmd_args[*i], "-n", 2) == 0)
 	{
 		newline = 0;

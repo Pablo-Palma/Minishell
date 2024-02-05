@@ -61,7 +61,10 @@ echo_commands=(
     "3 echo -n Hello World"
     "4 echo -n"
     "5 echo -n -n -n Hello World"
-    "6 echo    Hello    World"
+    "6 echo -nnn Hello World"
+    "7 echo -n -nx Hello World"
+    "8 echo -nx -n Hello World"
+    "9 echo    Hello    World"
 
 )
 
