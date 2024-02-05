@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 11:53:25 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/24 21:07:21 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/05 14:12:50 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,7 @@ char	*doc_envp(t_minishell *shell, char *src)
 		return (NULL);
 	if (src[cnt] == '$' || src[cnt] == '?')
 		line = ft_double(shell, src, i);
-	while (src[cnt] && src[cnt] != ' ' && src[cnt] != 39
-		&& src[cnt] != 34 && src[cnt] != '\n')
+	while (ft_isalpha(src[cnt]) || ft_isdigit(src[cnt]))
 		cnt++;
 	if (!line)
 		line = doc_switch(shell, src, i, cnt);

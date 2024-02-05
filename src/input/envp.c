@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 13:00:47 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/27 13:03:02 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/05 20:20:55 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,10 @@ void	switch_envp(t_minishell *shell, t_token *token, int i)
 		return ;
 	if (!token->value[cnt] || ft_isspace(token->value[cnt]))
 		new_value = empty_env_switch(shell, token->value, i, i + 1);
-	while (token->value[cnt] && token->value[cnt] != ' '
-		&& token->value[cnt] != '\'' && token->value[cnt] != '\"')
-		cnt++;
 	if (!token->value[1] || token->value[1] == '?' || token->value[1] == '$')
 		return ;
+	while (ft_isalpha(token->value[cnt]) || ft_isdigit(token->value[cnt]))
+		cnt++;
 	if (!new_value)
 		new_value = ft_switch(shell, token, i, cnt);
 	if (!new_value)
@@ -72,22 +71,26 @@ void	echo_double(t_minishell *shell, t_token *token, int i)
 void	handle_envp(t_minishell *shell, t_token *node)
 {
 	t_token	*token;
+	int		quote;
 	int		i;
 
 	token = node;
 	while (token)
 	{
-		if (token->envvar)
+		i = -1;
+		while (token->type != AST_FILE && token->value[++i])
 		{
-			i = 0;
-			while (strchr(token->value, '$'))
+			if (!quote && (token->value[i] == '\'' || token->value[i] == '\"'))
+				quote = token->value[i];
+			if (token->value[i] == quote)
+				quote = 0;
+			if (quote != '\'' && token->value[i] == '$')
 			{
-				while (token->value[i] != '$')
-					i++;
 				if (token->value[i + 1] == '$' || token->value[i + 1] == '?')
 					echo_double(shell, token, i);
 				else
 					switch_envp(shell, token, i);
+				i = -1;
 			}
 		}
 		token = token->next;
