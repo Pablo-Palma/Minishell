@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/02 19:52:03 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/05 15:46:52 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ typedef struct s_token
 {
 	t_type			type;
 	char			*value;
-	int				envvar;
 	struct s_token	*next;
 	struct s_token	*prev;
 }					t_token;

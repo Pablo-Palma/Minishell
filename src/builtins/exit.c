@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 10:49:42 by pabpalma          #+#    #+#             */
-/*   Updated: 2023/12/18 21:05:35 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/05 11:52:08 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,23 +21,26 @@ int	exit_command(t_minishell *shell, char **cmd_args)
 {
 	int	exit_code;
 
-	(void)shell;
-	exit_code = 0;
+	exit_code = shell->last_exit_status;
 	free_shell(shell);
+	printf("exit\n");
 	if (cmd_args[1] == NULL)
-	{
-		printf("exit\n");
 		exit(exit_code);
-	}
-	else if (ft_isnumeric(cmd_args[1]) && cmd_args[2] == NULL)
+	else if (!ft_isnumeric(cmd_args[1]) || cmd_args[2])
 	{
-		exit_code = ft_atoi(cmd_args[1]);
-		printf("exit\n");
-		exit(exit_code);
+		if (!cmd_args[2])
+			printf("minishell: exit: %s: numeric argument required\n", cmd_args[1]);
+		else
+			printf("minishell: exit: too many arguments\n");
+		exit(2);
 	}
 	else
 	{
-		printf("minishell: exit %s: numeric argument required\n", cmd_args[1]);
-		return (1);
+		if (ft_strlen(cmd_args[1]) > 3)
+			exit(255);
+		exit_code = ft_atoi(cmd_args[1]);
+		if (exit_code > 255)
+			exit(255);
+		exit(exit_code);
 	}
 }

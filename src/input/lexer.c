@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:37:07 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/02 12:46:52 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/05 12:01:41 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ t_token	*build_command_token(char **input, int *i)
 	(*i)--;
 	return (new_token);
 }
-
+/*
 t_token	*build_file_token(char **input, int *i)
 {
 	char		*file;
@@ -84,7 +84,7 @@ t_token	*build_file_token(char **input, int *i)
 	free (file);
 	(*i)--;
 	return (new_token);
-}
+}*/
 
 int	build_token(t_token **tokens, char **input, int *i, int *is_file)
 {
@@ -94,7 +94,7 @@ int	build_token(t_token **tokens, char **input, int *i, int *is_file)
 	type = token_type(input[*i]);
 	if (*is_file)
 	{
-		status = add_token_back(tokens, build_file_token(input, i));
+		status = add_token_back(tokens, create_token(AST_FILE, input[*i]));
 		*is_file = 0;
 	}
 	else if (type == AST_COMMAND)
