@@ -6,25 +6,27 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/30 00:17:42 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/02 19:52:03 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# define MAX_PATH				260 //As a convention
+# define MAX_PATH				260
 # define SIGINT_NORMAL			0
 # define SIGINT_RECIVED			1
 # define SIGINT_COMMAND			2
 # define SIGINT_HD				3
 # define SIGINT_HD_RECIVED		4
+# define SIGINT_SUBSHELL		5
 
 # include "libft.h"
 # include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <sys/wait.h>
+# include <dirent.h>
 
 extern volatile sig_atomic_t	g_sigint_recived;
 
@@ -40,7 +42,18 @@ typedef enum t_type
 	AST_HEREDOC_DELIM,
 	AST_AND,
 	AST_OR,
+	AST_SUBSHELL_EX,
 }	t_type;
+
+typedef struct s_wildcard
+{
+	DIR				*dir;
+	struct dirent	*entry;
+	char			*pat;
+	char			*f_pat;
+	char			*dir_path;
+	char			**files;
+}	t_wildcard;
 
 typedef struct s_token
 {
@@ -59,7 +72,17 @@ typedef struct s_ast_node
 	struct s_ast_node	*left;
 	struct s_ast_node	*right;
 	struct s_ast_node	*next;
+	struct s_ast_node	*prev;
 }	t_ast_node;
+
+typedef struct s_tree
+{
+	t_ast_node	*root;
+	t_ast_node	*branch;
+	t_ast_node	*file;
+	t_ast_node	*red_in;
+	t_ast_node	*delim;
+}	t_tree;
 
 typedef struct s_minishell
 {
@@ -67,7 +90,8 @@ typedef struct s_minishell
 	char		**og_envp;
 	char		*executable_path;
 	int			pipes[2];
-	int			special_cat;
+	int			hd_pipes;
+	int			hd_pipes_read;
 	int			fd_read;
 	int			fd_write;
 	int			input_redirect;
@@ -101,8 +125,11 @@ void		add_cmd(t_ast_node **root, t_token *token);
 void		add_pipe(t_ast_node **root, t_token *token);
 void		add_red_out(t_ast_node **root, t_token *token, t_ast_node **file);
 void		add_red_in(t_ast_node **root, t_token *token, t_ast_node **file);
+void		add_hd(t_ast_node **root, t_token *token, t_ast_node **delim);
+void		add_sequence(t_tree *tree, t_token *token);
 void		free_ast(t_ast_node *node);
 int			add_ast_back(t_ast_node **head, t_ast_node *new_node);
+void		insert_redirection(t_ast_node **root, t_ast_node **redirect_in);
 
 //parsing
 t_token		*lexer(char **input);
@@ -125,14 +152,7 @@ int			is_valid(char *input, t_minishell *shell);
 void		execute_ast_command(t_minishell *shell, t_ast_node *node);
 void		execute_pipe_cmd(t_minishell *shell, t_ast_node *cmd_node);
 
-//execute utils
-void		create_list(t_minishell *shell, t_ast_node *cmd_node);
-void		wait_for_commands(pid_t last_pid);
-int			handle_dup(t_minishell *shell);
-void		close_fds(int *pipe_fds, int *fd_in);
-void		establish_fd(t_minishell *shell, t_ast_node *node, int *fd_in);
-void		single_cmd_process(t_minishell *shell, char **args, char *path);
-int			handle_signal(t_minishell *shell, char *value);
+//execute_utils
 int			handle_redirect(t_minishell *shell, t_ast_node *cmd_node);
 void		read_from_stdin(t_minishell *shell, const char *delim, int wr_fd);
 void		proccess_heredoc(t_minishell *shell, char *delimiter);
@@ -140,6 +160,18 @@ int			handle_fd(t_minishell *shell);
 void		select_exec(t_minishell *shell, char **command);
 void		increment_shlvl(t_minishell *shell);
 void		redirect_stdin(t_minishell *shell);
+void		single_cmd_process(t_minishell *shell, char **args, char *path);
+void		exec_subshell_ex(t_minishell *shell, char *sub_expr, int is_pipe);
+
+char		**handle_wildcards(char *value);
+void		establish_fd(t_minishell *shell, t_ast_node *node, int *fd_in);
+void		close_fds(int *pipe_fds, int *fd_in);
+int			handle_dup(t_minishell *shell);
+void		create_list(t_minishell *shell, t_ast_node *cmd_node);
+int			handle_signal(t_minishell *shell, char *value);
+void		execute_single_command(t_minishell *shell, char *value);
+void		execute_and_sequence(t_minishell *shell, t_ast_node *node);
+void		execute_heredoc(t_minishell*shell, t_ast_node *node);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //
@@ -168,6 +200,9 @@ int			exit_command(t_minishell *shell, char **cmd_args);
 void		setup_signal_handlers(void);
 void		handle_sigint(int sig);
 void		exit_status(t_minishell *shell, const char *msg, int status);
+void		handle_sigquit(int sig);
+void		ignore_sigquit(void);
+void		set_sigquit(void);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //
@@ -200,6 +235,7 @@ void		ft_strncpy(char *dst, const char *src, int n);
 void		init_minishell(t_minishell *shell, char **env);
 void		reset_minishell(t_minishell *shell);
 char		*ft_strndup(const char *src, int n);
+int			count_elem(char **array);
 
 ///////////////////////////////////////////////////////////////////////////////
 //																			 //
@@ -209,5 +245,18 @@ char		*ft_strndup(const char *src, int n);
 
 //minishell
 int			minishell(char **envp);
+
+///////////////////////////////////////////////////////////////////////////////
+//																			 //
+//									BONUS									 //
+//																			 //
+///////////////////////////////////////////////////////////////////////////////
+
+char		**expand_wildcards(char **args);
+char		**command(char **args, char **files);
+void		split_pattern(const char *pat, char **dir_path, char **file_pat);
+int			match_pattern(const char *filename, const char *pattern);
+int			cnt_files(char *pattern, char *dir_path);
+char		*concatenate_path(const char *dir_path, const char *filename);
 
 #endif
