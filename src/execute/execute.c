@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:11:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/05 18:59:52 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/06 09:10:40 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,8 @@ void	execute_single_command(t_minishell *shell, char *value)
 			free(path);
 		}
 	}
-	if (g_sigint_recived == SIGINT_RECIVED)
-		shell->last_exit_status = 130;
-	if (g_sigint_recived == SIGQUIT_COMMAND)
-		shell->last_exit_status = 131;
+	if (g_sigint_recived >= SIGINT_RECIVED)
+		shell->last_exit_status = SIGNAL_CODE + g_sigint_recived;
 	g_sigint_recived = SIGINT_NORMAL;
 	ft_free_arrays(args);
 }

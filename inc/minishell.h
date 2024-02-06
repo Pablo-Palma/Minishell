@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/05 19:00:00 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/06 10:07:43 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,13 @@
 
 # define MAX_PATH				260
 # define SIGINT_NORMAL			0
-# define SIGINT_RECIVED			1
-# define SIGINT_COMMAND			2
-# define SIGINT_HD				3
-# define SIGINT_HD_RECIVED		4
-# define SIGINT_SUBSHELL		5
-# define SIGQUIT_COMMAND		6
+# define SIGINT_COMMAND			1
+# define SIGINT_RECIVED			2
+# define SIGQUIT_COMMAND		3
+# define SIGINT_HD				4
+# define SIGINT_HD_RECIVED		5
+# define SIGINT_SUBSHELL		6
+# define SIGNAL_CODE			128
 
 # include "libft.h"
 # include <signal.h>

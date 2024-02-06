@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/05 18:11:54 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/06 10:07:02 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ pid_t	execute_command(t_minishell	*shell, char *value)
 
 pid_t	execute_multiple_cmd(t_minishell *shell, t_ast_node *cmd_node)
 {
-	g_sigint_recived = 2;
+	g_sigint_recived = SIGINT_COMMAND;
 	if (cmd_node->type == AST_REDIRECT_IN || cmd_node->type == AST_REDIRECT_OUT)
 	{
 		if (handle_redirect(shell, cmd_node) == -1)
