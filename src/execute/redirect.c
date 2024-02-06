@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/13 13:24:33 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/06 20:31:28 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/06 20:44:30 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ int	input_redirection(t_minishell *shell, t_ast_node *cmd_node)
 
 int	output_redirection(t_minishell *shell, t_ast_node *cmd_node)
 {
+	if (shell->output_redirect && shell->fd_write != STDOUT_FILENO)
+		close(shell->fd_write);
 	shell->fd_write = open(cmd_node->value,
 			O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (shell->fd_write == -1)

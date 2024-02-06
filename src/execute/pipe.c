@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/06 20:30:44 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/06 20:54:39 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ pid_t	execute_command(t_minishell	*shell, char *value)
 		execve(path, args, shell->envp);
 		handle_error ("Execve Error", 1, EXIT_FAILURE);
 	}
+	if (shell->output_redirect)
+		shell->output_redirect = 0;
 	if (shell->input_redirect)
 		close(shell->fd_read);
 	return (pid);
