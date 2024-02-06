@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 20:35:26 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/02 16:56:50 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/06 15:38:01 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,15 @@ void	add_red_out(t_ast_node **root, t_token *token, t_ast_node **file)
 	*file = NULL;
 	if (!node)
 		*root = redirect;
-	else if (node->type == AST_COMMAND)
+	else if (node->type == AST_COMMAND || node->type == AST_REDIRECT_OUT)
 	{
 		redirect->left = (*root);
 		(*root) = redirect;
 	}
 	else
 	{
-		while (node->left && node->left != AST_COMMAND)
+		while (node->left && node->left->type != AST_COMMAND
+			&& node->left->type != AST_REDIRECT_OUT)
 			node = node->left;
 		redirect->left = node->left;
 		node->left = redirect;

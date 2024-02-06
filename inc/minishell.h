@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/05 15:46:52 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/06 11:50:29 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ t_token		*get_last_token(t_token *token);
 t_type		token_type(char *value);
 int			add_token_back(t_token **head, t_token *new_token);
 void		free_tokens(t_token *token);
+void		sort_tokens(t_token **root);
 
 //ast
 t_ast_node	*create_ast_node(t_type type, char *value);
@@ -136,7 +137,7 @@ int			handle_input(t_minishell *shell, char *input);
 int			count_op(char *input, char *operators);
 void		handle_operators(char *input, char *p_input, char *operators);
 void		handle_envp(t_minishell *shell, t_token *node);
-void		switch_envp(t_minishell *shell, t_token *token, int i);
+void		switch_envp(t_minishell *shell, t_token *token, int *i, int *q);
 int			open_quotes(char *str);
 char		*strip_quotes(char *input);
 int			is_valid(char *input, t_minishell *shell);

@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 08:14:43 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/30 00:27:59 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/05 20:51:37 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,17 +36,9 @@ int	special_builtin(t_minishell *shell, char **cmd_args)
 
 int	handle_builtin(t_minishell *shell, char **cmd_args)
 {
-	char	*path;
-
-	path = "/bin/echo";
 	if (strncmp(cmd_args[0], "echo", 5) == 0)
 	{
-		if (cmd_args[1] && ft_strncmp(cmd_args[1], "$$", 3) == 0)
-			single_cmd_process(shell, cmd_args, path);
-		else if (cmd_args[1] && ft_strncmp(cmd_args[1], "$?", 3) == 0)
-			printf("%d\n", shell->last_exit_status);
-		else
-			echo_command(cmd_args);
+		echo_command(cmd_args);
 		return (1);
 	}
 	else if (strncmp(cmd_args[0], "pwd", 4) == 0)

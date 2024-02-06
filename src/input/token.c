@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 23:49:08 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/05 20:20:03 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/06 15:33:53 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,5 +61,45 @@ void	free_tokens(t_token *tokens)
 		free(tokens->value);
 		free(tokens);
 		tokens = next;
+	}
+}
+
+static int	is_type(t_token *token)
+{
+	if (token->type == AST_COMMAND)
+		return (0);
+	if (token->type == AST_PIPE)
+		return (0);
+	if (token->type == AST_AND)
+		return (0);
+	if (token->type == AST_OR)
+		return (0);
+	if (token->type == AST_SUBSHELL_EX)
+		return (0);
+	return (1);
+}
+
+void	sort_tokens(t_token **root)
+{
+	t_token	*token;
+
+	token = *root;
+	while (token)
+	{
+		if (token->type == AST_COMMAND && token->prev && is_type(token->prev))
+		{
+			if (token->next)
+				token->next->prev = token->prev;
+			if (token->prev)
+				token->prev->next = token->next;
+			if (token->prev && token->prev->prev)
+				token->prev->prev->next = token;
+			token->next = token->prev;
+			token->prev = token->next->prev;
+			if (token->next)
+				token->next->prev = token;
+		}
+		else
+			token = token->next;
 	}
 }
