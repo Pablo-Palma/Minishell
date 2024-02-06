@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/06 20:54:39 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/06 21:19:37 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,15 +51,11 @@ pid_t	execute_command(t_minishell	*shell, char *value)
 		path = get_path(args[0], my_getenv(shell->envp, "PATH"));
 		if (!path)
 			handle_error(args[0], 1, 127);
-		close(shell->pipes[0]);
 		signal(SIGQUIT, SIG_DFL);
 		execve(path, args, shell->envp);
 		handle_error ("Execve Error", 1, EXIT_FAILURE);
 	}
-	if (shell->output_redirect)
-		shell->output_redirect = 0;
-	if (shell->input_redirect)
-		close(shell->fd_read);
+	close_redirections(shell);
 	return (pid);
 }
 

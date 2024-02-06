@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/06 16:44:12 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/06 21:14:09 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,6 +168,7 @@ void		exec_subshell_ex(t_minishell *shell, char *sub_expr, int is_pipe);
 char		**handle_wildcards(char *value);
 void		establish_fd(t_minishell *shell, t_ast_node *node, int *fd_in);
 void		close_fds(int *pipe_fds, int *fd_in);
+void		close_redirections(t_minishell *shell);
 int			handle_dup(t_minishell *shell);
 void		create_list(t_minishell *shell, t_ast_node *cmd_node);
 int			handle_signal(t_minishell *shell, char *value);
