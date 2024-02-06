@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/06 10:07:02 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/06 16:36:40 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ pid_t	execute_command(t_minishell	*shell, char *value)
 	char	**args;
 	char	*path;
 
-	set_sigquit();
 	pid = fork();
 	if (pid == -1)
 		handle_error ("Fork Error", 1, EXIT_FAILURE);
@@ -53,6 +52,7 @@ pid_t	execute_command(t_minishell	*shell, char *value)
 		if (!path)
 			handle_error(args[0], 1, 127);
 		close(shell->pipes[0]);
+		signal(SIGQUIT, SIG_DFL);
 		execve(path, args, shell->envp);
 		handle_error ("Execve Error", 1, EXIT_FAILURE);
 	}
