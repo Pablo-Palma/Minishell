@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 10:54:15 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/30 10:56:47 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/05 18:58:56 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,10 @@ void	handle_sigquit(int sig)
 	(void)sig;
 	memset(&sa, 0, sizeof(sa));
 	if (g_sigint_recived == SIGINT_COMMAND)
+	{
 		write(1, "Quit: 3\n", 8);
+		g_sigint_recived = SIGQUIT_COMMAND;
+	}
 	else if (g_sigint_recived == SIGINT_HD)
 		ignore_sigquit();
 }

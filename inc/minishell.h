@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/02 19:52:03 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/05 19:00:00 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # define SIGINT_HD				3
 # define SIGINT_HD_RECIVED		4
 # define SIGINT_SUBSHELL		5
+# define SIGQUIT_COMMAND		6
 
 # include "libft.h"
 # include <signal.h>
