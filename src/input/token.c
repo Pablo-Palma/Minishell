@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 23:49:08 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/02 12:47:15 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/06 16:52:02 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 t_token	*create_token(t_type type, char *value)
 {
 	t_token	*new_token;
-	int		envvar;
 
 	new_token = malloc(sizeof(t_token));
 	if (!new_token)
@@ -23,18 +22,13 @@ t_token	*create_token(t_type type, char *value)
 	new_token->type = type;
 	new_token->next = NULL;
 	new_token->prev = NULL;
-	new_token->envvar = 0;
 	new_token->value = ft_strdup(value);
-	envvar = open_quotes(value);
-	if (envvar == -1)
+	if (open_quotes(value) == -1)
 	{
 		free(new_token->value);
 		free(new_token);
 		return (NULL);
 	}
-	if (type == AST_FILE)
-		return (new_token);
-	new_token->envvar = envvar;
 	return (new_token);
 }
 
@@ -67,5 +61,45 @@ void	free_tokens(t_token *tokens)
 		free(tokens->value);
 		free(tokens);
 		tokens = next;
+	}
+}
+
+static int	is_type(t_token *token)
+{
+	if (token->type == AST_COMMAND)
+		return (0);
+	if (token->type == AST_PIPE)
+		return (0);
+	if (token->type == AST_AND)
+		return (0);
+	if (token->type == AST_OR)
+		return (0);
+	if (token->type == AST_SUBSHELL_EX)
+		return (0);
+	return (1);
+}
+
+void	sort_tokens(t_token **root)
+{
+	t_token	*token;
+
+	token = *root;
+	while (token)
+	{
+		if (token->type == AST_COMMAND && token->prev && is_type(token->prev))
+		{
+			if (token->next)
+				token->next->prev = token->prev;
+			if (token->prev)
+				token->prev->next = token->next;
+			if (token->prev && token->prev->prev)
+				token->prev->prev->next = token;
+			token->next = token->prev;
+			token->prev = token->next->prev;
+			if (token->next)
+				token->next->prev = token;
+		}
+		else
+			token = token->next;
 	}
 }

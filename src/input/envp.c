@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 13:00:47 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/05 13:36:28 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/06 16:49:25 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,58 +36,65 @@ char	*ft_switch(t_minishell *shell, t_token *token, int i, int cnt)
 	return (value);
 }
 
-void	switch_envp(t_minishell *shell, t_token *token, int i)
+void	switch_envp(t_minishell *shell, t_token *token, int *i, int *quote)
 {
 	char	*new_value;
 	int		cnt;
 
-	cnt = i + 1;
+	cnt = *i + 1;
 	new_value = NULL;
 	if (token->type == AST_HEREDOC_DELIM)
 		return ;
 	if (!token->value[cnt] || ft_isspace(token->value[cnt]))
-		new_value = empty_env_switch(shell, token->value, i, i + 1);
-	while (token->value[cnt] && token->value[cnt] != ' '
-		&& token->value[cnt] != '\'' && token->value[cnt] != '\"')
-		cnt++;
+		new_value = empty_env_switch(shell, token->value, *i, cnt);
 	if (!token->value[1] || token->value[1] == '?' || token->value[1] == '$')
 		return ;
+	while (ft_isalpha(token->value[cnt]) || ft_isdigit(token->value[cnt]))
+		cnt++;
 	if (!new_value)
-		new_value = ft_switch(shell, token, i, cnt);
+		new_value = ft_switch(shell, token, *i, cnt);
 	if (!new_value)
-		new_value = empty_env_switch(shell, token->value, i, cnt);
+		new_value = empty_env_switch(shell, token->value, *i, cnt);
 	free(token->value);
 	token->value = new_value;
+	*i = -1;
+	*quote = 0;
 }
 
-void	echo_double(t_minishell *shell, t_token *token, int i)
+void	echo_double(t_minishell *shell, t_token *token, int *i, int *quote)
 {
 	char	*aux;
 
 	aux = token->value;
-	token->value = ft_double(shell, token->value, i);
+	token->value = ft_double(shell, token->value, *i);
+	*i = -1;
+	*quote = 0;
 	free(aux);
 }
 
 void	handle_envp(t_minishell *shell, t_token *node)
 {
 	t_token	*token;
+	int		quote;
 	int		i;
 
 	token = node;
 	while (token)
 	{
-		if (token->envvar)
+		quote = 0;
+		i = -1;
+		while (token->type != AST_FILE && token->value[++i])
 		{
-			i = 0;
-			while (ft_strchr(token->value, '$'))
+			if (!quote && (token->value[i] == '\'' || token->value[i] == '\"'))
+				quote = token->value[i];
+			else if (token->value[i] == quote)
+				quote = 0;
+			if (quote != '\'' && token->value[i] == '$')
 			{
-				while (token->value[i] != '$')
-					i++;
 				if (token->value[i + 1] == '$' || token->value[i + 1] == '?')
-					echo_double(shell, token, i);
+					echo_double(shell, token, &i, &quote);
 				else
-					switch_envp(shell, token, i);
+					switch_envp(shell, token, &i, &quote);
 			}
 		}
 		token = token->next;
