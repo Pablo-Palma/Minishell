@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 20:46:20 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/02 09:28:22 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/07 19:01:28 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ void	init_minishell(t_minishell *shell, char **envp)
 
 void	reset_minishell(t_minishell *shell)
 {
+	if (shell->fd_read != 0)
+		close(shell->fd_read);
 	shell->fd_read = 0;
 	shell->fd_write = 1;
 	shell->input_redirect = 0;
