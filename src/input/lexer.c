@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:37:07 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/06 18:58:19 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/07 12:44:41 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ int	build_token(t_token **tokens, char **input, int *i, int *is_file)
 	type = token_type(input[*i]);
 	if (*is_file)
 	{
+		if (ft_strchr("|<>&", *input[*i]) != NULL)
+			return (-1);
 		status = add_token_back(tokens, create_token(AST_FILE, input[*i]));
 		*is_file = 0;
 	}
@@ -128,6 +130,7 @@ t_token	*lexer(char **input)
 	{
 		if (build_token(&tokens, input, &i, &is_file) == -1)
 		{
+			printf("msl: syntax error near unexpected token '%s'\n", input[i]);
 			free_tokens(tokens);
 			ft_free_arrays(input);
 			return (NULL);
