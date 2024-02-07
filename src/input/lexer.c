@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:37:07 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/07 13:05:30 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/07 14:47:26 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	build_token(t_token **tokens, char **input, int *i, int *is_file)
 	type = token_type(input[*i]);
 	if (*is_file)
 	{
-		if (ft_strchr("|<>&", *input[*i]) != NULL)
+		if (ft_strchr("|<>&()", *input[*i]) != NULL)
 			return (-1);
 		status = add_token_back(tokens, create_token(AST_FILE, input[*i]));
 		*is_file = 0;
