@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 23:49:08 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/07 13:14:51 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/07 14:24:56 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ void	sort_tokens(t_token **root)
 			token = token->next;
 	}
 	token = *root;
-	while (token->prev)
+	while (token && token->prev)
 		token = token->prev;
 	*root = token;
 }
