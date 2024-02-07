@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:11:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/06 16:46:53 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/07 11:47:53 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	execute_input_redirect(t_minishell *shell, t_ast_node *node)
 	pid = fork();
 	if (!pid)
 	{
-		fd_in = open(node->right->value, O_RDONLY);
+		fd_in = open(node->right->value, O_RDONLY, 0777);
 		if (fd_in == -1)
 			handle_error("Read Error", 1, EXIT_FAILURE);
 		dup2(fd_in, STDIN_FILENO);
