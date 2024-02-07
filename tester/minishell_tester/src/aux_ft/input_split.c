@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 18:27:38 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/02 22:08:31 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/07 13:12:37 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ char	**split_input(const char *cmd, const char *delimiters)
 	i = 0;
 	arg_count = count_args(cmd, delimiters);
 	if (arg_count == -1)
-		return (NULL);
+		return (printf("msh: syntax error: open brackets\n"), NULL);
 	args = (char **)malloc(sizeof(char *) * (arg_count + 1));
 	if (!args)
 		return (NULL);

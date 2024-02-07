@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 13:32:58 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/02 12:50:48 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/07 13:12:59 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,13 @@ static void	build_tree(t_tree *tree, t_token *token)
 		add_red_out(&tree->branch, token, &tree->file);
 	else if (token->type == AST_COMMAND || token->type == AST_SUBSHELL_EX)
 		add_cmd(&tree->branch, token);
-	else
+	else if (token->type == AST_AND || token->type == AST_OR)
 		add_sequence(tree, token);
+	else
+	{
+		if (tree->file)
+			free_ast(tree->file);
+	}
 }
 
 t_ast_node	*build_ast(t_token *tokens)
@@ -75,6 +80,10 @@ t_ast_node	*build_ast(t_token *tokens)
 	set_tree(&tree);
 	while (token_iter)
 	{
+		if (token_iter->type == AST_PIPE && (!token_iter->next
+				|| token_iter->next->type == AST_AND
+				|| token_iter->next->type == AST_OR))
+			return (NULL);
 		build_tree(&tree, token_iter);
 		token_iter = token_iter->prev;
 	}

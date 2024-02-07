@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 00:28:50 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/02 17:48:20 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/07 13:21:27 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,16 @@ void	add_pipe(t_ast_node **root, t_token *token)
 
 void	execute_heredoc(t_minishell*shell, t_ast_node *node)
 {
-	if (!node->right || !node->left)
+	if (!node->right)
+	{
+		printf("msh: syntax error: no delimiter for here_doc\n");
 		return ;
+	}
+	if (!node->left)
+	{
+		printf("msh: syntax error: no command for here_doc\n");
+		return ;
+	}
 	proccess_heredoc(shell, node->right->value);
 	if (shell->hd_pipes != 1)
 		execute_ast_command(shell, node->left);

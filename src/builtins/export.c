@@ -6,18 +6,29 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 11:24:43 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/20 14:07:12 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/07 16:52:42 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//1.	Si añadimos una nueva variable shell.envp se sustituye por
-//una nueva matriz asignada dinamicamente con malloc, pero hay que checkear 
-//que no genere leaks.
-//y ver el entorno shell->envp que se recibe en el main como se almacena.
-//2.	falta controlar casos especiales como que se exporte una variable vacía
-//o que la forma de exportar la variable o cumpla con las convenciones...
+int	is_valid_varname(const char *name)
+{
+	int	equal;
+
+	equal = 0;
+	if (!name || !*name || (!ft_isalpha(*name) && *name != '_'))
+		return (0);
+	while (*name)
+	{
+		if (*name == '=')
+			equal = 1;
+		if (!ft_isalnum(*name) && *name != '=' && *name != '_')
+			return (0);
+		name++;
+	}
+	return (equal);
+}
 
 int	process_export(t_minishell *shell, const char *arg)
 {
@@ -25,16 +36,18 @@ int	process_export(t_minishell *shell, const char *arg)
 	int			status;
 
 	status = 0;
+	if (!is_valid_varname(arg))
+		return (printf("msh: %s Invalid export argument\n", arg), -1);
 	tokens = ft_split(arg, '=');
 	if (tokens == NULL)
 	{
-		perror("Errorn en split_cmd");
+		perror("Error en split_cmd");
 		return (-1);
 	}
 	if (tokens[0])
 	{
 		unset_command(shell, tokens);
-		if (tokens[1])
+		if (arg)
 			add_var_envp(&(shell->envp), arg);
 		else
 		{
