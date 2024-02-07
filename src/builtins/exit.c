@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 10:49:42 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/06 16:53:06 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/07 08:02:28 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,14 @@ int	exit_command(t_minishell *shell, char **cmd_args)
 				cmd_args[1]);
 		else
 			printf("minishell: exit: too many arguments\n");
-		exit(2);
+		exit(255);
 	}
 	else
 	{
-		if (ft_strlen(cmd_args[1]) > 3)
+		if (ft_strlen(cmd_args[1]) > 18)
 			exit(255);
-		exit_code = ft_atoi(cmd_args[1]);
-		if (exit_code > 255)
-			exit(255);
-		exit(exit_code);
+		else if (cmd_args[1])
+			exit_code = ft_atoi(cmd_args[1]);
+		exit(exit_code % 256);
 	}
 }

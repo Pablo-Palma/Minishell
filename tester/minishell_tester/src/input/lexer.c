@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:37:07 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/05 13:45:54 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/06 18:58:19 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,35 +58,6 @@ t_token	*build_command_token(char **input, int *i)
 	return (new_token);
 }
 
-t_token	*build_file_token(char **input, int *i)
-{
-	char		*file;
-	char		*temp;
-	t_token		*new_token;
-
-	file = ft_strdup(input[*i]);
-	(*i)++;
-	while (input[*i] && (ft_strchr(input[*i], '\"')
-			|| ft_strchr(input[*i], '\'')))
-	{
-		temp = file;
-		file = ft_strjoin(file, " ");
-		if (!file)
-			return (NULL);
-		free(temp);
-		temp = file;
-		file = ft_strjoin(file, input[*i]);
-		if (!file)
-			return (NULL);
-		free(temp);
-		(*i)++;
-	}
-	new_token = create_token(AST_FILE, file);
-	free (file);
-	(*i)--;
-	return (new_token);
-}
-
 int	build_token(t_token **tokens, char **input, int *i, int *is_file)
 {
 	t_type	type;
@@ -95,7 +66,7 @@ int	build_token(t_token **tokens, char **input, int *i, int *is_file)
 	type = token_type(input[*i]);
 	if (*is_file)
 	{
-		status = add_token_back(tokens, build_file_token(input, i));
+		status = add_token_back(tokens, create_token(AST_FILE, input[*i]));
 		*is_file = 0;
 	}
 	else if (type == AST_COMMAND)
@@ -113,15 +84,44 @@ int	build_token(t_token **tokens, char **input, int *i, int *is_file)
 	return (status);
 }
 
+void	build_collapsed_token(t_token **root, t_token *token)
+{
+	char	*value;
+	char	*temp;
+
+	while (token)
+	{
+		if (token->type == AST_COMMAND)
+		{
+			value = ft_strdup(token->value);
+			while (token->next && token->next->type == AST_COMMAND)
+			{
+				temp = ft_strjoin(value, " ");
+				free(value);
+				value = ft_strjoin(temp, token->next->value);
+				free(temp);
+				token = token->next;
+			}
+			add_token_back(root, create_token(AST_COMMAND, value));
+			free(value);
+		}
+		else
+			add_token_back(root, create_token(token->type, token->value));
+		token = token->next;
+	}
+}
+
 t_token	*lexer(char **input)
 {
 	t_token	*tokens;
+	t_token	*collapsed_tokens;
 	int		i;
 	int		is_file;
 
 	i = -1;
 	is_file = 0;
 	tokens = NULL;
+	collapsed_tokens = NULL;
 	if (!input)
 		return (NULL);
 	while (input[++i])
@@ -133,6 +133,8 @@ t_token	*lexer(char **input)
 			return (NULL);
 		}
 	}
-	ft_free_arrays(input);
-	return (tokens);
+	sort_tokens(&tokens);
+	build_collapsed_token(&collapsed_tokens, tokens);
+	free_tokens(tokens);
+	return (collapsed_tokens);
 }

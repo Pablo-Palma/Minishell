@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/02 19:52:03 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/06 21:14:09 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,13 @@
 
 # define MAX_PATH				260
 # define SIGINT_NORMAL			0
-# define SIGINT_RECIVED			1
-# define SIGINT_COMMAND			2
-# define SIGINT_HD				3
-# define SIGINT_HD_RECIVED		4
-# define SIGINT_SUBSHELL		5
+# define SIGINT_COMMAND			1
+# define SIGINT_RECIVED			2
+# define SIGQUIT_COMMAND		3
+# define SIGINT_HD				4
+# define SIGINT_HD_RECIVED		5
+# define SIGINT_SUBSHELL		6
+# define SIGNAL_CODE			128
 
 # include "libft.h"
 # include <signal.h>
@@ -59,7 +61,6 @@ typedef struct s_token
 {
 	t_type			type;
 	char			*value;
-	int				envvar;
 	struct s_token	*next;
 	struct s_token	*prev;
 }					t_token;
@@ -117,6 +118,7 @@ t_token		*get_last_token(t_token *token);
 t_type		token_type(char *value);
 int			add_token_back(t_token **head, t_token *new_token);
 void		free_tokens(t_token *token);
+void		sort_tokens(t_token **root);
 
 //ast
 t_ast_node	*create_ast_node(t_type type, char *value);
@@ -137,7 +139,7 @@ int			handle_input(t_minishell *shell, char *input);
 int			count_op(char *input, char *operators);
 void		handle_operators(char *input, char *p_input, char *operators);
 void		handle_envp(t_minishell *shell, t_token *node);
-void		switch_envp(t_minishell *shell, t_token *token, int i);
+void		switch_envp(t_minishell *shell, t_token *token, int *i, int *q);
 int			open_quotes(char *str);
 char		*strip_quotes(char *input);
 int			is_valid(char *input, t_minishell *shell);
@@ -166,6 +168,7 @@ void		exec_subshell_ex(t_minishell *shell, char *sub_expr, int is_pipe);
 char		**handle_wildcards(char *value);
 void		establish_fd(t_minishell *shell, t_ast_node *node, int *fd_in);
 void		close_fds(int *pipe_fds, int *fd_in);
+void		close_redirections(t_minishell *shell);
 int			handle_dup(t_minishell *shell);
 void		create_list(t_minishell *shell, t_ast_node *cmd_node);
 int			handle_signal(t_minishell *shell, char *value);

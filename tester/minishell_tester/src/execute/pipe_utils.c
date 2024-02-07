@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 00:34:02 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/02 09:57:33 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/06 21:15:41 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ int	handle_dup(t_minishell *shell)
 			return (-1);
 		close(shell->fd_read);
 	}
+	close(shell->pipes[0]);
 	if (shell->fd_write != STDOUT_FILENO)
 	{
 		if (dup2(shell->fd_write, STDOUT_FILENO) == -1)

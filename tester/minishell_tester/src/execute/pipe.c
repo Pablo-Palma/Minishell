@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 03:00:42 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/05 18:11:54 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/06 21:19:37 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ pid_t	execute_command(t_minishell	*shell, char *value)
 	char	**args;
 	char	*path;
 
-	set_sigquit();
 	pid = fork();
 	if (pid == -1)
 		handle_error ("Fork Error", 1, EXIT_FAILURE);
@@ -52,16 +51,17 @@ pid_t	execute_command(t_minishell	*shell, char *value)
 		path = get_path(args[0], my_getenv(shell->envp, "PATH"));
 		if (!path)
 			handle_error(args[0], 1, 127);
-		close(shell->pipes[0]);
+		signal(SIGQUIT, SIG_DFL);
 		execve(path, args, shell->envp);
 		handle_error ("Execve Error", 1, EXIT_FAILURE);
 	}
+	close_redirections(shell);
 	return (pid);
 }
 
 pid_t	execute_multiple_cmd(t_minishell *shell, t_ast_node *cmd_node)
 {
-	g_sigint_recived = 2;
+	g_sigint_recived = SIGINT_COMMAND;
 	if (cmd_node->type == AST_REDIRECT_IN || cmd_node->type == AST_REDIRECT_OUT)
 	{
 		if (handle_redirect(shell, cmd_node) == -1)
