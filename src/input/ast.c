@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 13:32:58 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/07 12:02:47 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/07 13:12:59 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,7 @@ static void	build_tree(t_tree *tree, t_token *token)
 	else
 	{
 		if (tree->file)
-		{
-			free(tree->file->value);
-			free(tree->file);
-		}
+			free_ast(tree->file);
 	}
 }
 

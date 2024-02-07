@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:11:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/07 11:47:53 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/07 13:16:42 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	execute_output_redirect(t_minishell *shell, t_ast_node *node)
 	int		fd_out;
 
 	if (!node->right)
-		return (-1);
+		return (printf("msh: syntax error: no redirection file\n"), -1);
 	node->right->value = strip_quotes(node->right->value);
 	pid = fork();
 	if (!pid)
@@ -76,7 +76,7 @@ int	execute_input_redirect(t_minishell *shell, t_ast_node *node)
 	int		fd_in;
 
 	if (!node->right)
-		return (-1);
+		return (printf("msh: syntax error: no redirection file\n"), -1);
 	node->right->value = strip_quotes(node->right->value);
 	pid = fork();
 	if (!pid)
