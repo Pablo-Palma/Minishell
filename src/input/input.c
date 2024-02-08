@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 22:53:13 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/06 16:49:58 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/08 09:56:19 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ void	handle_operators(char *input, char *p_input, char *operators)
 int	handle_input(t_minishell *shell, char *input)
 {
 	t_token		*tokens;
-	t_ast_node	*ast;
 	char		*p_input;
 
 	p_input = ft_calloc(1, ft_strlen(input) + count_op(input, "<>|&") * 2 + 1);
@@ -83,15 +82,12 @@ int	handle_input(t_minishell *shell, char *input)
 	handle_envp(shell, tokens);
 	if (!tokens)
 		return (-1);
-	ast = build_ast(tokens);
-	if (!ast)
-	{
-		free_tokens(tokens);
-		return (-1);
-	}
-	execute_ast_command(shell, ast);
-	free_ast(ast);
+	shell->ast = build_ast(tokens);
 	free_tokens(tokens);
+	if (!shell->ast)
+		return (-1);
+	execute_ast_command(shell, shell->ast);
+	free_ast(shell->ast);
 	reset_minishell(shell);
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 13:27:25 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/02 12:37:37 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/08 09:42:59 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,12 +79,13 @@ int	add_ast_back(t_ast_node **head, t_ast_node *new_node)
 	return (1);
 }
 
-void	free_ast(t_ast_node *node)
+t_ast_node	*free_ast(t_ast_node *node)
 {
 	if (!node)
-		return ;
+		return (NULL);
 	free_ast(node->left);
 	free_ast(node->right);
 	free(node->value);
 	free(node);
+	return (NULL);
 }

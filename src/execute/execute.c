@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:11:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/07 13:16:42 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/08 10:05:04 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int	execute_input_redirect(t_minishell *shell, t_ast_node *node)
 			handle_error("Read Error", 1, EXIT_FAILURE);
 		dup2(fd_in, STDIN_FILENO);
 		if (node->left)
-			execute_single_command(shell, node->left->value);
+			execute_ast_command(shell, node->left);
 		close(fd_in);
 		exit(0);
 	}

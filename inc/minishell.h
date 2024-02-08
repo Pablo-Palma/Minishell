@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/07 13:09:50 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/08 09:42:44 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ void		add_red_out(t_ast_node **root, t_token *token, t_ast_node **file);
 void		add_red_in(t_ast_node **root, t_token *token, t_ast_node **file);
 void		add_hd(t_ast_node **root, t_token *token, t_ast_node **delim);
 void		add_sequence(t_tree *tree, t_token *token);
-void		free_ast(t_ast_node *node);
+t_ast_node	*free_ast(t_ast_node *node);
 int			add_ast_back(t_ast_node **head, t_ast_node *new_node);
 void		insert_redirection(t_ast_node **root, t_ast_node **redirect_in);
 
