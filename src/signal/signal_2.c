@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 10:54:15 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/02/06 10:07:25 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/08 12:24:00 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	handle_sigquit(int sig)
 	struct sigaction	sa;
 
 	(void)sig;
-	memset(&sa, 0, sizeof(sa));
+	ft_memset(&sa, 0, sizeof(sa));
 	if (g_sigint_recived == SIGINT_COMMAND)
 	{
 		write(1, "Quit: 3\n", 8);
