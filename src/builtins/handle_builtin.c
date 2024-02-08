@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 08:14:43 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/06 16:53:30 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/08 07:55:58 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	special_builtin(t_minishell *shell, char **cmd_args)
 
 int	handle_builtin(t_minishell *shell, char **cmd_args)
 {
-	if (strncmp(cmd_args[0], "echo", 5) == 0)
+	if (ft_strncmp(cmd_args[0], "echo", 5) == 0)
 	{
 		echo_command(cmd_args);
 		return (1);
