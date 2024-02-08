@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:21:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/30 10:59:04 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/08 12:04:24 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ int	minishell(char **envp)
 		if (!input)
 		{
 			free_shell(&shell);
-			free(input);
 			break ;
 		}
 		if (*input)
