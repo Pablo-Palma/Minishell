@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 20:46:20 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/08 09:53:15 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/08 11:20:48 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,6 @@ void	free_shell(t_minishell *shell)
 		free(shell->input_line);
 	if (shell->envp)
 		free_env(&(shell->envp));
-	if (shell->executable_path)
-		free(shell->executable_path);
 	free_ast(shell->ast);
 }
 
