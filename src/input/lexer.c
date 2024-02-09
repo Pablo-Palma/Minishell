@@ -6,27 +6,12 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:37:07 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/24 10:03:19 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/08 09:33:20 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
-int	is_valid(char *input, t_minishell *shell)
-{
-	while (*input && (!isascii(*input) || (*input == 39 || *input == 34
-				|| *input == '<' || *input == '>' || *input == '?'
-				|| *input == '/' || *input == '!')))
-		input++;
-	if (*input == '\0')
-	{
-		printf("minishell: command not found\n");
-		shell->last_exit_status = 127;
-		return (0);
-	}
-	return (1);
-}*/
 int	build_heredoc(char **input, int *i, t_token **tokens)
 {
 	if (add_token_back(tokens, create_token(AST_HEREDOC, input[*i])) == -1)
@@ -73,34 +58,6 @@ t_token	*build_command_token(char **input, int *i)
 	return (new_token);
 }
 
-t_token	*build_file_token(char **input, int *i)
-{
-	char		*file;
-	char		*temp;
-	t_token		*new_token;
-
-	file = ft_strdup(input[*i]);
-	(*i)++;
-	while (input[*i] && (strchr(input[*i], '\"') || strchr(input[*i], '\'')))
-	{
-		temp = file;
-		file = ft_strjoin(file, " ");
-		if (!file)
-			return (NULL);
-		free(temp);
-		temp = file;
-		file = ft_strjoin(file, input[*i]);
-		if (!file)
-			return (NULL);
-		free(temp);
-		(*i)++;
-	}
-	new_token = create_token(AST_FILE, file);
-	free (file);
-	(*i)--;
-	return (new_token);
-}
-
 int	build_token(t_token **tokens, char **input, int *i, int *is_file)
 {
 	t_type	type;
@@ -109,40 +66,79 @@ int	build_token(t_token **tokens, char **input, int *i, int *is_file)
 	type = token_type(input[*i]);
 	if (*is_file)
 	{
-		status = add_token_back(tokens, build_file_token(input, i));
+		if (ft_strchr("|<>&()", *input[*i]) != NULL)
+			return (-1);
+		status = add_token_back(tokens, create_token(AST_FILE, input[*i]));
 		*is_file = 0;
 	}
 	else if (type == AST_COMMAND)
 		status = add_token_back(tokens, build_command_token(input, i));
 	else if (type == AST_HEREDOC)
 		status = build_heredoc(input, i, tokens);
+	else if (type == AST_SUBSHELL_EX)
+		status = add_token_back(tokens, create_token(type, input[*i]));
 	else
 	{
-		if (type != AST_PIPE)
+		if (type == AST_REDIRECT_IN || type == AST_REDIRECT_OUT)
 			*is_file = 1;
 		status = add_token_back(tokens, create_token(type, input[*i]));
 	}
 	return (status);
 }
 
+void	build_collapsed_token(t_token **root, t_token *token)
+{
+	char	*value;
+	char	*temp;
+
+	while (token)
+	{
+		if (token->type == AST_COMMAND)
+		{
+			value = ft_strdup(token->value);
+			while (token->next && token->next->type == AST_COMMAND)
+			{
+				temp = ft_strjoin(value, " ");
+				free(value);
+				value = ft_strjoin(temp, token->next->value);
+				free(temp);
+				token = token->next;
+			}
+			add_token_back(root, create_token(AST_COMMAND, value));
+			free(value);
+		}
+		else
+			add_token_back(root, create_token(token->type, token->value));
+		token = token->next;
+	}
+	token = *root;
+}
+
 t_token	*lexer(char **input)
 {
 	t_token	*tokens;
+	t_token	*collapsed_tokens;
 	int		i;
 	int		is_file;
 
 	i = -1;
 	is_file = 0;
 	tokens = NULL;
+	collapsed_tokens = NULL;
+	if (!input)
+		return (NULL);
 	while (input[++i])
 	{
 		if (build_token(&tokens, input, &i, &is_file) == -1)
 		{
+			printf("msh: syntax error near unexpected token '%s'\n", input[i]);
 			free_tokens(tokens);
-			ft_free_arrays(input);
-			return (NULL);
+			return (ft_free_arrays(input), NULL);
 		}
 	}
 	ft_free_arrays(input);
-	return (tokens);
+	sort_tokens(&tokens);
+	build_collapsed_token(&collapsed_tokens, tokens);
+	free_tokens(tokens);
+	return (collapsed_tokens);
 }

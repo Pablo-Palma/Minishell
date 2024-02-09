@@ -6,13 +6,13 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 22:53:13 by jbaeza-c          #+#    #+#             */
-/*   Updated: 2024/01/26 22:01:09 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/08 09:56:19 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	count_operators(char *input)
+int	count_op(char *input, char *operators)
 {
 	int	flag;
 	int	counter;
@@ -28,28 +28,26 @@ int	count_operators(char *input)
 		if (input[i] == last_quote)
 			last_quote = 0;
 		if (!last_quote && (input[i] == 34 || input[i] == 39))
-			last_quote = input[i]; 
-		if ((input[i] == '>' || input[i] == '<' || input[i] == '|')
+			last_quote = input[i];
+		if (ft_strchr(operators, input[i])
 			&& !last_quote && !flag)
 		{
 			counter++;
 			flag++;
 		}
-		else if (input[i] != '>' && input[i] != '<')
+		else if (!ft_strchr(operators, input[i]))
 			flag = 0;
 	}
 	return (counter);
 }
 
-char	*handle_operators(char *input)
+void	handle_operators(char *input, char *p_input, char *operators)
 {
-	char	*parsed_input;
 	int		i;
 	int		j;
 	int		f;
 	int		last_quote;
 
-	parsed_input = calloc(1, ft_strlen(input) + count_operators(input) * 2 + 1);
 	i = 0;
 	j = 0;
 	f = 0;
@@ -60,96 +58,36 @@ char	*handle_operators(char *input)
 			last_quote = 0;
 		if (!last_quote && (input[i] == 34 || input[i] == 39))
 			last_quote = input[i];
-		if ((input[i] == '>' || input[i] == '<' || input[i] == '|') && !f && !last_quote)
+		if ((ft_strchr(operators, input[i]) && !f && !last_quote)
+			|| (!ft_strchr(operators, input[i]) && f))
 		{
-			parsed_input[j++] = ' ';
-			f++;
+			p_input[j++] = ' ';
+			f = 1;
+			if (!ft_strchr(operators, input[i]))
+				f = 0;
 		}
-		else if (!(input[i] == '>' || input[i] == '<' || input[i] == '|') && f && !last_quote)
-		{
-			parsed_input[j++] = ' ';
-			f = 0;
-		}
-		parsed_input[j++] = input[i++];
+		p_input[j++] = input[i++];
 	}
-	parsed_input[j] = 0;
-	return (parsed_input);
-}
-
-int	open_quotes(char *str)
-{
-	int		i;
-	int		envvar;
-	char	last_quote;
-
-	i = -1;
-	last_quote = 0;
-	envvar = 1;
-	while (str[++i])
-	{
-		if (last_quote == 39 && str[i] == '$')
-			envvar = 0;
-		if ((str[i] == 39 || str[i] == 34) && last_quote == 0)
-			last_quote = str[i];
-		else if (str[i] == last_quote)
-			last_quote = 0;
-	}
-	if (last_quote)
-		return (-1);
-	return (envvar);
-}
-
-int	handle_doc(t_minishell *shell, t_token *tokens)
-{
-	t_token	*current_token;
-	t_token	*delimiter_token;
-
-	current_token = tokens;
-	while (current_token != NULL)
-	{
-		if (current_token->type == AST_HEREDOC)
-		{
-			if (!current_token->next)
-			{
-				free_tokens(tokens);
-				return (1);
-			}
-			delimiter_token = current_token->next;
-			if (delimiter_token && delimiter_token->type == AST_HEREDOC_DELIM)
-			{
-				if (g_sigint_recived == SIGINT_HD_RECIVED)
-					return (1);
-				proccess_heredoc(shell, delimiter_token->value);
-			}
-		}
-		current_token = current_token->next;
-	}
-	return (0);
 }
 
 int	handle_input(t_minishell *shell, char *input)
 {
 	t_token		*tokens;
-	t_ast_node	*ast;
-	char		*parsed_input;
+	char		*p_input;
 
-	parsed_input = handle_operators(input);
-	tokens = lexer(split_input(parsed_input, " "));
-	free(parsed_input);
+	p_input = ft_calloc(1, ft_strlen(input) + count_op(input, "<>|&") * 2 + 1);
+	handle_operators(input, p_input, "<>|&");
+	tokens = lexer(split_input(p_input, " "));
+	free(p_input);
+	handle_envp(shell, tokens);
 	if (!tokens)
 		return (-1);
-	handle_envp(shell, tokens);
-	if (handle_doc(shell, tokens))
-		return (1);
-	ast = build_ast(tokens);
-	if (!ast)
-	{
-		free_tokens(tokens);
-		return (-1);
-	}
-	execute_ast_command(shell, ast);
-	free_ast(ast);
+	shell->ast = build_ast(tokens);
 	free_tokens(tokens);
+	if (!shell->ast)
+		return (-1);
+	execute_ast_command(shell, shell->ast);
+	free_ast(shell->ast);
 	reset_minishell(shell);
 	return (1);
 }

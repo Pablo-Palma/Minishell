@@ -6,16 +6,18 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:28:52 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/23 00:41:03 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/08 11:54:38 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-/*void leaks()
+/*
+void	leaks(void)
 {
 	system("leaks -q minishell");
-}*/
+}
+*/
 
 int	main(int argc, char **argv, char **envp)
 {

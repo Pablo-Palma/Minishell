@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:21:06 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/24 17:20:36 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/08 12:04:24 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,16 @@ int	minishell(char **envp)
 	char		*input;
 
 	init_minishell(&shell, envp);
-	setup_signal_handlers();
 	while (1)
 	{
+		setup_signal_handlers();
+		ignore_sigquit();
 		input = readline("minishell> ");
 		if (g_sigint_recived)
 			g_sigint_recived = SIGINT_NORMAL;
 		if (!input)
 		{
 			free_shell(&shell);
-			free(input);
 			break ;
 		}
 		if (*input)
@@ -37,6 +37,5 @@ int	minishell(char **envp)
 		}
 		free(input);
 	}
-	printf("exit\n");
 	return (0);
 }

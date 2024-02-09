@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 20:46:20 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/23 00:22:21 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/08 11:20:48 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,10 @@ void	handle_error(const char *msg, int use_perror, int error_code)
 void	free_shell(t_minishell *shell)
 {
 	if (shell->input_line)
-	{
 		free(shell->input_line);
-		shell->input_line = NULL;
-	}
-	if (shell)
-	{
-		if (shell->envp)
-			free_env(&(shell->envp));
-	}
+	if (shell->envp)
+		free_env(&(shell->envp));
+	free_ast(shell->ast);
 }
 
 void	copy_envp(t_minishell *shell, char **envp)
@@ -69,14 +64,18 @@ void	init_minishell(t_minishell *shell, char **envp)
 	shell->output_redirect = 0;
 	shell->input_line = NULL;
 	shell->ast = NULL;
+	shell->pipe_list = NULL;
 	shell->last_cmd = 0;
-	shell->nb_pipes = 0;
+	shell->hd_pipes = 0;
+	shell->hd_pipes_read = 0;
 	shell->last_exit_status = 0;
 	shell->shell_pid = 0;
 }
 
 void	reset_minishell(t_minishell *shell)
 {
+	if (shell->fd_read != 0)
+		close(shell->fd_read);
 	shell->fd_read = 0;
 	shell->fd_write = 1;
 	shell->input_redirect = 0;

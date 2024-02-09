@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 13:27:25 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/01/24 09:55:36 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/08 09:42:59 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ t_ast_node	*create_ast_node(t_type type, char *value)
 	node->value = ft_strdup(value);
 	node->left = NULL;
 	node->right = NULL;
+	node->next = NULL;
 	return (node);
 }
 
@@ -55,25 +56,36 @@ int	add_token_back(t_token **head, t_token *new_token)
 	return (1);
 }
 
-void	free_tokens(t_token *tokens)
+int	add_ast_back(t_ast_node **head, t_ast_node *new_node)
 {
-	t_token	*next;
+	t_ast_node	*last;
 
-	while (tokens)
+	new_node->next = NULL;
+	if (!head || !new_node)
+		return (-1);
+	if (*head == NULL)
 	{
-		next = tokens->next;
-		free(tokens->value);
-		free(tokens);
-		tokens = next;
+		new_node->prev = NULL;
+		*head = new_node;
 	}
+	else
+	{
+		last = *head;
+		while (last->next)
+			last = last->next;
+		last->next = new_node;
+		new_node->prev = last;
+	}
+	return (1);
 }
 
-void	free_ast(t_ast_node *node)
+t_ast_node	*free_ast(t_ast_node *node)
 {
 	if (!node)
-		return ;
+		return (NULL);
 	free_ast(node->left);
 	free_ast(node->right);
 	free(node->value);
 	free(node);
+	return (NULL);
 }
