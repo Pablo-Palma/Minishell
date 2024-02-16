@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:54:15 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/08 09:42:44 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/08 13:49:24 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,8 @@ t_token		*get_last_token(t_token *token);
 t_type		token_type(char *value);
 int			add_token_back(t_token **head, t_token *new_token);
 void		free_tokens(t_token *token);
-void		sort_tokens(t_token **root);
+t_token		*sort_tokens(t_token **root);
+t_token		*check_pipes(t_token **root);
 
 //ast
 t_ast_node	*create_ast_node(t_type type, char *value);

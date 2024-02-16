@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:37:07 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/07 14:47:26 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/08 09:33:20 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,7 @@ void	build_collapsed_token(t_token **root, t_token *token)
 			add_token_back(root, create_token(token->type, token->value));
 		token = token->next;
 	}
+	token = *root;
 }
 
 t_token	*lexer(char **input)
@@ -132,10 +133,10 @@ t_token	*lexer(char **input)
 		{
 			printf("msh: syntax error near unexpected token '%s'\n", input[i]);
 			free_tokens(tokens);
-			ft_free_arrays(input);
-			return (NULL);
+			return (ft_free_arrays(input), NULL);
 		}
 	}
+	ft_free_arrays(input);
 	sort_tokens(&tokens);
 	build_collapsed_token(&collapsed_tokens, tokens);
 	free_tokens(tokens);

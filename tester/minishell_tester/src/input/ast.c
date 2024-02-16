@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 13:32:58 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/07 13:12:59 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/08 09:42:21 by jbaeza-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,8 @@ t_ast_node	*build_ast(t_token *tokens)
 		if (token_iter->type == AST_PIPE && (!token_iter->next
 				|| token_iter->next->type == AST_AND
 				|| token_iter->next->type == AST_OR))
-			return (NULL);
+			return (free_ast(tree.root), free_ast(tree.branch),
+				free_ast(tree.red_in));
 		build_tree(&tree, token_iter);
 		token_iter = token_iter->prev;
 	}

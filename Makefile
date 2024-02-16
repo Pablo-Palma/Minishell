@@ -41,6 +41,7 @@ SRCS =	$(SRC_DIR)aux_ft/array_size.c			\
 		$(SRC_DIR)input/input.c					\
 		$(SRC_DIR)input/lexer.c 				\
 		$(SRC_DIR)input/token.c 				\
+		$(SRC_DIR)input/token_utils.c 			\
 		$(SRC_DIR)main/main.c 					\
     	$(SRC_DIR)main/minishell.c				\
     	$(SRC_DIR)signal/signal.c 				\

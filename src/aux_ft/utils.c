@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 20:46:20 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/08 11:20:48 by pabpalma         ###   ########.fr       */
+/*   Updated: 2024/02/08 13:06:02 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,4 +80,5 @@ void	reset_minishell(t_minishell *shell)
 	shell->fd_write = 1;
 	shell->input_redirect = 0;
 	shell->output_redirect = 0;
+	shell->ast = NULL;
 }
