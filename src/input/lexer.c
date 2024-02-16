@@ -6,7 +6,7 @@
 /*   By: jbaeza-c <jbaeza-c@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:37:07 by pabpalma          #+#    #+#             */
-/*   Updated: 2024/02/08 09:33:20 by jbaeza-c         ###   ########.fr       */
+/*   Updated: 2024/02/08 13:54:11 by pabpalma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,12 +132,12 @@ t_token	*lexer(char **input)
 		if (build_token(&tokens, input, &i, &is_file) == -1)
 		{
 			printf("msh: syntax error near unexpected token '%s'\n", input[i]);
-			free_tokens(tokens);
-			return (ft_free_arrays(input), NULL);
+			return (ft_free_arrays(input), free_tokens(tokens), NULL);
 		}
 	}
 	ft_free_arrays(input);
-	sort_tokens(&tokens);
+	if (!sort_tokens(&tokens))
+		return (NULL);
 	build_collapsed_token(&collapsed_tokens, tokens);
 	free_tokens(tokens);
 	return (collapsed_tokens);

@@ -1,8 +1,8 @@
 NAME = minishell 
 CC = gcc -g3
 CFLAGS = -Wall -Werror -Wextra -I libft/inc -I inc
-LDFLAGS = -L/opt/homebrew/opt/readline/lib
-CPPFLAGS = -I/opt/homebrew/opt/readline/include
+LDFLAGS = -L/$(HOME)/.brew/opt/readline/lib
+CPPFLAGS = -I/$(HOME)/.brew/opt/readline/include
 LIBFT_DIR = libft
 LIBFT_LIB = $(LIBFT_DIR)/libft.a
 SRC_DIR = src/
@@ -41,6 +41,7 @@ SRCS =	$(SRC_DIR)aux_ft/array_size.c			\
 		$(SRC_DIR)input/input.c					\
 		$(SRC_DIR)input/lexer.c 				\
 		$(SRC_DIR)input/token.c 				\
+		$(SRC_DIR)input/token_utils.c 			\
 		$(SRC_DIR)main/main.c 					\
     	$(SRC_DIR)main/minishell.c				\
     	$(SRC_DIR)signal/signal.c 				\
